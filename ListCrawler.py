@@ -28,7 +28,7 @@ class ListCrawler(object):
         @type query: str
 
         @raise NotImplemented: If the page is not recognized
-        """       
+        """
         assert isinstance(page,str)
         assert isinstance(query,str)
 
@@ -46,11 +46,11 @@ class ListCrawler(object):
             raise NotImplemented
 
     def get():
-        """         
+        """
         @return: Returns a list of urls
         @rtype: list
         """
-        
+
         crawler = self.crawler()
 
         return crawler.get_results(self.query)

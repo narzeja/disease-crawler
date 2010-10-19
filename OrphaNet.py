@@ -25,7 +25,7 @@ class OrphaNet(ParserInterface):
     def prevalence(self):
         return xpath("/html/body/div/div[8]/div/table/tbody/tr/td/table/tbody/tr[3]/td[2]/ul/li")
                       #/html/body/div/div[8]/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]
-    
+
     def summary(self):
         return xpath("/html/body/div/div[8]/div[3]/div/p")
 
@@ -39,4 +39,4 @@ class OrphaNet(ParserInterface):
     def MIM(self):
         return xpath("/html/body/div/div[8]/div/table/tbody/tr/td/table/tbody/tr[6]/td[2]/ul/li/a")
 
-        
+

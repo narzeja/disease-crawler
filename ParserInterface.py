@@ -9,8 +9,8 @@ def xpath(path):
 def tree(page):
     parser = _etree.HTMLParser()
     return _etree.parse(page, parser)
-    
-    
+
+
 
 class ParserInterface(object):
 
@@ -27,7 +27,7 @@ class ParserInterface(object):
 
     def prevalence(self):
         raise NotImplemented
-    
+
     def onset_age(self):
         raise NotImplemented
 
@@ -40,4 +40,4 @@ class ParserInterface(object):
     def MIM(self):
         raise NotImplemented
 
-    
+

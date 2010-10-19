@@ -11,7 +11,7 @@ class TestOrphaNet(unittest.TestCase):
         page = codecs.open("17 ketoreductase deficiency", 'r', 'iso-8859-1')
         #print page
         self.parser = Crawler(page, parser=OrphaNet)
-    
+
     def test_disease_name(self):
         print self.parser.disease_name
 
@@ -23,7 +23,7 @@ class TestOrphaNet(unittest.TestCase):
 
     def test_prevalence(self):
         print self.parser.prevalence
-    
+
     def test_summary(self):
         print self.parser.summary
 

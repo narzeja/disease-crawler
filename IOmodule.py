@@ -72,11 +72,11 @@ def writeOutTDM(dirname, filename, matrix, type='numpy.float32'):
     """
     Receives a (full) directory name and a filename, a matrix and optional type,
     which is defined by numpy, and is e.g. numpy.float32, numpy.integer etc.
-    
+
     Uses mmwrite to write out matrices, saving them in Matrix Market
     format which saves a lot of space 
     """
-    
+
     if not os.path.isdir(dirname):
         os.mkdir(dirname)
 
@@ -92,7 +92,7 @@ def readInTDM(dirname, filename):
 
     """
     Receives (full) directory path and filename without extention.
-    
+
     Returns the matrix specified.
     """
 
@@ -114,7 +114,7 @@ def getSortedFilelist(dir, startIndex=None, stopIndex=None):
 
     E.g. only want first 10 file, just call getSortedFilelist(dir, 0, 10)
     """
-    
+
     files=sorted([f for f in os.listdir(dir) if os.path.isfile(dir+"/"+f)])[startIndex:stopIndex]
 
     return files

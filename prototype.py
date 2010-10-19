@@ -32,7 +32,7 @@ class Crawler(object):
             #html = open("test.xml")
 
             parser = etree.HTMLParser()
-            
+
             tree = lxml.etree.parse(html, parser)
             #print etree.tostring(tree)
 
@@ -47,7 +47,7 @@ class Crawler(object):
                 page_url_base = "http://www.orpha.net/consor/cgi-bin/"
 
                 page_url = urlparse.urljoin(page_url_base, link.get("href"))
-                
+
                 page_request = urllib2.Request(page_url)
                 page_request.add_header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; he; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8")
                 page_request.add_header("Referer", "http://www.google.com")
@@ -58,12 +58,12 @@ class Crawler(object):
 
                 #page_tree = lxml.etree.parse(page_html, parser)
 
-        
 
-    
+
+
 class WebsiteInterface(object):
 
-    
+
     def __get__(self):
         raise NotImplemented
 
