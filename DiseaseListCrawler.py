@@ -6,11 +6,11 @@ Retrieves the initial list of diseases and urls to their description on
 Orphanet
 """
 
-__author__ = 'Henrik Groenholt Jensen, Truls Asheim and Michael Andersen'
+__author__ = 'Henrik Groenholt Jensen'
 __version__= '1.0'
-__modified__='16-09-2010'
+__modified__='21-10-2010'
 
-from ListCrawlerBase import ListCrawlerBase
+from BaseCrawler import BaseCrawler
 import lxml
 import lxml.html
 from lxml import etree
@@ -19,8 +19,8 @@ from lxml import etree
 import time
 import random
 
-class OrphanetListCrawler(ListCrawlerBase):
-
+class OrphanetDiseaseCrawler(BaseCrawler):
+        
     orphanet_url = 'http://www.orpha.net/consor/cgi-bin/Disease_Search_List.php?lng=EN&TAG='
 
     def __init__(self):
@@ -44,9 +44,6 @@ class OrphanetListCrawler(ListCrawlerBase):
         for page in pages():
             result=None
 
-            random.seed(time.time())
-            time.sleep(random.randrange(3, 6))
-
             category_url = self.orphanet_url + page
 
             html = self.open_url(category_url)
@@ -54,9 +51,9 @@ class OrphanetListCrawler(ListCrawlerBase):
             parser = etree.HTMLParser()
             tree = lxml.etree.parse(html, parser)
             specific_urls = tree.xpath("//div[@id='result-box']/ul/li/a")
-
+            
             result=[(pages_url_base+url.get("href"),url.text) for url in specific_urls]
-
+            
             results.extend(result)
 
             print "Current category:",page,"- retrived",len(result),"urls"

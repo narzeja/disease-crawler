@@ -6,19 +6,19 @@ Instantiates a predefined crawler module and returns a list of urls to parse
 data from
 """
 
-__author__ = 'Henrik Groenholt Jensen, Truls Asheim and Michael Andersen'
+__author__ = 'Henrik Groenholt Jensen'
 __version__= '1.0'
-__modified__='16-09-2010'
+__modified__='21-10-2010'
 
-import GoogleListCrawler
-import OrphanetListCrawler
+import SearchGoogle
+from SearchGoogle import SearchGoogle
 
-class ListCrawler(object):
+class Crawler(object):
 
     crawler=None
     lst=[]
 
-    def __init__(self, page, query=None): 
+    def __init__(self, parser, query=None): 
         """Specify page - query is used for google only
 
         @param page: Specifies what crawler module to be used
@@ -28,7 +28,7 @@ class ListCrawler(object):
         @type query: str
 
         @raise NotImplemented: If the page is not recognized
-        """
+        """       
         assert isinstance(page,str)
         assert isinstance(query,str)
 
@@ -46,11 +46,11 @@ class ListCrawler(object):
             raise NotImplemented
 
     def get():
-        """
+        """         
         @return: Returns a list of urls
         @rtype: list
         """
-
+        
         crawler = self.crawler()
 
         return crawler.get_results(self.query)
