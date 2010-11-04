@@ -128,7 +128,7 @@ class SearchGoogle(BaseCrawler):
         while not results:
             print 'Google 503-fried us :/'
             print 'Sleeping...'
-            time.sleep(900) 
+            time.sleep(900)
             print 'Woke up! Retrying...'
             results = self.open_url(search_url)
         
@@ -149,8 +149,11 @@ class SearchGoogle(BaseCrawler):
         
             if self.url:
                 result=field.xpath('h3/a[@class="l"]')
-                search_results['url'].append(result[0].get('href'))
-                            
+                try:
+                    search_results['url'].append(result[0].get('href'))
+                except:
+                    continue
+
             if self.cached_site:
                 result=field.xpath('div//span[@class="gl"]/a[1]')
                 if len(result):

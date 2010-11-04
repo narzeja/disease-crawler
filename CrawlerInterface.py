@@ -9,17 +9,21 @@ data from
 
 __author__ = 'Henrik Groenholt Jensen'
 __version__= '1.0'
-__modified__='22-10-2010'
+__modified__='29-10-2010'
 
 import DiseaseListCrawler
+from DiseaseListCrawler import DiseaseListCrawler
 import OrphanetCrawler
+from OrphanetCrawler import OrphanetCrawler
+import WrongdiagnosisCrawler
+from WrongdiagnosisCrawler import WrongdiagnosisCrawler
 
 class CrawlerInterface(object):
 
     crawler=None
     lst=[]
 
-    def __init__(self, crawler, disease): 
+    def __init__(self, page, disease): 
         """Given a keyword a specific crawler is chosen to parse disease 
         information.
         
@@ -43,51 +47,51 @@ class CrawlerInterface(object):
 
         @raise NotImplemented: If the page is not recognized
         """       
-        assert isinstance(crawler,str)
+        assert isinstance(page,str)
         assert isinstance(disease,str)
 
-        self.crawler = crawler
+        self.page = page
         self.disease = disease
 
-        if 'diseaselist' in crawler.lower():
+        if 'diseaselist' in page.lower():
             self.crawler = DiseaseListCrawler
         
-        if 'orphanet' in crawler.lower():
+        if 'orphanet' in page.lower():
             self.crawler = OrphanetCrawler
         
         
         ### To be implemented...
                 
-        if 'wiki' in crawler.lower():
+        if 'wiki' in self.page.lower():
             raise NotImplemented
         
-        if 'wrongdiagnosis' in crawler.lower():
-            raise NotImplemented
+        if 'wrongdiagnosis' in self.page.lower():
+            self.crawler = WrongdiagnosisCrawler
             
-        if 'generic' in crawler.lower():
+        if 'generic' in self.page.lower():
             raise NotImplemented
             
         
         ### Optionally to be implemented...
             
-        if 'rarediseases' in crawler.lower():
+        if 'rarediseases' in self.page.lower():
             raise NotImplemented
         
-        if 'mim' in crawler.lower():
+        if 'mim' in self.page.lower():
             raise NotImplemented
             
-        if 'icd10' in crawler.lower():
+        if 'icd10' in self.page.lower():
             raise NotImplemented
             
-        if 'medpedia' in crawler.lower():
+        if 'medpedia' in self.page.lower():
             raise NotImplemented
 
 
-        if self.crawler is None:
-            print 'Crawler:', page 
+        if not self.page:
+            print 'Crawler: ', page 
             raise NotImplemented
 
-    def get():
+    def get(self):
         """         
         @return: Returns a dictionary of information depending on the crawler.
         @rtype: dictionary
@@ -95,6 +99,6 @@ class CrawlerInterface(object):
         
         crawler = self.crawler()
 
-        return crawler.get_results(self.disease)
+        return crawler.get_disease_info(self.disease)
 
 

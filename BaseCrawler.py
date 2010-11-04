@@ -67,9 +67,9 @@ class BaseCrawler(object):
 #        headers = {"User-Agent" : "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; Media Center PC 4.0; SLCC1; .NET CLR 3.0.04320)" }
 #        headers = {"User-Agent" : "Opera/9.70 (Linux ppc64 ; U; en) Presto/2.2.1" }
 #        headers = {"User-Agent" : "Mozilla/5.0 (compatible; Konqueror/4.4; Linux) KHTML/4.4.1 (like Gecko) Fedora/4.4.1-1.fc12" }
-#        headers = {"User-Agent" : "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.19) Gecko/20081202 Firefox (Debian-2.0.0.19-0etch1)" }
+        headers = {"User-Agent" : "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.19) Gecko/20081202 Firefox (Debian-2.0.0.19-0etch1)" }
                 
-        headers = {"User-Agent" : "Mozilla/5.0 (compatible; Konqueror/4.4; Linux) KHTML/4.4.1 (like Gecko) Fedora/4.4.1-1.fc12" } 
+#        headers = {"User-Agent" : "Mozilla/5.0 (compatible; Konqueror/4.4; Linux) KHTML/4.4.1 (like Gecko) Fedora/4.4.1-1.fc12" } 
     
         try:
             req = Request(url, None, headers)

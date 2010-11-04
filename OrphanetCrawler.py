@@ -7,72 +7,91 @@
 
 __author__ = 'Henrik Groenholt Jensen'
 __version__= '1.0'
-__modified__='22-10-2010'
+__modified__='29-10-2010'
 
 import lxml
 import lxml.html
 from lxml import etree
 
+import SearchGoogle
 from SearchGoogle import SearchGoogle
+
 import time
 import re
 
-class OrphanetCrawler(SearchGoogle):
-
-    count=0
-    run=0
+class OrphanetCrawler(object):
 
     def __init__(self):
-        pass
+        self.SG=SearchGoogle()
 
-    def crawl_url(self,url):
+    def get_disease_info(self,disease):
         
         print "========== NEW QUERY BEGUN ============"
-                
-        url="\""+url+"\""
-        
+
+        disease="\""+disease+"\""
+
         # Set GoogleCrawler options
-        self.url = False
-        self.cached_site = True
-        self.site = "orpha.net"
-        
-        # Search Google        
-        urls = self.get_results(url)                
-        
+#        self.SG.url = False
+        self.SG.cached_site = True
+        self.SG.site = "orpha.net"
+
+        # Search Google
+        googled = self.SG.get_results(disease)
+
         # What sites to look for among the results from Google
-        orpha_link = None        
+        orpha_link = None
         flag = False
-        for cached_site in urls['cached_site']:
+        # Look in cached urls
+        for cached_site in googled['cached_site']:
             if "Disease_Search.php" in cached_site and not flag: flag = True
             if "cgi-bin/OC_Exp.php" in cached_site and not flag: flag = True
-            if flag: 
+            if flag:
                 orpha_link = cached_site
-                print "Orphanet url found"
+                print "Orphanet cached url found"
                 break
-        
-        # Status printouts
-        if flag:
-            self.count+=1
-            self.run+=1
-        else:
-            self.run+=1
-        print "~~~~~~~~~~"
-        print "Percentage found: "+str(float(self.count)/self.run)
-        print "Run: "+str(self.run)
-        print "~~~~~~~~~~"
-        
-        
+
+        # If no cached urls were found, look among the direct urls
+        if not flag:
+            for url in googled['url']:
+                if "Disease_Search.php" in url and not flag: flag = True
+                if "cgi-bin/OC_Exp.php" in url and not flag: flag = True
+                if flag:
+                    orpha_link = url
+                    print "Orphanet url found"
+                    break
+
         if orpha_link:
-        
             print orpha_link
-            opened_url = self.open_url(orpha_link)
+            opened_url = self.SG.open_url(orpha_link)
 
             # ======= BEGIN PARSING ======= #
 
             # Parse the relevant section
-            parser = etree.HTMLParser()            
-            tree = lxml.etree.parse(opened_url, parser)            
+            parser = etree.HTMLParser()
+            tree = lxml.etree.parse(opened_url, parser)
             disease_info=tree.xpath('//td[@class="twoColumnsTable"]//tr/td//text()')
+
+            # BEGIN SPECIAL CASE # 
+            # In some cases google returns invalid cached urls
+            if not disease_info:
+                flag = False
+                for url in googled['url']:
+                    if "Disease_Search.php" in cached_site and not flag: flag = True
+                    if "cgi-bin/OC_Exp.php" in cached_site and not flag: flag = True
+                    if flag: 
+                        orpha_link = url
+                        print "Orphanet url SPECIAL CASE found"
+                        break
+                # Redo parsing
+                opened_url = self.SG.open_url(orpha_link)
+                parser = etree.HTMLParser()            
+                tree = lxml.etree.parse(opened_url, parser)            
+                disease_info=tree.xpath('//td[@class="twoColumnsTable"]//tr/td//text()')
+                # Give up if it is still invalid
+                if not disease_info:
+                    print "Unable to locate Orphanet site"
+                    return None
+            # END SPECIAL CASE #
 
             # Sanitize the results a bit and remove empty strings
             sanitizer = re.compile(r'[\r|\n|\t]')
@@ -87,6 +106,8 @@ class OrphanetCrawler(SearchGoogle):
             assert len(token_indices)==7
             results={}
             results["Orpha number"]=disease_info[token_indices[0]+1:token_indices[1]]
+            # Note: Prevlance parsing does not work in most cases and leaves an
+            # empty list. BeautifulSoup would be needed in a second run.
             results["Prevalence"]=disease_info[token_indices[1]+1:token_indices[2]]
             results["Inheritance"]=disease_info[token_indices[2]+1:token_indices[3]]
             results["Age of onset"]=disease_info[token_indices[3]+1:token_indices[4]]
@@ -102,10 +123,8 @@ class OrphanetCrawler(SearchGoogle):
                 disease_summary="Group of diseases"
             results["Summary"]=disease_summary
             
-#            print results
-            print results['Prevalence']
-            
-#        time.sleep(1)
-            
+        time.sleep(25)
+        
+        print 
         
         

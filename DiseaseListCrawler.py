@@ -8,25 +8,22 @@ Orphanet
 
 __author__ = 'Henrik Groenholt Jensen'
 __version__= '1.0'
-__modified__='21-10-2010'
+__modified__='29-10-2010'
 
+import BaseCrawler
 from BaseCrawler import BaseCrawler
 import lxml
 import lxml.html
 from lxml import etree
 
-# should be moved to the controller module:
-import time
-import random
-
-class OrphanetDiseaseCrawler(BaseCrawler):
+class DiseaseListCrawler(BaseCrawler):
         
     orphanet_url = 'http://www.orpha.net/consor/cgi-bin/Disease_Search_List.php?lng=EN&TAG='
 
     def __init__(self):
         pass
 
-    def get_results(self,query=None):
+    def get_disease_info(self,query=None):
         """Get a tubled list of disease urls and names
 
         In short: Go through all the disease categories ('A','B','C'...) using
