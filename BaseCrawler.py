@@ -54,8 +54,8 @@ class BaseCrawler(object):
         Request = urllib2.Request
         self.cj = cookielib.LWPCookieJar()
 
-        if os.path.isfile(self.COOKIEFILE):
-            self.cj.load(self.COOKIEFILE)
+#        if os.path.isfile(self.COOKIEFILE):
+#            self.cj.load(self.COOKIEFILE)
 
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         urllib2.install_opener(opener)

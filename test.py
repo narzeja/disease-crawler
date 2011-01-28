@@ -19,6 +19,7 @@ import IOmodule as iom
 
 class Test(object):
 
+
     def __init__ (self, query="test", npp=99, itt=99):
         """ standard search will results in 100 queries using the
         keyword 'test'.
@@ -36,23 +37,37 @@ class Test(object):
 #            self.GMs.append()
         self.resulting_url_list = []
 
-    def start(self, from_itt=0):
+    def start(self, from_itt=0, num_itt=10, query_terms=[]):
+        """ initiates the test and iterates the diseasenames from
+        'from_itt' and gets 'num_itt' at a time.
+        """
+        collected_missed_urls = []
         self.resulting_url_list = []
         j = from_itt
-        for i in range(from_itt,self.iterations):
+        range_end = from_itt + num_itt
+
+        if not query_terms:
+            query_terms = self.diseasenames
+
+        if range_end > len(query_terms):
+            range_end = len(query_terms)
+        for i in range(from_itt, from_itt+num_itt):
             print("Search iteration:", j)
-            url, query = self.diseasenames[j]
+            url, query = query_terms[j]
 #            query = self.query + str(i)
             try:
                 self.resulting_url_list.append(self.GM.get_results(query)['url'])
                 j += 1
             except:
                 print("Killing the old Google Search instance")
+                collected_missed_urls += (url, query)
                 del self.GM
                 self.GM = SG.SearchGoogle() # make a new searcher
                 self.GM.results_per_page = self.npp
                 print("Done!")
                 j += 1
+        print("Now I'm done, here are the failed searches: ")
+        return collected_missed_urls
 
 #            urls = res['url']
 #        return resulting_urldict_list
