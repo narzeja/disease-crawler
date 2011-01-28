@@ -17,7 +17,7 @@ import lxml.html
 from lxml import etree
 
 class DiseaseListCrawler(BaseCrawler):
-        
+
     orphanet_url = 'http://www.orpha.net/consor/cgi-bin/Disease_Search_List.php?lng=EN&TAG='
 
     def __init__(self):
@@ -48,9 +48,9 @@ class DiseaseListCrawler(BaseCrawler):
             parser = etree.HTMLParser()
             tree = lxml.etree.parse(html, parser)
             specific_urls = tree.xpath("//div[@id='result-box']/ul/li/a")
-            
+
             result=[(pages_url_base+url.get("href"),url.text) for url in specific_urls]
-            
+
             results.extend(result)
 
             print "Current category:",page,"- retrived",len(result),"urls"

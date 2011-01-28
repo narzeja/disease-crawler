@@ -18,7 +18,7 @@ class Crawler(object):
     crawler=None
     lst=[]
 
-    def __init__(self, parser, query=None): 
+    def __init__(self, parser, page, query=None): 
         """Specify page - query is used for google only
 
         @param page: Specifies what crawler module to be used

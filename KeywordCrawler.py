@@ -55,7 +55,7 @@ class KeywordCrawler(object):
 #                        if word in text.lower():
 #                            count+=1
 #                        if count==len(disease_split):
-                        if "characterized by" in text.lower()
+                        if "characterized by" in text.lower():
                             print text
                             # Run FreqDist on the split string, removing empty strings in the process
 #                            fdist = FreqDist([word.lower() for word in text.split(' ') if word != ''])
