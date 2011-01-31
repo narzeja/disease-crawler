@@ -1,0 +1,110 @@
+%\documentclass[10pt,a4paper,final,oneside,openany,article]{memoir}
+%\documentclass[letterpaper,a4paper,10pt]{article}
+\documentclass[10pt,letterpaper,final]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{hyperref}
+\setcounter{tocdepth}{3}
+\usepackage[draft]{fixme}
+\usepackage{abstract}
+
+%% FONT
+%\usepackage[T1]{fontenc}
+%\usepackage{lmodern}
+%\usepackage[urw-garamond]{mathdesign}
+% Fonts configuration
+%  - Palatino and Bitstream Vera Sans Mono for verbatim
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\usepackage[sc]{mathpazo} % Math font for Palatino
+\usepackage{bera}
+\linespread{1.05} % Palatino needs more leading (space between lines)
+\usepackage{microtype} % ++
+
+
+%% odds and ends
+%\chapterstyle{hangnum}
+\setcounter{secnumdepth}{2}
+
+%HEADINGS
+\title{Constructing Models For Diagnosing Rare Diseases\\
+        \small{Synopsis}}
+
+\author{Brian S. Mathiasen $-$ soborg@diku.dk \\
+        Henrik G. Jensen $-$ henne@diku.dk\\
+%        \\
+%        Department of Computer Science\\
+%        University of Copenhagen\\
+%        Universitetsparken 1\\
+%        DK-2100 Copenhagen, Denmark
+}
+
+\date{\today} %\today
+
+%%
+\begin{document}
+\maketitle
+%\listoffixmes
+%\tableofcontents
+\section{Disposition}
+
+The use of the Internet for aiding in diagnoses is an important part in
+the daily practice of physicians. It is therefore important to develop
+systems that will aid physicians, with particular focus on rare
+diseases.
+
+The goal of the project is to develop a system for building language
+models for rare diseases. The language models will be based on prior
+knowledge provided by Orphanet\footnote{\url{http://orpha.net/}}. It
+will be expanded through automated iterations on popular search engines.
+The information gathered from the results of these searches will be
+validated based on a correlation with the prior knowledge and new
+searches will be based on the posterior language model. We will use
+machine learning and natural language processing to extract the relevant
+information with a focus on symptoms and other important features.
+
+During the project, we will evaluate the system by it’s ability to rank
+a relevant disease (the precision of the system) compared with previous
+similar projects. A ranking is produced by entering a case report or a
+list of symptoms of a rare disease into the system.
+
+
+\section{Learning Goals}
+\begin{itemize}
+\item Utilize natural language processing techniques.
+\item Utilize intermediate and advanced algorithms for machine learning.
+\item Utilize efficient data structures for data mining.
+\item Build language models for rare diseases based on results from
+popular search engines such as Google and PubMed.
+\item Build a model for disease/symptom harvesting.
+\item Utilize background knowledge of selected rare diseases to
+determine the validity and accuracy of the model.
+\item Compare validity and accuracy to previous work on support decision
+systems on diagnosing rare diseases.
+\end{itemize}
+
+\section{Project Time Frame}
+\begin{center}
+	\begin{tabular}{lll}
+		Week & Activity & Subtasks \\ \hline
+		1 & Programming & Select data format, arrange prior data \\
+		2 & Programming & preliminary test searches, begin model coding \\
+		3 & Programming & model and preliminary results \\
+		4 & fine-tuning & fine tune programming \\
+		5 & initiate tests & tests \\
+		6 & tests, report & . \\
+		7 & report & . \\
+		8 & report & . \\
+		9 & ? & ? \\
+	\end{tabular}
+	\label{tab:timeestimates}
+\end{center}
+
+
+
+
+%\renewcommand\bibname{References}
+%\bibliography{bib}
+%\bibliographystyle{apalike}
+
+\end{document}
