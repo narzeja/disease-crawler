@@ -130,6 +130,43 @@ diagnosis aid”:
 http://vitualis.wordpress.com/2007/02/26/google-based-medicine/
 
 
+\section{Method}
+We will use Natural Language Processing (NLP) techniques to identify
+whether a term or phrase is a symptom. E.g. \texttt{thickened blood} is
+a symptom (phrase) while the terms \texttt{thickened} and \texttt{blood}
+on their own are not.
+
+Our model is based on Machine Learning (ML) clustering algorithms. The
+model, that is trained to classify symptoms into clusters, recognises
+that the majority of those symptoms belong to the cluster of data that
+is associated with one particular disease. This results in a possible
+diagnosis of the disease for the patient, given some level of confidence
+or error.
+
+Each cluster within the set of clusters $c \in C$ represents a disease
+which has it's own symptoms that is collected through a prior data-set,
+as provided by OrphanetData \fxfatal{præciser kilden}, and subsequently
+collected through various iterations on search engines and harvested
+using NLP techniques for feature extraction.
+
+The process is outline as shown below:
+\begin{itemize}
+\item extract features from known abstract
+\item initiate $n$ iterations to harvest more features based on already
+known features and disease meta-data.
+\end{itemize}
+
+
+\subsubsection{Feature Extraction}
+we do this and that and those... innit.
+
+%As such, we wish to cluster symptoms $\Sigma$ into clusters $C$ for
+%which any disease $d \in C$ has a list of symptoms $\Sigma$.
+
+%Read more at Suite101: Unsupervised Machine Learning and Diagnostics:
+%\url{http://www.suite101.com/content/unsupervised-machine-learning-and-diagnostics-a218637}
+
+
 \appendix
 \section{Appendix}
 
