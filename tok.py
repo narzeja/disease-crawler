@@ -24,26 +24,28 @@ def feature_extractor(document):
     """ function to extract features from document, returns a list of
     features
     """
+    #FIXME: STUB!
+
     def symptom_extractor(sentence):
         """ extracts symptoms from the sentence
         """
+        #FIXME: STUB!
         return []
 
     def synonym_extractor(sentence):
         """ extracts synonyms from the sentence
         """
+        #FIXME: STUB!
         return []
 
     def misc_extractor(sentence):
         """ extracts misc from the sentence, anything that can otherwise
         be useful, such as demographics, prevelance or other.
         """
+        #FIXME: STUB!
         return []
 
-
-    #FIXME: STUB!
-    features = []
-    return features
+    return []
 
 
 
