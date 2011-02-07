@@ -157,8 +157,19 @@ known features and disease meta-data.
 \end{itemize}
 
 
-\subsubsection{Feature Extraction}
+\subsection{Feature Extraction}
 we do this and that and those... innit.
+
+
+\subsubsection{Feature Extraction as a Classification Problem}
+When extracting features, we really wish to be able to distinguish keyword or
+feature phrases and words of interest from ordinary phrases and words. Looking
+upon the problem as a classification problem allows us to utilize algorithms for
+(un-)supervised classification, with the supervised allowing us to directly
+measure the root mean square error (RMSE).
+
+We will use NLP techniques to extract candidates for this classification, using
+Part-of-Speech (POS) tagging\footnote{\fxwarning{Brief explanation here}}.
 
 %As such, we wish to cluster symptoms $\Sigma$ into clusters $C$ for
 %which any disease $d \in C$ has a list of symptoms $\Sigma$.

@@ -2,6 +2,12 @@ import re
 from numpy import array
 
 def parseOrphaDesc() :
+    """ Not gonna document a method we wont we resuing.
+    
+    Note that the 4 returned lists are in same order and might 
+    contain None-values if no information was found on particular 
+    entries.
+    """
     
     path = "OrphanetData/OrphanetProduct4_descript.Txt"
     
@@ -10,7 +16,7 @@ def parseOrphaDesc() :
     # First split of the data:
     #   0: Orpha number
     #   1: Disease name
-    #   2: Abstract + Table name
+    #   2: Abstract + table name
     arr_len = len(data)
     orpha_nums       = data[range(4,arr_len,3)]
     disease_names    = data[range(5,arr_len,3)]
@@ -21,19 +27,16 @@ def parseOrphaDesc() :
     
     # Second split of the data:
     #   3: Author
-    #   4: Genes
-    author = [re.search(r'(\*Authors?:)(.*)(\*)',a) for a in abstracts]
+    authors = []
+    new_abstracts = []
+    for abstract in abstracts:
+        m = re.search(r'(\*Authors?:)(.*)(\*)',abstract)
+        if m:
+            authors.append(m.group(2))
+            new_abstracts.append(abstract[:m.start()]+abstract[m.end():])
+        else:
+            authors.append(None)
+            new_abstracts.append(abstract)
+    abstracts = new_abstracts
     
-    
-    author2 = [re.search(r'(\*)(.*)(\*)',a) for a in abstracts]
-    a1 = [a.group(0) for a in author if a]
-#    a2 = [a.group(0) for a in author2 if a]
-#    print [a for a in a2 if a not in a1]
-    print [a for a in a1 if len(a)>100]
-#    print [x.group(0) for x in author if x]
-    
-    # test all arrays
-    print len([x for x in orpha_nums if not x])
-    print len([x for x in disease_names if not x])
-    print len([x for x in abstracts if not x])
-    print len([x for x in author if x])
+    return orpha_nums, disease_names, abstracts, authors
