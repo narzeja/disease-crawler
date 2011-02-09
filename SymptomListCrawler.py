@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-"""Module for retrieving full list of symptoms from WrongDiagnosis
+"""Module for retrieving full list of symptoms from WrongDiagnosis, or
+from existing file on filesystem.
 
 
 """
@@ -30,14 +31,20 @@ class SymptomListCrawler(BaseCrawler):
         if from_filesystem:
             try:
                 fd = open('symptoms.dict', 'r')
-                results = eval(fd.read())
+                result_dict = eval(fd.read())
                 fd.close()
-                return results
+
+                fd = open('symptoms.list', 'r')
+                result_list = eval(fd.read())
+                fd.close()
+
+                return result_dict, result_list
             except Exception:
                 print "no such file"
                 return
 
-        results = {}
+        result_dict = {}
+        result_list = []
 
         url = 'http://www.wrongdiagnosis.com/lists/symptoms.htm'
 
@@ -48,7 +55,6 @@ class SymptomListCrawler(BaseCrawler):
 
         for key in string.uppercase:
             A_tag = tree.xpath("//a[@name='%s']" % key)[0]
-#            print key
             h2_tag = A_tag.getnext()
             ul_tag = h2_tag.getnext()
             listtags = ul_tag.getchildren()
@@ -58,12 +64,17 @@ class SymptomListCrawler(BaseCrawler):
                 text = tag.getchildren()[0].text
                 sublist.append(text)
 
-            results.update({key: sublist})
+            result_dict.update({key: sublist}) # dict of crap
+            result_list += sublist # list of crap
 
         fd = open('symptoms.dict', 'w')
-        fd.write(str(results))
+        fd.write(str(result_dict))
         fd.close()
 
-        return results
+        fd = open('symptoms.list', 'w')
+        fd.write(str(result_list))
+        fd.close()
+
+        return result_dict, result_list
 
 
