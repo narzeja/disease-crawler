@@ -125,7 +125,7 @@ diseases according to some relevance criterion.
 Google Health: http://www.google.com/intl/en-US/health/about/index.html
 
 
-Article by practicing Doctor on “do’s and don’t’s when using Google as
+Article by practicioning Doctor on “do’s and don’t’s when using Google as
 diagnosis aid”:
 http://vitualis.wordpress.com/2007/02/26/google-based-medicine/
 
@@ -141,7 +141,7 @@ model, that is trained to classify symptoms into clusters, recognises
 that the majority of those symptoms belong to the cluster of data that
 is associated with one particular disease. This results in a possible
 diagnosis of the disease for the patient, given some level of confidence
-or error.
+or error.\fxfatal{rewrite or actually implement this clustering wisely!}
 
 Each cluster within the set of clusters $c \in C$ represents a disease
 which has it's own symptoms that is collected through a prior data-set,
@@ -161,21 +161,55 @@ known features and disease meta-data.
 we do this and that and those... innit.
 
 
-\subsubsection{Feature Extraction as a Classification Problem}
-When extracting features, we really wish to be able to distinguish keyword or
-feature phrases and words of interest from ordinary phrases and words. Looking
-upon the problem as a classification problem allows us to utilize algorithms for
-(un-)supervised classification, with the supervised allowing us to directly
-measure the root mean square error (RMSE).
+\subsubsection{Feature Extraction using NLP}
+%When extracting features, we really wish to be able to distinguish keyword or
+%feature phrases and words of interest from ordinary phrases and words. Looking
+%upon the problem as a classification problem allows us to utilize algorithms for
+%(un-)supervised classification, with the supervised allowing us to directly
+%measure the root mean square error (RMSE).
 
-We will use NLP techniques to extract candidates for this classification, using
-Part-of-Speech (POS) tagging\footnote{\fxwarning{Brief explanation here}}.
+We will use NLP techniques to extract candidates for this
+classification, using Part-of-Speech (POS)
+tagging\footnote{\fxwarning{Brief explanation here}}, and semantic
+recognition of terms and phrases.
+
 
 %As such, we wish to cluster symptoms $\Sigma$ into clusters $C$ for
 %which any disease $d \in C$ has a list of symptoms $\Sigma$.
 
 %Read more at Suite101: Unsupervised Machine Learning and Diagnostics:
 %\url{http://www.suite101.com/content/unsupervised-machine-learning-and-diagnostics-a218637}
+
+
+\subsection{Using the Google Search engine}
+After considerable consideration, we have decided to limit the scope of
+our information harvesting to sites, guaranteed to be within the domain
+of disease and/or rare diseases. As such, we methodically crawl each
+known site of interest and extract phrases, paragraphs and documents
+which are suitable candidates to contain information according to the
+query of features.
+
+While we may potentially lose critical information by limiting our
+searches to specific sites, we also gain precision in our models by only
+harvesting information within our domain. As such, we do not risk
+running into documents that are not necessarily important for the
+purpose of our model, but still show up as a result, caused by more or
+less vague references to the given query. In order to widen the scope of
+the searches, one would have to not only define modular ways of
+extracting valuable information within any site available on the
+Internet, but also look into document classification \cite{Jimmy}, to
+decrease the level of noise. The implementation of such a classification
+model is relatively simple, and only require a substantial amount of
+corpora of documents for training and testing the model, but we did not
+see it as important in this project and will leave the discussion as is.
+
+
+For each \texttt{SearchGoogle} instance, we define which domain it
+should retrieve results from, as well as an extractor function that
+reads the results and returns information to be processed further, by
+our feature extraction algorithm. All of these results are thus passed
+into a mathematical model and used to increase disease prediction
+precision or widen the amount of known diseases. I.e. expand the model.
 
 
 \appendix
