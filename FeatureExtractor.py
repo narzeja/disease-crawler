@@ -17,10 +17,14 @@ import SymptomListCrawler as SLC
 
 class FeatureExtractor(object):
 
-    def __init__ (self, abstracts = ["OrphanetData/test.txt"]):
-        self.abstracts = abstracts
+    def __init__ (self):
+#        self.abstracts = abstracts
         self.symptomlistcrawler = SLC.SymptomListCrawler()
-        self.documents = [self.preprocess(doc) for doc in self.abstracts]
+        self.documents = []
+
+    def loadDocuments(self, documents = ["OrphanetData/abstract1.txt", "OrphanetData/abstract2.txt"]):
+        self.documents = [self.preprocess(doc) for doc in documents]
+
 
     def preprocess(self, abstract):
         """ reads in an abstract text document (from file) and tags every
@@ -39,7 +43,7 @@ class FeatureExtractor(object):
         return document
 
 
-    def symptom_candidate_extractor(self, document, strict=True):
+    def symptom_candidate_extractor(self, document, strict):
         """ extracts symptoms candidates from the POS-tagged sentence
         """
         #should catch "characterized by <listing>" and "characterised by <listing>"
@@ -47,11 +51,11 @@ class FeatureExtractor(object):
         candidates = []
 
         if strict:
-            grammar = """CANDIDATE: {<VB.*><IN|TO>(<SYMPTOM><,|CC>?)*}
-                         SYMPTOM: {<JJ|VB.*>*<NN.*>*}
+            grammar = """CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
+                         SYMPTOM: {<JJ|VB(D|G)>*<NN>*}
                       """
         else:
-            grammar = """SYMPTOM: {<JJ|VB.*>*<NN.*>*}
+            grammar = """SYMPTOM: {<JJ|VBG>*<NN>*}
                     """
 
         cp = nltk.RegexpParser(grammar)
@@ -63,9 +67,10 @@ class FeatureExtractor(object):
                 try:
                     if strict:
                         if chunk.node == 'CANDIDATE':
-                            previous = chunk.node
-                        if previous == 'CANDIDATE' and chunk.node == 'SYMPTOM':
+                            previous = 'CANDIDATE'
+                        if (previous == 'CANDIDATE' or previous == 'SYMPTOM') and chunk.node == 'SYMPTOM':
                             candidates.append(chunk.leaves())
+                            previous = 'SYMPTOM'
                     else:
                         if chunk.node == 'SYMPTOM':
                             candidates.append(chunk.leaves())
