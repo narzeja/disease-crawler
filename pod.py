@@ -1,12 +1,18 @@
 import re
 from numpy import array
 
-def parseOrphaDesc() :
+def parseOrphaDesc(zipped=True) :
     """ Not gonna document a method we wont we resuing.
     
     Note that the 4 returned lists are in same order and might 
     contain None-values if no information was found on particular 
-    entries.
+    entries (e.g. not all articles had authors).
+    
+    @param zipped   bool    If true, return a list of lists on the form 
+                              [(id1,name1,abstract1,author1),(id2,name2...)]
+                              else return four individual lists.
+    
+    @returns orphanet numbers, disease names, abstracts and authors (see above)
     """
     
     path = "OrphanetData/OrphanetProduct4_descript.Txt"
@@ -39,4 +45,5 @@ def parseOrphaDesc() :
             new_abstracts.append(abstract)
     abstracts = new_abstracts
     
-    return orpha_nums, disease_names, abstracts, authors
+    if zipped:  return zip(orpha_nums, disease_names, abstracts, authors)
+    else:       return orpha_nums, disease_names, abstracts, authors
