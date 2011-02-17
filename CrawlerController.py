@@ -27,95 +27,103 @@ __author__ = 'Brian Soborg Mathiasen'
 __version__= '1.0'
 __modified__='10-02-2011'
 
+import time
+import RareDiseases as RD
+import Wikipedia as WIKI
 
-import SearchGoogle as SG
-import lxml
+#class Pubmed(object):
+#    def __init__(self):
+#        self.site = 'ncbi.nlm.nih.gov'
+#        self.results = []
+#        self.parser = lxml.etree.HTMLParser()
 
-def pubmed_extractor(document):
-    return
+#    def extract(sef, SG, query):
+#        SG.site = self.site
 
-
-class Wikipedia(object):
-    def __init__ (self):
-        self.site = 'en.wikipedia.org'
-        self.results = []
-
-    def extract(self, SG):
-        SG.site = self.site
-
-        urls = SG.get_results(SG.query)['url']
-        parser = lxml.etree.HTMLParser()
-
-        for url in urls:
-            doc_tree = lxml.etree.parse(url, parser)
-
-            abstract = ""
-            try:
-                div_iterator = doc_tree.xpath("//div[@id='bodyContent']/p")[0].itertext()
-            except IndexError:
-                break
-            try:
-                while div_iterator:
-                    abstract += div_iterator.next()
-            except StopIteration:
-                pass
-            self.results.append(abstract)
-
-        return {self.site: self.results}
-
-class RareDiseases(object):
-    def __init__ (self):
-        self.site = 'rarediseases.org'
-        self.results = []
-
-    def extract(self, SG):#, document_tree):
-        SG.site = self.site
-        urls = SG.get_results(SG.query)['url']
-        parser = lxml.etree.HTMLParser()
-
-        for url in urls:
-            doc_tree = lxml.etree.parse(url, parser)
-
-            try:
-                span_iterator = doc_tree.xpath("//span[@class='feature_body']")[0].itertext()
-            except IndexError:
-                break
-            try:
-                while not span_iterator.next() == 'General Discussion':
-                    continue
-            except StopIteration:
-                break
-            self.results.append(span_iterator.next())
-
-        return {self.site: self.results}
+#        urls = SG.get_results(query)['url']
 
 
-class CrawlerController(object):
 
-    def __init__ (self, results_per_page=1, query="albinism", search_location="any"):
-        """
-        @param results_per_page :: int # how many hits it should maximum return        parser = etree.HTMLParser()
-        @param query :: str # the string to search for
-        @param loc :: str # where to search for 'query' (any, title, body, links, url)
-        """
-        self.documents = [] # this is the collection of harvested documents, documents :: [str]
-        self.crawlers = []
-        self.sg = SG.SearchGoogle()
-        self.sg.results_per_page = results_per_page
-        self.sg.query = query
-        self.sg.search_location = search_location
-        self.crawlers.append(RareDiseases())
-        self.crawlers.append(Wikipedia())
+#        return {self.site: self.results}
 
 
-    def initiateCrawlers(self):
-        """ start each crawler instance, harvest documents and extract information using the extractor
-        """
-#        self.sg.site = self.RD.site
-        for crawler in self.crawlers:
-            self.documents.append(crawler.extract(self.sg))
+#class Wrongdiagnosis(object):
+#    def __init__(self):
+#        self.site = 'wrongdiagnosis.com'
+#        self.results = []
+#        self.parser = lxml.etree.HTMLParser()
 
-##        self.sg.site = self.Wiki.site
-#        self.documents.append(self.Wiki.extract(self.sg))
+#    def extract(self):
+#        SG.site = self.site
+
+#        urls = SG.get_results(query)['url']
+
+#        wd_link=None
+#        for url in urls:
+#            if "intro.htm" in url:
+#                wd_link = url
+#            if "/medical/" in url and not flag1:
+#                wd_link = url.replace('medical',query[0])
+#                wd_link = wd_link.replace('.htm','/intro.htm')
+
+#            if wd_link:
+#                opened_url = SG.open_url(wd_link)
+
+#                parser = lxml.etree.HTMLParser()
+#                tree = lxml.etree.parse(opened_url, self.parser)
+#                return tree
+#                disease_info = tree.xpath('//div[@id="wd_content"]/p')
+
+
+#        return {self.site: self.results}
+
+
+def initiateWikiCrawl(query="albinism", results_per_page=1, search_location="any"):
+    wiki = WIKI.Wikipedia(query)
+
+    documents = []
+    ret = wiki.extract()
+    return ret
+    documents.append(ret)
+
+    return documents
+
+
+def initiateRarediseasesCrawl(query="albinism", results_per_page=1, search_location="any"):
+    rd = RD.RareDiseases(query)
+    documents = []
+
+    ret = rd.extract()
+    return ret
+    documents.append(ret)
+
+    return documents
+
+#class CrawlerController(object):
+
+#    def __init__(self, results_per_page=1, query="albinism", search_location="any"):
+#        """
+#        @param results_per_page :: int # how many hits it should maximum return        parser = etree.HTMLParser()
+#        @param query :: str # the string to search for
+#        @param loc :: str # where to search for 'query' (any, title, body, links, url)
+#        """
+#        self.documents = [] # this is the collection of harvested documents, documents :: [str]
+#        self.crawlers = []
+
+#        self.RD = RareDiseases(query, results_per_page, search_location)
+#        self.Wiki = Wikipedia(query, results_per_page, search_location)
+
+
+#    def initiateCrawlers(self):
+#        """ start each crawler instance, harvest documents and extract information using the extractor
+#        """
+##        self.sg.site = self.RD.site
+##        for crawler in self.crawlers:
+##            self.documents.append(crawler.extract(self.sg, self.query))
+
+###        self.sg.site = self.Wiki.site
+#        self.documents.append(self.RD.extract())
+#        time.sleep(15)
+#        self.documents.append(self.Wiki.extract())
 
 

@@ -12,7 +12,6 @@ run = SearchGoogle()
 run.cached_site = True
 run.summary = True
 run.title = True
-run.set_query("query")  -- optional if "query" in get_results
 run.get_results("query")
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -210,7 +209,7 @@ class SearchGoogle(BaseCrawler):
         return search_results
 
 
-    def get_results(self,query):
+    def get_results(self,query, use_cache=False):
         """Get a dictionary of search results (depending on options set)
 
         @return: Returns a list of googled urls in descending order
@@ -221,17 +220,20 @@ class SearchGoogle(BaseCrawler):
 
         self.query = "&q="+query.replace(' ','+')
 
-        try:
-            results = self._results_cache[self.query]
-            if results[1]!=self.return_options():
+        if try_cache:
+            try:
+                results = self._results_cache[self.query]
+                if results[1]!=self.return_options():
+                    self._results_cache[self.query] = (self._search(),self.return_options())
+                    results = self._results_cache[self.query]
+            except KeyError:
                 self._results_cache[self.query] = (self._search(),self.return_options())
                 results = self._results_cache[self.query]
-        except KeyError:
-            self._results_cache[self.query] = (self._search(),self.return_options())
-            results = self._results_cache[self.query]
 
-        # Clear cache if over 300
-        if len(self._results_cache)>300: self._results_cache={}
-
-        return results[0]
+            # Clear cache if over 300
+            if len(self._results_cache)>300: self._results_cache={}
+            return results[0]
+        else:
+            results = self._search()
+            return results
 
