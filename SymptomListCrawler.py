@@ -13,11 +13,9 @@ __modified__='10-02-2011'
 import BaseCrawler
 from BaseCrawler import BaseCrawler
 import lxml
-import lxml.html
-from lxml import etree
 import string
 import os
-
+import SearchGoogle as SG
 
 class SymptomListCrawler(BaseCrawler):
 
@@ -25,10 +23,7 @@ class SymptomListCrawler(BaseCrawler):
     def __init__ (self):
         self.symptoms_dict_by_letter = {}
         self.symptoms_list = []
-
-
-    def get_symptoms_from_document(self, document):
-        return
+        self.site = "http://medical-dictionary.thefreedictionary.com/"
 
     def get_symptoms_filesystem(self):
         try:
@@ -61,7 +56,7 @@ class SymptomListCrawler(BaseCrawler):
             url = 'http://www.medicinenet.com/script/main/alphaidx.asp?p=%s_sym' % key #(a_sym, b_sym...)
             html = self.open_url(url)
 
-            parser = etree.HTMLParser()
+            parser = lxml.etree.HTMLParser()
             tree = lxml.etree.parse(html, parser)
 
             div_tag = tree.xpath("//div[@class='AZ_results']")[0]
@@ -88,7 +83,7 @@ class SymptomListCrawler(BaseCrawler):
 
         html = self.open_url(url)
 
-        parser = etree.HTMLParser()
+        parser = lxml.etree.HTMLParser()
         tree = lxml.etree.parse(html, parser)
 
         for key in string.uppercase:
@@ -131,5 +126,16 @@ class SymptomListCrawler(BaseCrawler):
             if symptoms.issubset(s_words):
                 results.append(s)
         return results
+
+    def symptomExistsOnline(self, symptom):
+        site = self.site+symptom.replace(' ', '+')
+        html = self.open_url(site)
+        parser = lxml.etree.HTMLParser()
+        tree = lxml.etree.parse(html, parser)
+        try:
+            if "Word not found" in tree.xpath("//table[@id='ContentTable']/tr/td/div/p/text()")[0]:
+                return False
+        except:
+            return tree.xpath("//td[@id='MainTitle']/h1")[0].text
 
 
