@@ -110,8 +110,8 @@ class CrawlerController(object):
         self.documents = [] # this is the collection of harvested documents, documents :: [str]
         self.crawlers = []
 
-        self.crawlers.append(RareDiseases(query, results_per_page, search_location))
-        self.crawlers.append(Wikipedia(query, results_per_page, search_location))
+        self.crawlers.append(RD.RareDiseases(query, results_per_page, search_location))
+        self.crawlers.append(WIKI.Wikipedia(query, results_per_page, search_location))
 
 
     def initiateCrawlers(self):

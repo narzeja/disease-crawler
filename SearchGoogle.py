@@ -209,7 +209,7 @@ class SearchGoogle(BaseCrawler):
         return search_results
 
 
-    def get_results(self,query, use_cache=False):
+    def get_results(self,query, try_cache=False):
         """Get a dictionary of search results (depending on options set)
 
         @return: Returns a list of googled urls in descending order
