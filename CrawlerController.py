@@ -77,28 +77,6 @@ import Wikipedia as WIKI
 
 #        return {self.site: self.results}
 
-
-#def initiateWikiCrawl(query="albinism", results_per_page=1, search_location="any"):
-#    wiki = WIKI.Wikipedia(query)
-
-#    documents = []
-#    ret = wiki.extract()
-#    return ret
-#    documents.append(ret)
-
-#    return documents
-
-
-#def initiateRarediseasesCrawl(query="albinism", results_per_page=1, search_location="any"):
-#    rd = RD.RareDiseases(query)
-#    documents = []
-
-#    ret = rd.extract()
-#    return ret
-#    documents.append(ret)
-
-#    return documents
-
 class CrawlerController(object):
 
     def __init__(self, query="albinism", results_per_page=1, search_location="any"):
@@ -117,13 +95,6 @@ class CrawlerController(object):
     def initiateCrawlers(self):
         """ start each crawler instance, harvest documents and extract information using the extractor
         """
-#        self.sg.site = self.RD.site
         for crawler in self.crawlers:
             self.documents.append(crawler.extract())
-
-#        self.sg.site = self.Wiki.site
-#        self.documents.append(self.RD.extract())
-#        time.sleep(15)
-#        self.documents.append(self.Wiki.extract())
-
 

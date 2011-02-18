@@ -17,22 +17,23 @@ class db(object):
         print("Done")
         self.c = self.sqlserver.cursor()
 
-    def createtable(self, table='basicinfo'):
+    def createtable(self, table='diseaseinfo', columns = "(patres int, disease_name text, abstract text, author text, symptoms text, misc text)"):
         """ creates a imple table consisting of the fields:
         @patres: integer
         @disease_name: str
         @abstract: str
         @author: str
-        @features: str (misc data)
+        @symptoms: str
+        @misc: str (misc data)
         """
-        self.c.execute('create table ' + table + '(patres int, disease_name text, abstract text, author text, features text)')
+        self.c.execute('create table ' + table + columns)
 
-    def put(self, list_of_elm, table='basicinfo'):
-        """ takes a list of type list_of_elm :: [(int, str, str, str, str)]
+    def put(self, list_of_elm, table='diseaseinfo'):
+        """ takes a list of type list_of_elm :: [(int, str, str, str, str, str)]
             and enters it into the table 'table'
         """
         for l in list_of_elm:
-            self.c.execute('insert into '+table+' values(?,?,?,?,?)', l)
+            self.c.execute('insert into '+table+' values(?,?,?,?,?,?)', l)
 
     def commit(self):
         self.sqlserver.commit()
