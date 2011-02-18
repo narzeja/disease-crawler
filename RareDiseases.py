@@ -3,7 +3,7 @@ import lxml
 import SearchGoogle
 
 class RareDiseases(object):
-    def __init__(self, query):
+    def __init__(self, query, results_per_page=1, search_location="any"):
         self.site = 'rarediseases.org'
         self.results = []
         self.parser = lxml.etree.HTMLParser()

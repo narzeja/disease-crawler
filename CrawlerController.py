@@ -78,50 +78,50 @@ import Wikipedia as WIKI
 #        return {self.site: self.results}
 
 
-def initiateWikiCrawl(query="albinism", results_per_page=1, search_location="any"):
-    wiki = WIKI.Wikipedia(query)
+#def initiateWikiCrawl(query="albinism", results_per_page=1, search_location="any"):
+#    wiki = WIKI.Wikipedia(query)
 
-    documents = []
-    ret = wiki.extract()
-    return ret
-    documents.append(ret)
+#    documents = []
+#    ret = wiki.extract()
+#    return ret
+#    documents.append(ret)
 
-    return documents
-
-
-def initiateRarediseasesCrawl(query="albinism", results_per_page=1, search_location="any"):
-    rd = RD.RareDiseases(query)
-    documents = []
-
-    ret = rd.extract()
-    return ret
-    documents.append(ret)
-
-    return documents
-
-#class CrawlerController(object):
-
-#    def __init__(self, results_per_page=1, query="albinism", search_location="any"):
-#        """
-#        @param results_per_page :: int # how many hits it should maximum return        parser = etree.HTMLParser()
-#        @param query :: str # the string to search for
-#        @param loc :: str # where to search for 'query' (any, title, body, links, url)
-#        """
-#        self.documents = [] # this is the collection of harvested documents, documents :: [str]
-#        self.crawlers = []
-
-#        self.RD = RareDiseases(query, results_per_page, search_location)
-#        self.Wiki = Wikipedia(query, results_per_page, search_location)
+#    return documents
 
 
-#    def initiateCrawlers(self):
-#        """ start each crawler instance, harvest documents and extract information using the extractor
-#        """
-##        self.sg.site = self.RD.site
-##        for crawler in self.crawlers:
-##            self.documents.append(crawler.extract(self.sg, self.query))
+#def initiateRarediseasesCrawl(query="albinism", results_per_page=1, search_location="any"):
+#    rd = RD.RareDiseases(query)
+#    documents = []
 
-###        self.sg.site = self.Wiki.site
+#    ret = rd.extract()
+#    return ret
+#    documents.append(ret)
+
+#    return documents
+
+class CrawlerController(object):
+
+    def __init__(self, query="albinism", results_per_page=1, search_location="any"):
+        """
+        @param results_per_page :: int # how many hits it should maximum return parser = etree.HTMLParser()
+        @param query :: str # the string to search for
+        @param loc :: str # where to search for 'query' (any, title, body, links, url)
+        """
+        self.documents = [] # this is the collection of harvested documents, documents :: [str]
+        self.crawlers = []
+
+        self.crawlers.append(RareDiseases(query, results_per_page, search_location))
+        self.crawlers.append(Wikipedia(query, results_per_page, search_location))
+
+
+    def initiateCrawlers(self):
+        """ start each crawler instance, harvest documents and extract information using the extractor
+        """
+#        self.sg.site = self.RD.site
+        for crawler in self.crawlers:
+            self.documents.append(crawler.extract())
+
+#        self.sg.site = self.Wiki.site
 #        self.documents.append(self.RD.extract())
 #        time.sleep(15)
 #        self.documents.append(self.Wiki.extract())

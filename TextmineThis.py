@@ -164,9 +164,9 @@ class Textminer:
         
         """
         
-        print "Converting to lil matrix format..."
+#        print "Converting to lil matrix format..."
         termDoc = termDoc.tolil()
-        print "Converting to csc matrix format..."
+#        print "Converting to csc matrix format..."
         termDoc_csc = termDoc.tocsc()
         
         # Sanitize query terms
@@ -192,6 +192,7 @@ class Textminer:
                 n = term_hash[term]
             except:
                 print "Term not found: '"+term+"'"
+                continue
                 
             docs = termDoc_csc.getcol(n).nonzero()[0]
             

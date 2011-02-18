@@ -3,7 +3,7 @@ import lxml
 import SearchGoogle
 
 class Wikipedia(object):
-    def __init__(self, query):
+    def __init__(self, query, results_per_page=1, search_location="any"):
         self.site = 'en.wikipedia.org'
         self.results = []
         self.child_result = []
@@ -11,9 +11,9 @@ class Wikipedia(object):
         self.query = query
 
         self.sg = SearchGoogle.SearchGoogle()
-        self.sg.results_per_page = 1
-        self.sg.search_location = "any"
-        self.sg.site = "en.wikipedia.org"
+        self.sg.results_per_page = results_per_page
+        self.sg.search_location = search_location
+        self.sg.site = self.site
 
     def extract(self):
         urls = self.sg.get_results(self.query)['url']
