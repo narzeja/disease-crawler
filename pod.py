@@ -45,5 +45,5 @@ def parseOrphaDesc(zipped=True) :
             new_abstracts.append(abstract)
     abstracts = new_abstracts
     
-    if zipped:  return zip(orpha_nums, disease_names, abstracts, authors)
-    else:       return orpha_nums, disease_names, abstracts, authors
+    if zipped:  return zip(orpha_nums, abstracts, disease_names, authors)
+    else:       return orpha_nums, abstracts, disease_names, authors
