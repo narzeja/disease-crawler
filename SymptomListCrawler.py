@@ -16,6 +16,7 @@ import lxml
 import string
 import os
 import SearchGoogle as SG
+import sqlite3 as sql
 
 class SymptomListCrawler(BaseCrawler):
 
@@ -49,6 +50,15 @@ class SymptomListCrawler(BaseCrawler):
         fd = open('symptoms.list', 'w')
         fd.write(str(self.symptoms_list))
         fd.close()
+
+    def save_to_db(self):
+        server = sql.connect('data.db')
+        cursor = server.cursor()
+        for symptom in self.symptoms_list:
+            cursor.execute("insert into symptomlist values(?)", symptom)
+        server.commit()
+        cursor.close()
+        server.close()
 
     def get_symptoms_medicinenet(self):
 
@@ -121,7 +131,7 @@ class SymptomListCrawler(BaseCrawler):
         self.symptoms_dict_by_letter.update({symptom[0] : thislist})
 
     def getSymptomsContaining(self, symptom):
-        """ return all symptoms for which 'symptom' is part of
+        """ return all symptoms for which argument 'symptom' is part of
         """
         symptoms = set(symptom.split(' '))
         results = []
