@@ -21,21 +21,21 @@ class FeatureExtractor(object):
 #        self.abstracts = abstracts
         self.symptomlistcrawler = SLC.SymptomListCrawler()
         self.symptomlistcrawler.get_symptoms_filesystem()
-        self.documents = []
 
 #    def loadDocuments(self):
 #        self.documents = [self.preprocess(doc) for doc in documents]
 
 
-    def preprocess(self, doc, fs=False):
+    def preprocess(self, doc):
         """ reads in an abstract text document (from file) and tags every
         token in the text with appropriate token tags.
         known tags here:
         http://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
         """
-        if fs:
+        try:
             corpora = open(doc).read()
-        else: corpora = doc
+        except IOError:
+            corpora = doc
 
         corpora = corpora.replace('\n', ' ')
 
@@ -43,7 +43,7 @@ class FeatureExtractor(object):
         document = [nltk.word_tokenize(s) for s in document]
         document = [nltk.pos_tag(s) for s in document]
 
-        self.documents.append(document)
+        return document
 
 
     def symptom_candidate_extractor(self, document, strict):
@@ -84,18 +84,19 @@ class FeatureExtractor(object):
         return candidates
 
 
-    def feature_extractor(self, doc_num, strict=True):
+    def feature_extractor(self, doc, strict=True):
         """ function to extract features from document, returns a list of
         features
         """
-        symptom_candidates = self.symptom_candidate_extractor(self.documents[doc_num], strict)
+        document = self.preprocess(doc)
+        symptom_candidates = self.symptom_candidate_extractor(document, strict)
         results = []
         for tree in symptom_candidates:
             searchTerm = ""
             for candidate in tree:
                 searchTerm += string.lower(candidate[0]) + " "
             results.append(searchTerm[:-1])
-        return results
+        return self.validate_features(results)
 
     def validate_features(self, list_of_candidates):
         validated = []
