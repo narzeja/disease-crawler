@@ -14,7 +14,7 @@ class Textminer:
     <description>
     
     @requires   python-nltk along with the english nltk stopword-corpus
-    @requires   hcluster..
+    @requires   installation of the hcluster-library
     """
     def __init__(self):
         """
@@ -26,6 +26,7 @@ class Textminer:
         Counts the frequency distribution of terms.
         
         @param data     list or str     A list of terms or a document.
+        
         @returns a list of lowercased terms and their frequencies.
         """
         
@@ -48,6 +49,7 @@ class Textminer:
         @param data     list or str     A list of terms or a document.
         @param stemmer  nltk.*Stemmer   A stemmer from the nltk library 
                                           (PorterStemmer by default).
+        
         @returns a list of lowercased stemmed words.
         """
         
@@ -74,6 +76,7 @@ class Textminer:
                                           function it allows a user defined 
                                           stop word list to be used instead 
                                           of the standard nltk stopword-corpus.
+        
         @returns a list if non-stopwords.
         """
         
@@ -106,6 +109,7 @@ class Textminer:
         @param sanitizer    regexp  Provide a regular expression to sanitize 
                                       the document (default replaces all non-
                                       alphanumerical charecters with whitespaces)
+        
         @returns a sparse dok-matrix (see scipy.sparse for info on the 'dok')
                  along with the term and document hashes.
         """
@@ -129,8 +133,9 @@ class Textminer:
         Creates a Term-Frequency Inverse-Document-Frequency from a sparse
         coo_matrix, using log-transformation on TF and IDF.
         
-        @param termDoc
-        @returns 
+        @param termDoc      sparse matrix   A scipy.sparse term-doc matrix.
+        
+        @returns a tf-idf processed sparse matrix
         """
         
         print "Converting to lil matrix format..."
@@ -140,6 +145,7 @@ class Textminer:
         
         print "Running TF-IDF..."
         for row in range(0,tfidf.shape[0]):
+            n=tfidf.getrow(row).nonzero()[1]
             for col in (tfidf.getrow(row).nonzero()[1]):
                 tf = tfidf[row,col]
                 
@@ -161,7 +167,26 @@ class Textminer:
                         stemming=True,rm_stopwords=True, 
                         sanitizer=re.compile('[\W]')):
         """
+        Given a term-dcoument matrix and a term, document and name hash,
+        a list of document scores are returned based on a string or list of
+        terms (the query). The score represents the documents relevance to the
+        query. The dcoument score is a simple a simple summation of the scores
+        of each relevant term in the document.
         
+        @param termDoc  sparse matrix   A scipy.sparse term-doc matrix.
+        @param query      str/list      The query to from which scores are 
+                                          produced.
+        @param term_hash    dic     Term hash, where the term itself is the key.
+        @param doc_hash     dic     Doc hash, where the id of the doc is the key.
+        @param name_hash    dic     Name hash, where the id of the doc is the key.
+        @param stemming     bool    Stem the words if True.
+        @param rm_stopwords bool    Remove english stopwords if True.
+        @param sanitizer    regexp  Provide a regular expression to sanitize 
+                                      the document (default replaces all non-
+                                      alphanumerical charecters with whitespaces).
+        
+        @returns a list of tuples containing the document name and score 
+        - sorted by score in descending order.
         """
         
 #        print "Converting to lil matrix format..."
@@ -225,7 +250,20 @@ class Textminer:
                             stemming=True,rm_stopwords=True,
                             sanitizer=re.compile('[\W]')):
         """
+        Calculates the (by default cosine) correlation of two documents
         
+        @param doc1       str/list  Document one
+        @param doc2       str/list  Document two
+        @param measure    hcluster  Similarity measure from hcluster (cosine by
+                                      default). Must be a measure of the 
+                                      smilairty of two vectors.
+        @param stemming     bool    Stem the words if True.
+        @param rm_stopwords bool    Remove english stopwords if True.
+        @param sanitizer    regexp  Provide a regular expression to sanitize 
+                                      the document (default replaces all non-
+                                      alphanumerical charecters with whitespaces)
+        
+        @returns the similarity score
         """
         data = [("1",doc1,"document 1"),("2",doc2,"document 2")]
         
@@ -254,6 +292,7 @@ class Textminer:
         @param sanitizer    regexp  Provide a regular expression to sanitize 
                                       the document (default replaces all non-
                                       alphanumerical charecters with whitespaces)
+        
         @returns
             * a term hash, where the name of the term is the key,
             * a doc hash, where the id of the doc is the key,
@@ -302,17 +341,5 @@ class Textminer:
                 score_hash[doc_id][term] = score
         
         return term_hash, doc_hash, score_hash, name_hash
-        
-    def _printProgress(self,tl,cl):
-        if int(tl*0.1)==cl: print "Progress: 10 %"
-        if int(tl*0.2)==cl: print "Progress: 20 %"
-        if int(tl*0.3)==cl: print "Progress: 30 %"
-        if int(tl*0.4)==cl: print "Progress: 40 %"
-        if int(tl*0.5)==cl: print "Progress: 50 %"
-        if int(tl*0.6)==cl: print "Progress: 60 %"
-        if int(tl*0.7)==cl: print "Progress: 70 %"
-        if int(tl*0.8)==cl: print "Progress: 80 %"
-        if int(tl*0.9)==cl: print "Progress: 90 %"
-        if tl==cl: print "Progress: 100 % ...Done!"
 
 
