@@ -1,0 +1,249 @@
+%\documentclass[10pt,a4paper,final,oneside,openany,article]{memoir}
+%\documentclass[letterpaper,a4paper,10pt]{article}
+\documentclass[10pt,letterpaper,draft]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{hyperref}
+\setcounter{tocdepth}{3}
+\usepackage[draft]{fixme}
+\usepackage{abstract}
+
+%% FONT
+%\usepackage[T1]{fontenc}
+%\usepackage{lmodern}
+%\usepackage[urw-garamond]{mathdesign}
+% Fonts configuration
+%  - Palatino and Bitstream Vera Sans Mono for verbatim
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\usepackage[sc]{mathpazo} % Math font for Palatino
+\usepackage{bera}
+\linespread{1.05} % Palatino needs more leading (space between lines)
+\usepackage{microtype}
+\usepackage{graphicx} % ++
+
+
+%% odds and ends
+%\chapterstyle{hangnum}
+\setcounter{secnumdepth}{2}
+
+%HEADINGS
+\title{Constructing Models For Diagnosing Rare Diseases\\
+        \small{by Using the Google Search Engine}}
+
+\author{Brian S. Mathiasen $-$ soborg@diku.dk \\
+        Henrik G. Jensen $-$ henne@diku.dk\\
+%        \\
+%        Department of Computer Science\\
+%        University of Copenhagen\\
+%        Universitetsparken 1\\
+%        DK-2100 Copenhagen, Denmark
+}
+
+\date{\today} %\today
+
+%%
+\begin{document}
+\maketitle
+\listoffixmes
+%\tableofcontents
+
+
+\begin{abstract}
+In this paper we design and construct models for assisting physicians
+with the task of diagnosing rare diseases. Using a prior knowledge of
+rare diseases consisting of \textit{disease name, some symptoms} and
+\textit{synonyms}, we utilize the \textit{Google Search Engine} to build
+the model over several iterations. The model is constructed using
+several machine learning and natural language processing techniques by
+text mining symptoms and features from abstracts and other interesting
+paragraphs of text found in the search process.
+
+Our tests show that... blablabla, \fxwarning{Abstract, results: to do}
+\end{abstract}
+%%-----------------------------
+%\newpage
+\section{Introduction}
+\label{chap:introduction}
+
+
+The structure of this report is as follows:
+blablabla... and then some.
+
+\subsection{Limitations}
+
+
+\section{Previous Work}
+Blabla work by radu and paula \cite{radupaula}.
+
+
+\cite{jensenandersen} proposed a system for diagnosing rare diseases
+using vector space models and text mining. They showed a clear potential
+in automating such a process, but their results were not statistically
+significant. Their system did not rely on prior knowledge of particular
+diseases, but still showed that around 60\% of the tests were
+satisfactory.
+
+
+The article \cite{googlingdiagnosis} proves the viability of using
+Google as a diagnosis aid, despite the tests being done manually with
+little consideration with regard to automation or test reliability and
+validity.
+
+%Our system will move on to the next step and introduce intelligent
+%automation through a number of predefined criteria and utilizing several
+%machine learning and natural language processing techniques.
+
+
+The editorials \cite{googlechangemedicine} and
+\cite{diagnosissearchengines} suggest Google and search engines in
+general as being a very strong player in the task of diagnosing
+diseases. The witness of search engines being a valuable source of
+information is apparent, but the shear amount of misinformation and
+noise from regular searches make such a system in it’s current
+incarnation unreliable and error prone.
+%(Our goal is to refine and provide means for filtering out this noise
+%and focus on harvesting information from related material with reference
+%to the original search terms as well as specific criteria for the text
+%mining process.)
+
+
+Inspiration for a system: Online Search Engine specialised for
+diagnosing stuff etc.
+http://www.healthline.com/symptomsearch
+
+This system is based on simple searches that relies on an already
+established database of diseases with appropriate meta-information. The
+user is able to search for symptoms and can narrow down the search by
+adding several symptoms. The system will then present a list of possible
+diseases according to some relevance criterion.
+
+%(It is an end-user focused system, while our system will be a back-bone
+%focused system, attempting to establish a model on which queries may be
+%imposed. It will as such automate the information collection based on
+%several machine learning and natural language processing techniques
+%appropriate for the needs.)
+
+
+Google Health: http://www.google.com/intl/en-US/health/about/index.html
+
+
+Article by practising doctor on “do’s and don’t’s when using Google as
+diagnosis aid”:
+http://vitualis.wordpress.com/2007/02/26/google-based-medicine/
+
+
+\section{Method}
+
+\subsection{Overview of processing pipeline}
+The overall pipeline for the system is outlined in figure
+\ref{fig:outline}.
+
+\begin{figure}[htp!]
+\begin{center}
+\includegraphics[scale=0.7]{outline}
+\caption{Some crap}
+\label{fig:outline}
+\end{center}
+\end{figure}
+
+
+Each step of the pipeline is explained below:
+\begin{itemize}
+\item this
+\item that
+\item these
+\item those
+\end{itemize}
+
+
+%We will use Natural Language Processing (NLP) techniques to identify
+%whether a term or phrase is a symptom.
+% E.g. \texttt{thickened blood} is
+%a symptom (phrase) while the terms \texttt{thickened} and \texttt{blood}
+%on their own are not.
+
+%Our model is based on Machine Learning (ML) clustering algorithms. The
+%model, that is trained to classify symptoms into clusters, recognises
+%that the majority of those symptoms belong to the cluster of data that
+%is associated with one particular disease. This results in a possible
+%diagnosis of the disease for the patient, given some level of confidence
+%or error.\fxfatal{rewrite or actually implement this clustering wisely!}
+
+%Each cluster within the set of clusters $c \in C$ represents a disease
+%which has it's own symptoms that is collected through a prior data-set,
+%as provided by OrphanetData \fxfatal{præciser kilden}, and subsequently
+%collected through various iterations on search engines and harvested
+%using NLP techniques for feature extraction.
+
+%The process is outline as shown below:
+%\begin{itemize}
+%\item extract features from known abstract
+%\item initiate $n$ iterations to harvest more features based on already
+%known features and disease meta-data.
+%\end{itemize}
+
+
+\subsection{Feature Extraction}
+we do this and that and those... innit?
+
+
+\subsubsection{Feature Extraction using NLP}
+%When extracting features, we really wish to be able to distinguish keyword or
+%feature phrases and words of interest from ordinary phrases and words. Looking
+%upon the problem as a classification problem allows us to utilize algorithms for
+%(un-)supervised classification, with the supervised allowing us to directly
+%measure the root mean square error (RMSE).
+
+We will use NLP techniques to extract candidates for this
+classification, using Part-of-Speech (POS)
+tagging\footnote{\fxwarning{Brief explanation here}}, and semantic
+recognition of terms and phrases.
+
+
+%As such, we wish to cluster symptoms $\Sigma$ into clusters $C$ for
+%which any disease $d \in C$ has a list of symptoms $\Sigma$.
+
+%Read more at Suite101: Unsupervised Machine Learning and Diagnostics:
+%\url{http://www.suite101.com/content/unsupervised-machine-learning-and-diagnostics-a218637}
+
+
+\subsection{Using the Google Search engine}
+%After considerable consideration, we have decided to limit the scope of
+%our information harvesting to sites, guaranteed to be within the domain
+%of disease and/or rare diseases. As such, we methodically crawl each
+%known site of interest and extract phrases, paragraphs and documents
+%which are suitable candidates to contain information according to the
+%query of features.
+
+%While we may potentially lose critical information by limiting our
+%searches to specific sites, we also gain precision in our models by only
+%harvesting information within our domain. As such, we do not risk
+%running into documents that are not necessarily important for the
+%purpose of our model, but still show up as a result, caused by more or
+%less vague references to the given query. In order to widen the scope of
+%the searches, one would have to not only define modular ways of
+%extracting valuable information within any site available on the
+%Internet, but also look into document classification \cite{Jimmy}, to
+%decrease the level of noise. The implementation of such a classification
+%model is relatively simple, and only require a substantial amount of
+%corpora of documents for training and testing the model, but we did not
+%see it as important in this project and will leave the discussion as is.
+
+
+%For each \texttt{SearchGoogle} instance, we define which domain it
+%should retrieve results from, as well as an extractor function that
+%reads the results and returns information to be processed further, by
+%our feature extraction algorithm. All of these results are thus passed
+%into a mathematical model and used to increase disease prediction
+%precision or widen the amount of known diseases. I.e. expand the model.
+
+
+\appendix
+\section{Appendix}
+
+\renewcommand\bibname{References}
+\bibliography{bib}
+\bibliographystyle{apalike}
+
+\end{document}
