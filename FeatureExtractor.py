@@ -4,6 +4,13 @@
 if they are accepted as actual symptoms against our list of known symptoms
 harvested by SymptomListCrawler.
 NLP based.
+
+@USAGE:
+instantiate the class
+
+symptoms, non_symptoms = instance.feature_extractor(doc)
+@doc is a path to a text file or a string
+
 """
 
 __author__ = 'Brian Soborg Mathiasen'
