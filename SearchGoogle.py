@@ -133,12 +133,12 @@ class SearchGoogle(BaseCrawler):
         @rtype: list of urls
         """
 
-        print
+#        print
 
         search_url = ("http://www.google.com/search?hl=en&lr=lang_en"+self.query+
             self._results_per_page+self._search_loc+"&as_qdr=all"+self._site)
 
-        print "Url used for search: "+search_url
+#        print "Url used for search: "+search_url
 
         results = self.open_url(search_url)
 
@@ -165,7 +165,7 @@ class SearchGoogle(BaseCrawler):
 
         result_fields = tree.xpath('//li[@class="g"]')
 
-        print "Found "+str(len(result_fields))+" fields"
+#        print "Found "+str(len(result_fields))+" fields"
 
         search_results={}
         search_results['url'] = []
