@@ -43,6 +43,7 @@ class GCrawler():
             query           = data[0]
             initial_info    = data[1]
             synonyms        = data[2]
+            googled_info[query] = []
             
             # used as key in googled_info
             old_query = query 
@@ -52,6 +53,11 @@ class GCrawler():
             
             try:
                 urls = self.searcher.get_results(query)['url']
+                buffy = []
+                for url in urls:
+                    vampireslayer = self.crawlURL(url,initial_info,synonyms,corr_threshold)
+                    if vampireslayer: buffy.append(vampireslayer)
+                googled_info[query].append(buffy)
             except:
                 print("\n---Killing the old Google Search instance---\n")
                 missed_urls.append(old_query)
@@ -91,6 +97,7 @@ class GCrawler():
                     m = re.search(r'(characteri[s|z]ed by|characteristic)(.*?)(\.)',paragraph.lower())
                     if m: tmp = tmp +" " +(m.string[m.start(2):m.end(2)])
             print self.miner.getWordCount(tmp)
+        
         # TODO: fix missed urls
         
         return googled_info

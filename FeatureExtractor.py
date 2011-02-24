@@ -62,7 +62,7 @@ class FeatureExtractor(object):
 
         if strict:
             grammar = """CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
-                         SYMPTOM: {<JJ|VB(D|G)>*<NN>+}
+                         SYMPTOM: {<JJ|VBG>*<NN>+}
                       """
         else:
             grammar = """SYMPTOM: {<JJ|VBG>*<NN>+}
