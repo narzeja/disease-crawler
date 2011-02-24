@@ -36,7 +36,6 @@ class Textminer:
                 if terms != '': 
                     ll = terms.split(' ')
                     l.extend(ll)
-            print l
             l = [term.strip().lower() for term in l if term != '']
             fdist = nltk.FreqDist(l)
         elif isinstance(data,str):
@@ -60,8 +59,13 @@ class Textminer:
         """
         
         if isinstance(data,list):
+            l = []
+            for terms in data:
+                if terms != '': 
+                    ll = terms.split(' ')
+                    l.extend(ll)
             l = [stemmer.stem(term.strip().lower()) \
-                for term in data if term != '']
+                for term in l if term != '']
         elif isinstance(data,str):
             l = [stemmer.stem(term.strip().lower()) \
                 for term in data.split(' ') if term != '']
