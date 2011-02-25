@@ -53,11 +53,6 @@ class GCrawler():
             
             try:
                 urls = self.searcher.get_results(query)['url']
-                buffy = []
-                for url in urls:
-                    vampireslayer = self.crawlURL(url,initial_info,synonyms,corr_threshold)
-                    if vampireslayer: buffy.append(vampireslayer)
-                googled_info[query].append(buffy)
             except:
                 print("\n---Killing the old Google Search instance---\n")
                 missed_urls.append(old_query)
@@ -76,6 +71,8 @@ class GCrawler():
                 t2 = time.time()-t1
                 if paragraphs:
                     print "Paragraphs:",len(paragraphs)
+                    print "Site:",url
+                    print 
                     buff.append(paragraphs)
                 # If the parsing of the site takes over 25 sec or if the site
                 # has not produced any results whitelist it
