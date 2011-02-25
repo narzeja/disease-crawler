@@ -90,13 +90,21 @@ class GCrawler():
             print "Whitelisted:",whitelisted
             print len(googled_info[old_query]),"found for",old_query
             
+            ##############
             # temp stat thingy-double-loop:
             tmp = ""
             for  site in googled_info[old_query]:
                 for paragraph in site:
                     m = re.search(r'(characteri[s|z]ed by|characteristic)(.*?)(\.)',paragraph.lower())
                     if m: tmp = tmp +" " +(m.string[m.start(2):m.end(2)])
-            print self.miner.getWordCount(tmp)
+            
+            sanitizer = re.compile('[\W]')
+            symptoms = [sanitizer.sub(' ',x.lower()) for x in tmp.split(' ')]
+            symptoms = self.miner.removeStopwords(symptoms)
+            symptoms = self.miner.stem(symptoms)
+            symptoms = self.miner.getWordCount(symptoms)
+            print symptoms.items()
+            #################
         
         # TODO: fix missed urls
         
