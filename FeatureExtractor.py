@@ -61,11 +61,11 @@ class FeatureExtractor(object):
         candidates = []
 
         if strict:
-            grammar = """CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
+            grammar = r"""CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
                          SYMPTOM: {<JJ|VBG>*<NN>+}
                       """
         else:
-            grammar = """SYMPTOM: {<JJ|VBG>*<NN>+}
+            grammar = r"""SYMPTOM: {<JJ|VBG>*<NN>+}
                     """
 
         cp = nltk.RegexpParser(grammar)
@@ -91,7 +91,7 @@ class FeatureExtractor(object):
         return candidates
 
 
-    def feature_extractor(self, doc, strict=True):
+    def feature_extractor(self, doc, strict=False):
         """ function to extract features from document, returns a list of
         features
         """
@@ -103,7 +103,54 @@ class FeatureExtractor(object):
             for candidate in tree:
                 searchTerm += string.lower(candidate[0]) + " "
             results.append(searchTerm[:-1])
-        return self.validate_features(results)
+#        return self.validate_features(results)
+        return results, self.calc_candidates(results)
+
+    def calc_candidates(self, list_of_candidates):
+#        FIXME: Device a method to count words of phrases in a list,
+#        such that any phrase in that list gets the count on the
+#        occurance of that word
+#       i.e.: ['hej ost', 'hej', 'tis', 'lis', 'ost'] gets to:
+#       {'hej ost': 3,
+#        'hej': 2,
+#        'ost': 2,
+#        'tis': 1,
+#        'lis': 1}
+        unique_words_in_list = list(set(list_of_candidates))
+
+        dictionary = {}
+        for word in list_of_candidates:
+            dictionary[word] = 0
+            for word2 in list_of_candidates:
+                if word2 == word:
+                    dictionary[word] += 1
+                else:
+                    word2split = word2.split(' ')
+                    wordsplit = word.split(' ')
+                    for w2s in word2split:
+                        for ws in wordsplit:
+                            if w2s == ws:
+                                dictionary[word] +=1
+
+#        return dictionary
+#        uniquelist = []
+#        for s in list_of_candidates:
+
+#        dictionary_cand = {}
+#        spam = [dictionary_cand.update({s:list_of_candidates.count(s)}) for s in list_of_candidates]
+        sorted_set = sorted([(value,key) for (key,value) in dictionary.items()])
+
+        hit, miss = self.validate_features(list_of_candidates)
+        accepted_candidates = [(s, y) for (s, y) in sorted_set if s > 1]
+        results = []
+        for h in hit:
+            sh = set(h.split(' '))
+            for (num, ac) in accepted_candidates:
+                ach = set(ac.split(' '))
+                if sh.issubset(ach):
+                    results.append((num, ac))
+
+        return sorted_set, sorted(list(set(results)))
 
     def validate_features(self, list_of_candidates):
         validated = []
@@ -112,8 +159,8 @@ class FeatureExtractor(object):
             if self.symptomlistcrawler.symptomExists(cand) or \
                self.symptomlistcrawler.getSymptomsContaining(cand):
                 validated.append(cand)
-            elif self.symptomlistcrawler.symptomExistsOnline(cand):
-                validated.append(cand)
+#            elif self.symptomlistcrawler.symptomExistsOnline(cand):
+#                validated.append(cand)
             else:
                 failed.append(cand)
         return validated, failed

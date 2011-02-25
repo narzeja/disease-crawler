@@ -23,8 +23,10 @@ class SymptomListCrawler(BaseCrawler):
 
     def __init__ (self):
         self.symptoms_dict_by_letter = {}
+        for key in string.lowercase:
+            self.symptoms_dict_by_letter[key] = []
         self.symptoms_list = []
-        self.site = "http://medical-dictionary.thefreedictionary.com/"
+#        self.site = "http://medical-dictionary.thefreedictionary.com/"
 
     def get_symptoms_filesystem(self):
         try:
@@ -83,9 +85,28 @@ class SymptomListCrawler(BaseCrawler):
                 text = string.lower(li.getchildren()[0].text)
                 sublist.append(text)
 
-            self.symptoms_dict_by_letter.update({key: sublist}) # dict of crap
+#            self.symptoms_dict_by_letter.update({key: sublist}) # dict of crap
+            self.symptoms_dict_by_letter[key] += sublist
             self.symptoms_list += sublist # list of crap
 
+    def get_symptoms_diseasedatabase(self):
+
+        for key in string.uppercase:
+            url = 'http://www.diseasesdatabase.com/alphabetic.asp?strFilter=%s&strSearchType=all' %key
+            html = self.open_url(url)
+
+            parser = lxml.etree.HTMLParser()
+            tree = lxml.etree.parse(html, parser)
+
+            a_tagnames = tree.xpath("//div[@id='content']/a/text()")
+            sublist = []
+
+            for name in a_tagnames:
+                sublist.append(string.lower(name))
+
+#            self.symptoms_dict_by_letter.update({string.lower(key): sublist})
+            self.symptoms_dict_by_letter[string.lower(key)] += sublist
+            self.symptoms_list += sublist
 
     def get_symptoms_wrongdiagnosis(self):
 
@@ -107,7 +128,8 @@ class SymptomListCrawler(BaseCrawler):
                 text = string.lower(tag.getchildren()[0].text)
                 sublist.append(text)
 
-            self.symptoms_dict_by_letter.update({string.lower(key): sublist}) # dict of crap
+#            self.symptoms_dict_by_letter.update({string.lower(key): sublist}) # dict of crap
+            self.symptoms_dict_by_letter[string.lower(key)] += sublist
             self.symptoms_list += sublist # list of crap
 
 
@@ -141,18 +163,18 @@ class SymptomListCrawler(BaseCrawler):
                 results.append(s)
         return results
 
-    def symptomExistsOnline(self, symptom):
-        site = self.site+symptom.replace(' ', '+')
-        html = self.open_url(site)
-        parser = lxml.etree.HTMLParser()
-        tree = lxml.etree.parse(html, parser)
+#    def symptomExistsOnline(self, symptom):
+#        site = self.site+symptom.replace(' ', '+')
+#        html = self.open_url(site)
+#        parser = lxml.etree.HTMLParser()
+#        tree = lxml.etree.parse(html, parser)
 
-        text = ' '.join(tree.xpath("//table[@id='ContentTable']//text()"))
-        if 'Word not found' in text or 'Phrase not found' in text:
-            return False
-        if 'not available in the medical dictionary' in text:
-            return False
+#        text = ' '.join(tree.xpath("//table[@id='ContentTable']//text()"))
+#        if 'Word not found' in text or 'Phrase not found' in text:
+#            return False
+#        if 'not available in the medical dictionary' in text:
+#            return False
 
-        return tree.xpath("//td[@id='MainTitle']/h1")[0].text
+#        return tree.xpath("//td[@id='MainTitle']/h1")[0].text
 
 
