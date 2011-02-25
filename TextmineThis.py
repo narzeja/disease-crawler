@@ -207,7 +207,7 @@ class Textminer:
         # Sanitize query terms
         query = sanitizer.sub(' ',query)
         
-        if isinstance(query,list):saniti
+        if isinstance(query,list):
             searchTerms = [s.strip().lower() for s in query if s!='']
         elif isinstance(query,str):
             searchTerms = [s.strip().lower() for s in query.split(' ') if s!='']
