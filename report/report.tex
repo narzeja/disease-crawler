@@ -1,6 +1,6 @@
 %\documentclass[10pt,a4paper,final,oneside,openany,article]{memoir}
 %\documentclass[letterpaper,a4paper,10pt]{article}
-\documentclass[10pt,letterpaper,draft]{article}
+\documentclass[10pt,letterpaper,final]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
 \usepackage{hyperref}
@@ -21,7 +21,19 @@
 \linespread{1.05} % Palatino needs more leading (space between lines)
 \usepackage{microtype}
 \usepackage{graphicx} % ++
-
+\usepackage{color}
+\definecolor{kugrey}{rgb}{.4,.4,.4}
+\usepackage{listings}
+\lstset{ %
+    language=Python,                % choose the language of the code
+    frame=single,                   % adds a frame around the code
+    keywordstyle = \textbf,
+    commentstyle = \color{kugrey}\textit,
+    stringstyle = \ttfamily,
+    basicstyle   = \small\ttfamily,
+    numberstyle=\tiny,
+    sensitive = true,
+}
 
 %% odds and ends
 %\chapterstyle{hangnum}
@@ -108,15 +120,15 @@ incarnation unreliable and error prone.
 %mining process.)
 
 
-Inspiration for a system: Online Search Engine specialised for
-diagnosing stuff etc.
-http://www.healthline.com/symptomsearch
+%Inspiration for a system: Online Search Engine specialised for
+%diagnosing stuff etc.
+%http://www.healthline.com/symptomsearch
 
-This system is based on simple searches that relies on an already
-established database of diseases with appropriate meta-information. The
-user is able to search for symptoms and can narrow down the search by
-adding several symptoms. The system will then present a list of possible
-diseases according to some relevance criterion.
+%This system is based on simple searches that relies on an already
+%established database of diseases with appropriate meta-information. The
+%user is able to search for symptoms and can narrow down the search by
+%adding several symptoms. The system will then present a list of possible
+%diseases according to some relevance criterion.
 
 %(It is an end-user focused system, while our system will be a back-bone
 %focused system, attempting to establish a model on which queries may be
@@ -125,36 +137,53 @@ diseases according to some relevance criterion.
 %appropriate for the needs.)
 
 
-Google Health: http://www.google.com/intl/en-US/health/about/index.html
+%Google Health: http://www.google.com/intl/en-US/health/about/index.html
 
 
-Article by practising doctor on “do’s and don’t’s when using Google as
-diagnosis aid”:
-http://vitualis.wordpress.com/2007/02/26/google-based-medicine/
+%Article by practising doctor on “do’s and don’t’s when using Google as
+%diagnosis aid”:
+%http://vitualis.wordpress.com/2007/02/26/google-based-medicine/
 
 
 \section{Method}
+As one of the premises of the project was to introduce prior knowledge
+of the disease model, we needed to process our available data. We were
+given a large corpus of data from Orphanet \ref{app:orphanet},
+consisting of \texttt{\{orphanum, disease name, disease
+description/abstract, maybe author and date\}} for each disease in the
+data set.
+The data is processes similar to the method described in
+\cite{jensenandersen}, and will thus be used too bootstrap our knowledge
+of each disease, allowing us to iterate and harvest additional
+information using various harvesting techniques roughly covering the use
+of the \textit{Google} search engine to collect an array of websites
+given a query relevant to the disease (disease name and a possibly a
+number of keywords). For each website, we will collect paragraphs and
+save it for further processing if the cosine angle between the two
+vectors is within a reasonable threshold. For each accepted paragraph we
+use Natural Language Processing (NLP) techniques to identify candidates
+for relevant terms and phrases that will then be used to expand the
+model. The abstract flow model is available in figure \ref{fig:flow}.
 
-\subsection{Overview of processing pipeline}
-The overall pipeline for the system is outlined in figure
-\ref{fig:outline}.
 
 \begin{figure}[htp!]
 \begin{center}
-\includegraphics[scale=0.7]{outline}
+\includegraphics[scale=0.4]{images/pipeline}
 \caption{Some crap}
-\label{fig:outline}
+\label{fig:flow}
 \end{center}
 \end{figure}
 
+The process will be described in greater detail in the following
+sections.
 
-Each step of the pipeline is explained below:
-\begin{itemize}
-\item this
-\item that
-\item these
-\item those
-\end{itemize}
+\subsection{Building the preliminary model}
+
+
+\subsection{Preliminary tests}
+
+
+\subsection{Harvesting data, or: None Like it Raw!}
 
 
 %We will use Natural Language Processing (NLP) techniques to identify
@@ -185,27 +214,55 @@ Each step of the pipeline is explained below:
 
 
 \subsection{Feature Extraction}
-we do this and that and those... innit?
+In order to iterate and collect information to expand the modelling of
+relevant terms and phrases we use NLP to identify symptoms and medical
+terms (here-on referred to as just symptom) from abstracts and
+paragraphs harvested. Identifying unique symptoms and correlate with
+other documents describing the same disease will increase the knowledge,
+or further substantiate pre-existing knowledge of that disease. The
+ultimate goal of this strategy is to expand the model and highlight
+unique keywords such that, given our assumption, will increase the
+precision of the prediction.
+
+We have observed that symptoms are usually described as zero or more
+adjectives or verbs followed by one or more nouns\fxwarning{substantiate this claim somehow}.
+Thus we can build a regular grammar using the NLTK library as such:
+\begin{lstlisting}
+grammar = """CANDIDATE: {VBD><IN>(<SYMPTOM><,|CC>)*}
+             SYMPTOM: {<JJ|VB(D|G)>*<NN>+}"""
+\end{lstlisting}
+This will catch sentences such as \texttt{characterized by s$_{0}$,
+s$_{1}$, ... and s$_{n}$}, where \texttt{s$_{i}$} is a potential symptom
+candidate.
+This will allow us to catch the symptom \texttt{bleeding diathesis}, but
+will also match, for our purpose, insignificant medical-related terms
+such as \texttt{gene product}.
+The premise for the construction of this grammar is substantiated
+through anecdotal manual observations of a handful of abstracts from the
+orphanet data set, and utilized under the assumption that it will
+increase the amount of medically relevant terms as opposed to simply
+catching all combinations matching the \texttt{SYMPTOM} grammar above.
+
+Having collected a number of symptom candidates $\mathbb{S}$ from some
+document or paragraph, we calculate number of unique terms and return
+the candidates that appear more than once or a supterm of other
+candidates. I.e., consider the candidates $\mathbb{S} = $ \texttt{\{bleeding diathesis,
+bleeding, sleep apnae\}} we will return the symptoms $\mathbb{S'} = $ \texttt{\{bleeding
+diathesis, bleeding\}}.
+
+$ s_{j}, s_{i} \in \mathbb{S'}$ if count$(s_{j}) > 1,$ count$(s_{i}) \wedge s_{j} \subset s_{i}, $for $s_{i}, s_{j} \in \mathbb{S} $
+
+Anecdotal observations during the development phase of this module
+showed that returning terms and supterms of those terms increased the
+relevance of the returned symptoms.
 
 
 \subsubsection{Feature Extraction using NLP}
-%When extracting features, we really wish to be able to distinguish keyword or
-%feature phrases and words of interest from ordinary phrases and words. Looking
-%upon the problem as a classification problem allows us to utilize algorithms for
-%(un-)supervised classification, with the supervised allowing us to directly
-%measure the root mean square error (RMSE).
-
 We will use NLP techniques to extract candidates for this
 classification, using Part-of-Speech (POS)
-tagging\footnote{\fxwarning{Brief explanation here}}, and semantic
+tagging\fxwarning{Brief explanation here}, and semantic
 recognition of terms and phrases.
 
-
-%As such, we wish to cluster symptoms $\Sigma$ into clusters $C$ for
-%which any disease $d \in C$ has a list of symptoms $\Sigma$.
-
-%Read more at Suite101: Unsupervised Machine Learning and Diagnostics:
-%\url{http://www.suite101.com/content/unsupervised-machine-learning-and-diagnostics-a218637}
 
 
 \subsection{Using the Google Search engine}
@@ -239,8 +296,18 @@ recognition of terms and phrases.
 %precision or widen the amount of known diseases. I.e. expand the model.
 
 
+\section{Tests}
+First some bla.
+
+Then some tables and some more bla!
+
+\subsection{Preliminary Tests}
+Results and some bla.
+
+
 \appendix
 \section{Appendix}
+\label{app:orphanet}
 
 \renewcommand\bibname{References}
 \bibliography{bib}
