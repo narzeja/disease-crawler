@@ -7,6 +7,7 @@
 \setcounter{tocdepth}{3}
 \usepackage[draft]{fixme}
 \usepackage{abstract}
+\usepackage{todonotes}
 
 %% FONT
 %\usepackage[T1]{fontenc}
@@ -178,13 +179,12 @@ The process will be described in greater detail in the following
 sections.
 
 \subsection{Building the preliminary model}
-
-
-\subsection{Preliminary tests}
-
+\todo[inline]{Explain the construction of the TF-IDF matrix and explain
+assumptions for using prior information for harvesting}
 
 \subsection{Harvesting data, or: None Like it Raw!}
-
+\todo[inline]{Explain the technique for googling, including covariance
+and relevance measurements. Explain the threshold}
 
 %We will use Natural Language Processing (NLP) techniques to identify
 %whether a term or phrase is a symptom.
@@ -243,29 +243,33 @@ orphanet data set, and utilized under the assumption that it will
 increase the amount of medically relevant terms as opposed to simply
 catching all combinations matching the \texttt{SYMPTOM} grammar above.
 
+\todo[inline]{explain selecting symptoms from databases}
+
 Having collected a number of symptom candidates $\mathbb{S}$ from some
 document or paragraph, we calculate number of unique terms and return
-the candidates that appear more than once or a supterm of other
-candidates. I.e., consider the candidates $\mathbb{S} = $ \texttt{\{bleeding diathesis,
-bleeding, sleep apnae\}} we will return the symptoms $\mathbb{S'} = $ \texttt{\{bleeding
-diathesis, bleeding\}}.
-
-$ s_{j}, s_{i} \in \mathbb{S'}$ if count$(s_{j}) > 1,$ count$(s_{i}) \wedge s_{j} \subset s_{i}, $for $s_{i}, s_{j} \in \mathbb{S} $
-
+the candidates, $\mathbb{S'}$, that appear more than once or a supterm of
+other candidates. I.e., consider the candidates $\mathbb{S} = $
+\texttt{\{bleeding diathesis, bleeding, sleep apnae\}} we will return
+the symptoms $\mathbb{S'} = $ \texttt{\{bleeding diathesis, bleeding\}},
+using the mathematical rule:
+\begin{equation}
+ s_{j}, s_{i} \in \mathbb{S'}\texttt{if count}(s_{j}) > 1 \wedge\texttt{count}(s_{i}) \wedge s_{j} \subset s_{i}, \texttt{for } s_{i}, s_{j} \in \mathbb{S}
+\end{equation}
+\todo[inline]{præciser formel}
 Anecdotal observations during the development phase of this module
-showed that returning terms and supterms of those terms increased the
-relevance of the returned symptoms.
+showed that returning terms and supterms using this mathematical rule
+increased the amount of relevant symptoms, and seemed to decrease the
+amount of 
 
 
 \subsubsection{Feature Extraction using NLP}
 We will use NLP techniques to extract candidates for this
 classification, using Part-of-Speech (POS)
-tagging\fxwarning{Brief explanation here}, and semantic
+tagging\todo[inline]{Brief explanation here}, and semantic
 recognition of terms and phrases.
 
 
 
-\subsection{Using the Google Search engine}
 %After considerable consideration, we have decided to limit the scope of
 %our information harvesting to sites, guaranteed to be within the domain
 %of disease and/or rare diseases. As such, we methodically crawl each
@@ -297,12 +301,14 @@ recognition of terms and phrases.
 
 
 \section{Tests}
-First some bla.
-
+\todo[inline]{First some bla.
 Then some tables and some more bla!
+Investigate possibility of significance testing. How do we fare
+mathematically compared to 'Googling for Diagnosis'? Students T-Test or
+equiv.}
 
 \subsection{Preliminary Tests}
-Results and some bla.
+\todo[inline]{Results and some bla.}
 
 
 \appendix
