@@ -1,6 +1,6 @@
 %\documentclass[10pt,a4paper,final,oneside,openany,article]{memoir}
 %\documentclass[letterpaper,a4paper,10pt]{article}
-\documentclass[10pt,letterpaper,final]{article}
+\documentclass[10pt,letterpaper,draft]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
 \usepackage{hyperref}
@@ -68,8 +68,8 @@ with the task of diagnosing rare diseases. Using a prior knowledge of
 rare diseases consisting of \textit{disease name, some symptoms} and
 \textit{synonyms}, we utilize the \textit{Google Search Engine} to build
 the model over several iterations. The model is constructed using
-several machine learning and natural language processing techniques by
-text mining symptoms and features from abstracts and other interesting
+machine learning and natural language processing techniques by text
+mining symptoms and features from abstracts and other interesting
 paragraphs of text found in the search process.
 
 Our tests show that... blablabla, \fxwarning{Abstract, results: to do}
@@ -78,16 +78,51 @@ Our tests show that... blablabla, \fxwarning{Abstract, results: to do}
 %\newpage
 \section{Introduction}
 \label{chap:introduction}
+Physicians have expressed a need for aiding in the process of diagnosing
+rare diseases \cite{googlingdiagnosis}, and point towards using the
+Internet as a resource for information gathering, with particular focus
+on utilizing Google or other search engines \cite{googlechangemedicine}
+\cite{diagnosissearchengines}.
+
+The current process of automating this process relies heavily on static
+information, which is only expanded through manual interaction. \fxwarning{citation needed}
+\url{http://www.wrongdiagnosis.com/},
+\url{http://www.rarediseases.org/}, \url{http://www.orpha.net/}.
 
 
-The structure of this report is as follows:
-blablabla... and then some.
+In this project, we investigate methods for automating information
+collection of specific features from rare diseases, with focus on
+establishing a model of which a practising physician may query a case
+report for some patient and get a prediction of possible diseases based
+on the knowledge of the model.
+To increase the precision of the prediction, we must expand the model
+and look into harvesting specific information of some disease through a
+number of iterations on popular search engines. We use Natural Language
+Processing and Machine Learning techniques to extract unique information
+from some description of the disease, by assuming certain semantic and
+syntactic properties of symptoms and medically related phrases and
+terms.
+
+In the following we will present and highlight current and previous work
+within this domain. In chapter 3, we will discuss our method
+methodically, with particular focus on construction of model and feature
+extraction and post processing of harvested information.
+Then we will explain how we tested the system and argue statistical
+significances by comparing to previous work, as well as assessing the
+viability of our system as it is.
+Finally we will conclude our paper and discuss implications and other
+thoughts relevant to our method, while also proposing a number of topics
+for future work.
+
 
 \subsection{Limitations}
 
 
 \section{Previous Work}
-Blabla work by radu and paula \cite{radupaula}.
+Current work by Radu Dragusin and Paula something investigate the same
+thesis of automating information gathering as those we are presenting.
+However, as this is a work in progress we do not have access to further
+information at this point in time \cite{radupaula}.
 
 
 \cite{jensenandersen} proposed a system for diagnosing rare diseases
@@ -118,7 +153,7 @@ A sparse term-document matrix was build over the Orphanet abstracts. Each row en
 diseases. The witness of search engines being a valuable source of
 information is apparent, but the shear amount of misinformation and
 noise from regular searches make such a system in it’s current
-incarnation unreliable and error prone.
+incarnation unreliable and error prone.\fxwarning{citation needed}
 \todo[inline]{Omformuler, præciser!}
 %(Our goal is to refine and provide means for filtering out this noise
 %and focus on harvesting information from related material with reference
@@ -214,6 +249,8 @@ The comparison consists of constructing a $2 x n$ matrix, for $n$ being
 the number of unique terms in both texts, after which the cosine
 similarity measure is calculated and accepted paragraphs pushed onto
 further processing.
+
+Something N-gram machine learning here.
 
 \subsection{Feature Extraction}
 In order to iterate and collect information to expand the modelling of
