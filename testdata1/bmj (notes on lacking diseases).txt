@@ -1,0 +1,25 @@
+#Findes ikke	Infective endocarditis  	 Acute, aortic,  regurgitation, depression,  abscess   
+    
+553	Cushing's syndrome  	 hypertension, adrenal, mass   
+    
+#Har ingen beskrivelse	Eosinophilic granuloma  	 Hip, lesion, older, child   
+  
+#Har ingen beskrivelse	Ehrlichiosis  	 fever, bilateral, thigh, pain, weakness   
+  
+#Har ingen beskrivelse	Neurofibromatosis type 1  	 multiple, spinal, tumours, skin, tumours   
+  
+29072	Pheochromocytoma  	 hypertension, papilledema, headache, renal, mass, cafe, au, lait   
+  
+204	Creutzfeldt-Jakob disease  	 ataxia, confusion, insomnia, death   
+  
+183	Churg-Strauss syndrome  	 Wheeze, weight, loss, ANCA, haemoptysis, haematuria   
+  
+221	Dermatomyositis  	 myopathy, neoplasia, dysphagia, rash, periorbital, swelling   
+  
+50839	Cat Scratch Disease  	 renal, transplant, fever, cat, lymphadenopathy   
+  
+95455	TEN  	 bullous, skin, conditions, respiratory, failure, carbamazepine   
+  
+550	MELAS  	 seizure, confusion, dysphasia, T2, lesions   
+  
+130	Brugada syndrome  	 cardiac arrest sleep   
