@@ -71,8 +71,8 @@ the model over several iterations. The model is constructed using
 machine learning and natural language processing techniques by text
 mining symptoms and features from abstracts and other interesting
 paragraphs of text found in the search process.
+\todo[inline]{Tests and results}
 
-Our tests show that... blablabla, \fxwarning{Abstract, results: to do}
 \end{abstract}
 %%-----------------------------
 %\newpage
@@ -88,7 +88,6 @@ The current process of automating this process relies heavily on static
 information, which is only expanded through manual interaction. \fxwarning{citation needed}
 \url{http://www.wrongdiagnosis.com/},
 \url{http://www.rarediseases.org/}, \url{http://www.orpha.net/}.
-
 
 In this project, we investigate methods for automating information
 collection of specific features from rare diseases, with focus on
@@ -114,9 +113,8 @@ Finally we will conclude our paper and discuss implications and other
 thoughts relevant to our method, while also proposing a number of topics
 for future work.
 
-
 \subsection{Limitations}
-
+\todo[inline]{Blanks to be filled.}
 
 \section{Previous Work}
 Current work by Radu Dragusin and Paula something investigate the same
@@ -124,7 +122,7 @@ thesis of automating information gathering as those we are presenting.
 However, as this is a work in progress we do not have access to further
 information at this point in time \cite{radupaula}.
 
-
+\todo[inline]{work by radu and paula \cite{radupaula}}
 \cite{jensenandersen} proposed a system for diagnosing rare diseases
 using vector space models and text mining. They showed a clear potential
 in automating such a process, but their results were not statistically
@@ -221,17 +219,15 @@ sections.
 \subsection{Building the preliminary model}
 To perform the initial testing we mimicked the setup of \cite{jensenandersen} where a TF-IDF matrix was build using information (abstracts,titles, keywords) gathered form Pubmed. 
 
-A sparse term-disease matrix (similar to the well-known vector-space model) was build over the abstracts received from Orphanet. Each row in the matrix thus represented a the feature vector of a disease with the features being a list of term frequencies. Prior to the creation of the matrix, the terms were stemmed (using the Porter stemming algorithm) and stopwords were removed along with non-alphanumerical symbols. The disease-doc matrix were then processed using the TF-IDF model (as originally proposed by \cite{tfidf}) along with additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten term-burstiness (see \cite{burstiness})
-
+A sparse term-disease matrix (similar to the well-known term-document model) was build over the abstracts received from Orphanet. Each row in the matrix thus represented a the feature vector of a disease with the features being a list of term frequencies. Prior to the creation of the matrix, the terms were stemmed (using the Porter stemming algorithm) and stopwords were removed along with non-alphanumerical symbols. The term-disease matrix were then processed using the TF-IDF model (as originally proposed by \cite{tfidf}) along with additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten term-burstiness (\cite{burstiness}). The TF-IDF model 
 \[
 w_{t,d} = log(tf_{t,d}+1)\cdot log\frac{|D|}{|{d'\in D|t\in d'}|}
 \]
+where $tf_{t,d}$ is term frequency of term $t$ in disease $d$, $|D|$ is the total number of diseases in the disease set, and $|{d'\in D|t\in d'}|$ if number of diseases containing the term $t$.
 
-where 
 
 
-\todo[inline]{Explain the construction of the TF-IDF matrix and explain
-assumptions for using prior information for harvesting}
+\todo[inline]{add short describtion of preliminary test cases}
 
 \subsection{Harvesting data, or: None Like it Raw!}
 Harvesting additional data to expand our existing TF-IDF model is done
@@ -396,14 +392,10 @@ amount of noise generated in the symptom harvesting process.
 
 
 \section{Tests}
-\todo[inline]{First some bla.
-Then some tables and some more bla!
-Investigate possibility of significance testing. How do we fare
-mathematically compared to 'Googling for Diagnosis'? Students T-Test or
-equiv.}
+\todo[inline]{Investigate possibility of significance testing. How do we fare mathematically compared to 'Googling for Diagnosis'? Students T-Test or equiv.}
 
 \subsection{Preliminary Tests}
-\todo[inline]{Results and some bla.}
+\todo[inline]{Some results and vague description of the similarity to previous work}
 
 
 \section{Conclusion}

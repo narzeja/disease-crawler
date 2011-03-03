@@ -6,13 +6,9 @@ import sqlite3 as sql
 
 class db(object):
 
-    def __init__(self, destination=':memory:', load_old=None):
-        if load_old:
-            print("fetching old database from path: ", load_old)
-            self.sqlserver = sql.connect(load_old)
-        else:
-            print("creating new database in path: ", destination)
-            self.sqlserver = sql.connect(destination)
+    def __init__(self, destination='db.db'):
+        print("connecting to database in path: ", destination)
+        self.sqlserver = sql.connect(destination)
 
         print("Done")
         self.c = self.sqlserver.cursor()
@@ -50,7 +46,8 @@ class db(object):
         self.c.execute('CREATE TABLE '+ table + attributes)
         
         table = "mim"
-        attributes = "(patres INT, url TEXT, )"
+        attributes = "(patres INT, url TEXT, PRIMARY KEY (patres,url)"\
+                        "FOREIGN KEY patres REFERENCES disease_info(patres))"
         self.c.execute('CREATE TABLE '+ table + attributes)
 
     def put(self, list_of_elm, table='diseaseinfo'):
