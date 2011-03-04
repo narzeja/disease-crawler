@@ -1,8 +1,9 @@
 import re
 from numpy import array
+import codecs
 
 def parseOrphaDesc(zipped=True) :
-    """ Not gonna document a method we wont we resuing.
+    """ Not gonna document a method that we wont be resuing.
     
     Note that the 4 returned lists are in same order and might 
     contain None-values if no information was found on particular 
@@ -15,9 +16,12 @@ def parseOrphaDesc(zipped=True) :
     @returns orphanet numbers, disease names, abstracts and authors (see above)
     """
     
-    path = "OrphanetData/OrphanetProduct4_descript.Txt"
+    path = "OrphanetData/abstracts.txt"
     
-    data = array(re.split('\t',open(path).read()))
+    fileObj = codecs.open( path, "r", "utf-8" )
+    
+#    data = array(re.split('\t',open(path).read()))
+    data = array(re.split('\t',fileObj.read()))
     
     # First split of the data:
     #   0: Orpha number

@@ -3,9 +3,10 @@ import TextmineThis as TT
 import lxml
 import lxml.html
 from lxml import etree
-import unicodedata
 import re
 import time
+import db as DB
+import sqlite3
 
 class GCrawler():
     
@@ -17,6 +18,10 @@ class GCrawler():
         self.miner = TT.Textminer()
         self.searcher = SG.SearchGoogle()
         self.searcher.results_per_page = 20
+        
+        # Connect to existing database or initialise a new connection
+        db = DB.db()
+            
     
     #temp function - to be replaced when the database gets up!!
     def _convert_pod(self,pod_data):
@@ -83,7 +88,10 @@ class GCrawler():
                         else: whitelisted[url_base] += 1
                     else: whitelisted[url_base] = 1
             
+            db_con.c.excute("INSERT INTO disease_info VALUES (?,?,?,?)",)
             googled_info[old_query] = buff
+#            attributes = "(patres INT, disease_name TEXT, abstract TEXT," \
+#                        "author TEXT, PRIMARY KEY (patres))"
             
             print "Whitelisted:",whitelisted
             print "Blacklisted:",blacklisted
