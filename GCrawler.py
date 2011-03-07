@@ -131,8 +131,8 @@ class GCrawler():
         except:
             self.db_cursor.execute("UPDATE query SET "
                         + ", ".join([x+"=?" for x in attributes])
-                        + " WHERE patres=? AND query=?",
-                        tup + [patres,query])
+                        + " WHERE patres=?",
+                        tup + [patres])
         
         self.db_con.commit()
         
