@@ -127,7 +127,7 @@ class GCrawler():
         try:
             # Insert [patres INT, query TEXT, recall INT, blacklisted INT]
             self.db_cursor.execute("INSERT INTO query VALUES (?,?,?,?)",
-                            attributes)
+                            tup)
         except:
             self.db_cursor.execute("UPDATE query SET "
                         + ", ".join([x+"=?" for x in attributes])
