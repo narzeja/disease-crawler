@@ -157,6 +157,14 @@ class GCrawler():
         data = []
         page = self.searcher.open_url(url)
         
+        # If the page couldn't be opened: give it 3 attempts
+        count = 0
+        while not page:
+            print "Page could not be opened. Retrying in 2 secs (attempt "+str(count)+")"
+            time.sleep(2)
+            count+=1
+            if count>2: return None
+        
         parser = etree.HTMLParser()
         tree = lxml.etree.parse(page, parser)
          
@@ -202,7 +210,7 @@ class GCrawler():
             ## terms below are within the paragraph.
             if (score<corr_threshold) or \
                     (score<9.0 and\
-                    re.search(r'characteri[s|z]ed by|characteristic|symptom',tmp)\
+                    re.search(r'characteri[s|z]ed by|characteristic|symptom|may include',tmp)\
                     and [x for x in synonyms if x+" " in tmp]): 
                 data.append(tmp_old)
         
