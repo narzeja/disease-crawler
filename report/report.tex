@@ -122,7 +122,6 @@ thesis of automating information gathering as those we are presenting.
 However, as this is a work in progress we do not have access to further
 information at this point in time \cite{radupaula}.
 
-\todo[inline]{work by radu and paula \cite{radupaula}}
 \cite{jensenandersen} proposed a system for diagnosing rare diseases
 using vector space models and text mining. They showed a clear potential
 in automating such a process, but their results were not statistically
@@ -143,16 +142,14 @@ validity.
 
 The editorials \cite{googlechangemedicine} and
 \cite{diagnosissearchengines} suggest Google and search engines in
-general as being a very strong player in the taskTo perform the initial testing we mimicked the previous project where a TF-IDF matrix was build using information (abstracts,titles, keywords) gathered form Pubmed. 
-
-A sparse term-document matrix was build over the Orphanet abstracts. Each row entry in the matrix represents a disease and the corresponding feature vector a list of term frequencies. Prior to the creation of the matrix, the terms were stemmed (using the Porter stemming algorithm) and stopwords were removed along with non-alphanumerical symbols. The term-doc matrix were then processed using the TF-IDF algorithm along with To perform the initial testing we mimicked the previous project where a TF-IDF matrix was build using information (abstracts,titles, keywords) gathered form Pubmed. 
-
-A sparse term-document matrix was build over the Orphanet abstracts. Each row entry in the matrix represents a disease and the corresponding feature vector a list of term frequencies. Prior to the creation of the matrix, the terms were stemmed (using the Porter stemming algorithm) and stopwords were removed along with non-alphanumerical symbols. The term-doc matrix were then processed using the TF-IDF algorithm along with log-transformations  of diagnosing
-diseases. The witness of search engines being a valuable source of
-information is apparent, but the shear amount of misinformation and
-noise from regular searches make such a system in it’s current
-incarnation unreliable and error prone.\fxwarning{citation needed}
-\todo[inline]{Omformuler, præciser!}
+general as being a very strong player in the taskTo perform the initial
+testing we mimicked the previous project where a TF-IDF matrix was build
+using information (abstracts,titles, keywords) gathered form Pubmed. The
+knowledge of search engines being a valuable source of information is
+apparent, but the shear amount of misinformation and noise from regular
+searches make such a method in it’s current incarnation unreliable and
+error prone.\fxwarning{citation needed} \todo[inline]{Omformuler,
+præciser!}
 %(Our goal is to refine and provide means for filtering out this noise
 %and focus on harvesting information from related material with reference
 %to the original search terms as well as specific criteria for the text
@@ -217,13 +214,26 @@ The process will be described in greater detail in the following
 sections.
 
 \subsection{Building the preliminary model}
-To perform the initial testing we mimicked the setup of \cite{jensenandersen} where a TF-IDF matrix was build using information (abstracts,titles, keywords) gathered form Pubmed. 
+To perform the initial testing we mimicked the setup of
+\cite{jensenandersen} where a TF-IDF matrix was build using information
+(abstracts,titles, keywords) gathered form Pubmed. 
 
-A sparse term-disease matrix (similar to the well-known term-document model) was build over the abstracts received from Orphanet. Each row in the matrix thus represented a the feature vector of a disease with the features being a list of term frequencies. Prior to the creation of the matrix, the terms were stemmed (using the Porter stemming algorithm) and stopwords were removed along with non-alphanumerical symbols. The term-disease matrix were then processed using the TF-IDF model (as originally proposed by \cite{tfidf}) along with additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten term-burstiness (\cite{burstiness}). The TF-IDF model 
+A sparse term-disease matrix (similar to the well-known term-document
+model) was build over the abstracts received from Orphanet. Each row in
+the matrix thus represented a the feature vector of a disease with the
+features being a list of term frequencies. Prior to the creation of the
+matrix, the terms were stemmed (using the Porter stemming algorithm) and
+stopwords were removed along with non-alphanumerical symbols. The
+term-disease matrix were then processed using the TF-IDF model (as
+originally proposed by \cite{tfidf}) along with additional logarithmic
+smoothing of the $tf_{t,d}$-parameter to flatten term-burstiness
+(\cite{burstiness}). The TF-IDF model 
 \[
 w_{t,d} = log(tf_{t,d}+1)\cdot log\frac{|D|}{|{d'\in D|t\in d'}|}
 \]
-where $tf_{t,d}$ is term frequency of term $t$ in disease $d$, $|D|$ is the total number of diseases in the disease set, and $|{d'\in D|t\in d'}|$ if number of diseases containing the term $t$.
+where $tf_{t,d}$ is term frequency of term $t$ in disease $d$, $|D|$ is
+the total number of diseases in the disease set, and $|{d'\in D|t\in
+d'}|$ if number of diseases containing the term $t$.
 
 
 
@@ -334,6 +344,9 @@ a total of 29856 symptoms, with possible minor overlap, example:
 \textit{oculocutaneous albinism}, \textit{bleeding diathesis},
 \textit{neutropenia} as candidates.
 
+While the grammar does not explicitly collect symptoms or medical terms
+exclusively, we must figure out a way to filter out noise.
+
 \todo[inline]{explain selecting symptoms from databases}
 
 Having collected a number of symptom candidates $\mathbb{S}$ from some
@@ -350,8 +363,8 @@ using the mathematical rule:
 Anecdotal observations during the development phase of this module
 showed that returning terms and supterms using this mathematical rule
 increased the amount of relevant symptoms, and seemed to decrease the
-amount of noise generated in the symptom harvesting process.
-
+amount of noise generated in the symptom harvesting process. We call
+this the \texttt{Term \textbf{x} Supterm Relevance Score} (TSRS).
 
 %\subsubsection{Feature Extraction using NLP}
 %We will use NLP techniques to extract candidates for this
@@ -392,6 +405,39 @@ amount of noise generated in the symptom harvesting process.
 
 
 \section{Tests}
+We have chosen to base our tests on known test cases, from in particular
+those mentioned in \cite{jensenandersen}, \cite{googlingdiagnosis} and
+tests listed in \ref{app:tests}. We will then consider the significance
+across the results and introduce the independent variable
+\texttt{method} with the values \texttt{\{manual, semiautomatic,
+automatic\}}, where \texttt{manual} is the method used in
+\cite{googlingdiagnosis}, \texttt{semiautomatic} is the method used in
+\cite{jensenandersen} and finally \texttt{automatic} is the method
+described in this paper.
+
+The tests are compared using the dependant variable \texttt{prediction},
+that describes the position of the correct disease. I.e. the best result
+is 1 and worst result is $n$ where $n$ is the number of known diseases
+in the TF-IDF model.
+
+The results are described in table \ref{tab:results1} below.
+\begin{center}
+	\begin{tabular}{llll}
+		Case number & Manual Googling & Semi-automatic & Automatic \\ \hline
+		1 &  &  &  \\
+		2 &  &  &  \\
+		3 &  &  &  \\
+		4 &  &  &  \\
+		5 &  &  &  \\
+	\end{tabular}
+	\label{tab:results1}
+\end{center}
+Note that, for the manual googling method, the results presented in
+\cite{googlingdiagnosis} only considered binary results depicted as
+'Yes' if they predicted the diseases and 'No' otherwise. There is no
+ranking of where the correct was found from a number of possibilities,
+in contrary to \cite{jensenandersen} and this project.
+
 \todo[inline]{Investigate possibility of significance testing. How do we fare mathematically compared to 'Googling for Diagnosis'? Students T-Test or equiv.}
 
 \subsection{Preliminary Tests}
@@ -399,6 +445,8 @@ amount of noise generated in the symptom harvesting process.
 
 
 \section{Conclusion}
+We have introduced a method to automate harvesting and 
+
 
 \subsection{Future Work}
 Symptom extraction is a complex problem that requires the system to have
@@ -409,6 +457,7 @@ voting and correlation of individual terms and subterms to determine
 whether a phrase was accepted as a symptom or simply discarded, this
 process is relatively weak and only relies on anecdotally supported
 assumptions.
+
 A method that may improve symptom extraction is to utilize clustering
 algorithms, but will, in turn of allowing us to directly measure the
 performance of the system (training and testing), require a substantial
@@ -424,6 +473,10 @@ set consisting of terms that are \textit{not} related to medicine.
 \appendix
 \section{Appendix}
 \label{app:orphanet}
+
+\section{Test Cases}
+\label{app:tests}
+
 
 \renewcommand\bibname{References}
 \bibliography{bib}

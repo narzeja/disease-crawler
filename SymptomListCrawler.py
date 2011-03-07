@@ -34,9 +34,9 @@ class SymptomListCrawler(BaseCrawler):
             self.symptoms_dict_by_letter = eval(fd.read())
             fd.close()
 
-#            fd = open('symptoms.list', 'r')
-#            self.symptoms_list = eval(fd.read())
-#            fd.close()
+            fd = open('symptoms.list', 'r')
+            self.symptoms_list = eval(fd.read())
+            fd.close()
 
             return self.symptoms_dict_by_letter, self.symptoms_list
 
