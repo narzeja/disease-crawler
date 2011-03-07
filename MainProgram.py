@@ -16,23 +16,24 @@ class MainProgram():
         print "Main: Initializing Google Search Engine"
         self.g = GC.GCrawler()
 
-        print "Main: Importing Orpha.net data"
-        self.data = pod.parseOrphaDesc() # SHOULD COLLECT FROM DATABASE INSTEAD
-        self.newdata = self.g._convert_pod(self.data)
+#        print "Main: Importing Orpha.net data"
+#        self.data = pod.parseOrphaDesc() # SHOULD COLLECT FROM DATABASE INSTEAD
+#        self.newdata = self.g._convert_pod(self.data)
 
-        print "Main: Importing Feature Extractor"
+#        print "Main: Importing Feature Extractor"
         self.fe = FE.FeatureExtractor()
 
-        print "Main: Constructing term document and related hashes"
-        self.tt = TT.Textminer()
-        self.termdoc, self.term_hash, self.doc_hash, self.name_hash = self.tt.createTermDoc(self.data)
-        print "Main: almost there..."
+#        print "Main: Constructing term document and related hashes"
+#        self.tt = TT.Textminer()
+#        self.termdoc, self.term_hash, self.doc_hash, self.name_hash = self.tt.createTermDoc(self.data)
+#        print "Main: almost there..."
 #        self.tfidf = self.tt.runTFIDF(self.termdoc)
-        print "Main: Done! Ready to rock!"
-        self.database = datab.db()
+#        print "Main: Done! Ready to rock!"
+#        self.database = datab.db()
 
     def createTFIDF(self, termdoc):
-        self.tfidf = self.tt.runTFIDF(self.termdoc)
+#        self.tfidf = self.tt.runTFIDF(self.termdoc)
+        pass
 
     def constructQuery(self, caseReport, strict=False):
         ''' novelty function to extract candidates usable in a search query
@@ -42,27 +43,32 @@ class MainProgram():
     def predict(self, query):
         #TODO: This program should pass the TF-IDF matrix a query and
         # recieve a disease prediction
-        results = self.tt.queryTheMatrix(self.termdoc,query,self.term_hash,self.doc_hash,self.name_hash)
-        return results
+#        results = self.tt.queryTheMatrix(self.termdoc,query,self.term_hash,self.doc_hash,self.name_hash)
+        pass
 
-    def expand(self, patres, additional="", threshold=0.8, strict=True):
+    def expand(self, patres, additional="", threshold=0.8, strict=True, regoogle=False, loop=3):
         #TODO: This program should pass the model a query to expand the
         # knowledge, related to that particular query.
 
         # first harvest from google
-        print "Eggspand: hold on, initializing search and harvest procedure"
-#        try:
-#            self.g.crawlGoogle(patres, additional, threshold)
-#        except KeyError:
-#            print "Disease with PatRes %s, not found" % patres
+        if regoogle:
+            print "Eggspand: hold on, initializing search and harvest procedure"
+            try:
+                self.g.crawlGoogle(patres, additional, threshold)
+            except KeyError:
+                print "Disease with PatRes %s, not found" % patres
 
         # pull data from DB
-        query = self.database.c.execute("SELECT query FROM query" \
-                                        "WHERE patres = %s" %patres)
-        googled_info_data = self.database.c.execute("SELECT data FROM googled_info" \
-                                                    "WHERE patres = %s" % query)
+        query = self.g.db_cursor.execute("SELECT query FROM query " \
+                                         "WHERE patres = %s" %patres).fetchone()
 
-        return googled_info_data
+        googled_info_data = self.g.db_cursor.execute("SELECT data FROM googled_info " \
+                                                    "WHERE query = ?", query)
+        data = googled_info_data.fetchall()
+        alldata = " ".join([d[0] for d in data])
+
+        raw, calc, weighted = self.fe.feature_extractor(alldata, strict, loop)
+        return raw, calc, weighted
 
 
         # insert into refined_googled_info table

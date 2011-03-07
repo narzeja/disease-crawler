@@ -21,14 +21,18 @@ __modified__='16-02-2011'
 import nltk
 import SymptomListCrawler as SLC
 import string
+from nltk.corpus import brown
 
 class FeatureExtractor(object):
 
-    def __init__ (self):
+    def __init__ (self, n=1):
 #        self.abstracts = abstracts
         self.symptomlistcrawler = SLC.SymptomListCrawler()
         self.symptomlistcrawler.get_symptoms_filesystem()
-
+        brown_tagged_sents = brown.tagged_sents()
+        backofftagger = nltk.data.load('taggers/maxent_treebank_pos_tagger/english.pickle')
+        print "Training the NgramTagger, this will take a while"
+        self.ntagger = nltk.NgramTagger(n, brown_tagged_sents, backoff=backofftagger)
 #    def loadDocuments(self):
 #        self.documents = [self.preprocess(doc) for doc in documents]
 
@@ -48,55 +52,56 @@ class FeatureExtractor(object):
 
         document = nltk.sent_tokenize(corpora)
         document = [nltk.word_tokenize(s) for s in document]
-        document = [nltk.pos_tag(s) for s in document]
+        document = [self.ntagger.tag(s) for s in document]
+#        document = [nltk.pos_tag(s) for s in document]
 
         return document
 
 
-    def symptom_candidate_extractor(self, document, strict):
-        """ extracts symptoms candidates from the POS-tagged sentence
-        """
-        #should catch "characterized by <listing>" and "characterised by <listing>"
-#        grammar = """CHUNK: {<VBD|G><IN>(<JJ|VBG>*<NN><,|CC>)*(<JJ|VBG>*<NN>)}"""
-        candidates = []
-
-        if strict:
-            grammar = r"""CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
-                         SYMPTOM: {<JJ|VBG>*<NN>+}
-                      """
-        else:
-            grammar = r"""SYMPTOM: {<JJ|VBG>*<NN>+}
-                    """
-
-        cp = nltk.RegexpParser(grammar)
-
-        for sentence in document:
-            result = cp.parse(sentence)
-            previous = None
-            for chunk in result:
-                try:
-                    if strict:
-                        if chunk.node == 'CANDIDATE':
-                            previous = 'CANDIDATE'
-                        elif (previous == 'CANDIDATE' or previous == 'SYMPTOM') and chunk.node == 'SYMPTOM':
-                            candidates.append(chunk.leaves())
-                            previous = 'SYMPTOM'
-                        else:
-                            previous = None
-                    else:
-                        if chunk.node == 'SYMPTOM':
-                            candidates.append(chunk.leaves())
-                except AttributeError:
-                    continue
-        return candidates
-
-
-    def feature_extractor(self, doc, strict=False):
+    def feature_extractor(self, doc, strict=False, loop=3):
         """ function to extract features from document, returns a list of
         features
         """
+
+        def symptom_candidate_extractor(document, strict, loop):
+            """ extracts symptoms candidates from the POS-tagged sentence
+            """
+            #should catch "characterized by <listing>" and "characterised by <listing>"
+    #        grammar = """CHUNK: {<VBD|G><IN>(<JJ|VBG>*<NN><,|CC>)*(<JJ|VBG>*<NN>)}"""
+            candidates = []
+
+            if strict:
+                grammar = r"""CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
+                             SYMPTOM: {<JJ|VBG>*<NN>+}
+                          """
+            else:
+                grammar = r"""SYMPTOM: {<JJ|VBG>*<NN>+}
+                        """
+
+            cp = nltk.RegexpParser(grammar, loop=loop)
+
+            for sentence in document:
+                result = cp.parse(sentence)
+                previous = None
+                for chunk in result:
+                    try:
+                        if strict:
+                            if chunk.node == 'CANDIDATE':
+                                previous = 'CANDIDATE'
+                            elif (previous == 'CANDIDATE' or previous == 'SYMPTOM') and chunk.node == 'SYMPTOM':
+                                candidates.append(chunk.leaves())
+                                previous = 'SYMPTOM'
+                            else:
+                                previous = None
+                        else:
+                            if chunk.node == 'SYMPTOM':
+                                candidates.append(chunk.leaves())
+                    except AttributeError:
+                        continue
+            return candidates
+
         document = self.preprocess(doc)
-        symptom_candidates = self.symptom_candidate_extractor(document, strict)
+        symptom_candidates = symptom_candidate_extractor(document, strict, loop)
         results = []
         for tree in symptom_candidates:
             searchTerm = ""
@@ -104,7 +109,8 @@ class FeatureExtractor(object):
                 searchTerm += string.lower(candidate[0]) + " "
             results.append(searchTerm[:-1])
 #        return self.validate_features(results)
-        return results, self.calc_candidates(results)
+        calc, weighted = self.calc_candidates(results)
+        return results, calc, weighted
 
     def calc_candidates(self, list_of_candidates):
 #        FIXME: Device a method to count words of phrases in a list,
@@ -164,19 +170,5 @@ class FeatureExtractor(object):
             else:
                 failed.append(cand)
         return validated, failed
-
-    def synonym_extractor(self, sentence):
-        """ extracts synonyms from the sentence
-        """
-        # grammar should catch "also known as ...", "also called ..."
-        #FIXME: STUB!
-        return []
-
-    def misc_extractor(self, sentence):
-        """ extracts misc from the sentence, anything that can otherwise
-        be useful, such as demographics, prevelance or other.
-        """
-        #FIXME: STUB!
-        return []
 
 
