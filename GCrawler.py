@@ -7,6 +7,7 @@ import re
 import time
 import db as DB
 import sqlite3
+import unicodedata
 
 class GCrawler():
     
@@ -20,14 +21,12 @@ class GCrawler():
         self.searcher.results_per_page = 20
         
         # Connect to existing database or initialise a new connection
-        db = DB.db()
-            
+        self.db_con = DB.db()
+        self.db_cursor = self.db_con.c
     
-    #temp function - to be replaced when the database gets up!!
-    def _convert_pod(self,pod_data):
-        return [(x[2],x[1],[]) for x in pod_data]
     
-    def crawlGoogle(self,crawlData,additional=None,corr_threshold=0.8):
+    
+    def crawlGoogle(self,patres,additional=None,corr_threshold=0.8):
         """
         <description>
         
@@ -38,85 +37,107 @@ class GCrawler():
         @param corr_threshold   float   Correlation (cosine by default) threshold.
         """
         
+        # Selection: [patres INT, abstract TEXT, disease_name TEXT, author TEXT]
+        crawlData = self.db_cursor.execute("SELECT * FROM disease_info "\
+                                           "WHERE patres=?",[patres])
+        crawlData = crawlData.fetchone()
+        if not crawlData: raise KeyError
+        
         # Optimizors
         whitelisted = {}
-        blacklisted = []
+        blacklisted = self.db_cursor.execute("SELECT * FROM blacklisted_urls")
+        blacklisted = [x[0] for x in blacklisted.fetchall()]
         
-        missed_urls = [] # Some urls will be blocked and searched for later
-        googled_info = {}
-        for data in crawlData:
-            query           = data[0]
-            initial_info    = data[1]
-            synonyms        = data[2]
-            googled_info[query] = []
-            
-            # used as key in googled_info
-            old_query = query 
-            # append the query along with its synonyms
-            if query not in synonyms: synonyms.append(query) 
-            if additional: query += " "+additional # add additional search info
-            
+        patres          = crawlData[0]
+        initial_info    = crawlData[1]
+        query           = crawlData[2]
+        
+        print "Query:",query
+        
+        # Fetch synonyms of the disease name
+        synonyms_sql = self.db_cursor.execute("SELECT DS.synonym "\
+                                       "FROM disease_synonyms DS "\
+                                       "WHERE DS.patres=?",[patres])
+        synonyms = [x[0] for x in synonyms_sql.fetchall()]
+        
+        old_query = query 
+        # append the query along with its synonyms
+        if query not in synonyms: synonyms.append(query) 
+        if additional: query += " "+additional # add additional search info
+        
+        try:
+            urls = self.searcher.get_results(query)['url']
+        except:
+            print("\n---Killing the old Google Search instance---\n")
+            # Some urls will be blocked by Google and searched for later
             try:
-                urls = self.searcher.get_results(query)['url']
-            except:
-                print("\n---Killing the old Google Search instance---\n")
-                missed_urls.append(old_query)
-                del self.searcher
-                self.searcher = SG.SearchGoogle() # make a new searcher
-            
-            buff = []
-            urlparser = re.compile(r'(.*)(//?)')
-            for url in urls:
-                # get the base of the url and skip if blacklisted
-                url_base = re.search(urlparser,url).group(1)
-                if url_base in blacklisted: continue
-                # crawl the page and optimize
-                t1 = time.time()
-                paragraphs = self.crawlURL(url,initial_info,synonyms,corr_threshold)
-                t2 = time.time()-t1
-                if paragraphs:
-                    print "Paragraphs:",len(paragraphs)
-                    print "Site:",url
-                    print 
-                    buff.append(paragraphs)
-                # If the parsing of the site takes over 25 sec or if the site
-                # has not produced any results whitelist it
-                if not paragraphs or t2>25:
-                    if whitelisted.has_key(url_base):
-                        # If this has happened 6 times then blacklist the site
-                        if whitelisted[url_base] == 5: blacklisted[url_base].append(url_base)
-                        else: whitelisted[url_base] += 1
-                    else: whitelisted[url_base] = 1
-            
-            db_con.c.excute("INSERT INTO disease_info VALUES (?,?,?,?)",)
-            googled_info[old_query] = buff
-#            attributes = "(patres INT, disease_name TEXT, abstract TEXT," \
-#                        "author TEXT, PRIMARY KEY (patres))"
-            
-            print "Whitelisted:",whitelisted
-            print "Blacklisted:",blacklisted
-            print len(old_query),"found for",old_query
-            
-            ##############
-            # temp stat thingy-double-loop:
-            tmp = ""
-            for  site in googled_info[old_query]:
-                for paragraph in site:
-                    m = re.search(r'(characteri[s|z]ed by|characteristic|symptoms?)(.*?)(\.)',paragraph.lower())
-                    if m: tmp = tmp +" " +(m.string[m.start(2):m.end(2)])
-            
-            sanitizer = re.compile('[\W]')
-            symptoms = [sanitizer.sub(' ',x.lower()) for x in tmp.split(' ')]
-            symptoms = self.miner.removeStopwords(symptoms)
-            symptoms = self.miner.stem(symptoms)
-            symptoms = self.miner.getWordCount(symptoms)
-            print symptoms.items()
-            #################
+                self.db_cursor.execute("INSERT INTO missed_queries VALUES"\
+                                        "(?,?)",[query,patres])
+            except: pass # if it is already there, do nothing
+            del self.searcher
+            self.searcher = SG.SearchGoogle() # make a new searcher
         
-        # TODO: fix missed urls
+        urlparser = re.compile(r'(.*)(//?)')
+        blacklist_counter = 0; url_counter = 0
+        for url in urls:
+            # get the base of the url and skip if blacklisted
+            url_base = re.search(urlparser,url).group(1)
+            if url_base in blacklisted: 
+                blacklist_counter += 1
+                continue
+            # crawl the page and optimize
+            t1 = time.time()
+            paragraphs = self.crawlURL(url,initial_info,synonyms,corr_threshold)
+            t2 = time.time()-t1
+            if paragraphs:
+                url_counter += 1
+                print 
+                print "Paragraphs:",len(paragraphs)
+                print "Site:",url
+                
+                paragraphs = "::".join(paragraphs)
+                tup = [query,url,paragraphs]
+                attributes = ["query","url", "data"]
+                try:
+                    # Insert [query TEXT, url TEXT, data TEXT]
+                    self.db_cursor.execute("INSERT INTO googled_info VALUES (?,?,?)",
+                                            tup)
+                except:
+                    print "Updating..."
+                    self.db_cursor.execute("UPDATE googled_info SET "
+                               + ", ".join([x+"=?" for x in attributes])
+                               + " WHERE query=? AND url=?",
+                                tup + [query,url])
+            # If the parsing of the site takes over 25 sec or if the site
+            # has not produced any results whitelist it
+            elif not paragraphs or t2>25:
+                if whitelisted.has_key(url_base):
+                # If this has happened 6 times then blacklist the site
+                    if whitelisted[url_base] == 5: 
+                        try:
+                            self.db_cursor.execute("INSERT INTO blacklisted_urls"
+                                                + "VALUES ?",url_base)
+                            blacklisted.append(url_base)
+                        except: pass # if it is already blacklisted, do nothing
+                    else: whitelisted[url_base] += 1
+                else: whitelisted[url_base] = 1
         
-        return googled_info, blacklisted
-    
+        tup = [patres,query,url_counter,blacklist_counter]
+        attributes = ["patres","query","recall","blacklisted"]
+        try:
+            # Insert [patres INT, query TEXT, recall INT, blacklisted INT]
+            self.db_cursor.execute("INSERT INTO query VALUES (?,?,?,?)",
+                            attributes)
+        except:
+            self.db_cursor.execute("UPDATE query SET "
+                        + ", ".join([x+"=?" for x in attributes])
+                        + " WHERE patres=? AND query=?",
+                        tup + [patres,query])
+        
+        self.db_con.commit()
+        
+        print "Blacklisted:",blacklisted
+
     def crawlURL(self,url,initial_info,synonyms,corr_threshold=0.8):
         """
         Crawl a website for paragraphs that either has some similarity to the
@@ -136,13 +157,14 @@ class GCrawler():
         data = []
         page = self.searcher.open_url(url)
         
-#        print "URL:",url
-        
         parser = etree.HTMLParser()
         tree = lxml.etree.parse(page, parser)
          
         text = ""
-        paragraphs = tree.xpath('//p')
+        try:
+            paragraphs = tree.xpath('//p')
+        except AssertionError:
+            return None
         for p in paragraphs:
             tmp = p.xpath('text()')
             
@@ -173,10 +195,15 @@ class GCrawler():
             tmp = sanitizer.sub(' ',tmp.lower())
             
             # Validate texts
+            # ===============
+            ## First test: Accept if above threshold
+            # ---------------
+            ## Second test: Accept if disease name (or a synonym) and one of the
+            ## terms below are within the paragraph.
             if (score<corr_threshold) or \
-                    (score<9.0 and \
-                    re.search(r'characteri[s|z]ed by|characteristic',tmp) and \
-                    [x for x in synonyms if x+" " in tmp]): 
+                    (score<9.0 and\
+                    re.search(r'characteri[s|z]ed by|characteristic|symptom',tmp)\
+                    and [x for x in synonyms if x+" " in tmp]): 
                 data.append(tmp_old)
         
         return data

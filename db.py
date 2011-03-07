@@ -41,6 +41,11 @@ class db(object):
         attributes = "(url INT PRIMARY KEY)"
         self.c.execute('CREATE TABLE '+ table + attributes)
         
+        table = "missed_queries"
+        attributes = "(query INT PRIMARY KEY,patres INT,"\
+                        " FOREIGN KEY (patres) REFERENCES disease_info(patres))"
+        self.c.execute('CREATE TABLE '+ table + attributes)
+        
         table = "icd_10"
         attributes = "(patres INT, code TEXT, category TEXT, keywords TEXT, "\
                         "PRIMARY KEY (patres,code),"\
@@ -50,6 +55,18 @@ class db(object):
         table = "mim"
         attributes = "(patres INT, url TEXT, PRIMARY KEY (patres,url)"\
                         "FOREIGN KEY (patres) REFERENCES disease_info(patres))"
+        self.c.execute('CREATE TABLE '+ table + attributes)
+        
+        table = "query"
+        attributes = "(patres INT, query TEXT, recall INT, blacklisted INT,"\
+                        "PRIMARY KEY (patres)"\
+                        "FOREIGN KEY (patres) REFERENCES disease_info(patres))"
+        self.c.execute('CREATE TABLE '+ table + attributes)
+        
+        table = "googled_info"
+        attributes = "(query TEXT, url TEXT, data TEXT,"\
+                        "PRIMARY KEY (query,url)"\
+                        "FOREIGN KEY (query) REFERENCES query(query))"
         self.c.execute('CREATE TABLE '+ table + attributes)
         
         ############### INITIAL VALUES ###############
@@ -123,6 +140,9 @@ class db(object):
                                 [r1,r2])
             except: continue
         print "Table initialized: disease_synonyms"
+    
+        self.commit()
+        self.close()
 
     def commit(self):
         self.sqlserver.commit()

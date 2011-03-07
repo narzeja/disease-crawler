@@ -38,7 +38,7 @@ class Textminer:
                     l.extend(ll)
             l = [term.strip().lower() for term in l if term != '']
             fdist = nltk.FreqDist(l)
-        elif isinstance(data,str):
+        elif isinstance(data,str) or isinstance(data,unicode):
             l = [term.strip().lower() for term in data.split(' ') if term != '']
             fdist = nltk.FreqDist(l)
         else: 
@@ -66,7 +66,7 @@ class Textminer:
                     l.extend(ll)
             l = [stemmer.stem(term.strip().lower()) \
                 for term in l if term != '']
-        elif isinstance(data,str):
+        elif isinstance(data,str) or isinstance(data,unicode):
             l = [stemmer.stem(term.strip().lower()) \
                 for term in data.split(' ') if term != '']
         else:
@@ -93,10 +93,11 @@ class Textminer:
         if isinstance(data,list):
             l = [word.strip().lower() for word in data \
                 if word not in stopList and word != '']
-        elif isinstance(data,str):
+        elif isinstance(data,str) or isinstance(data,unicode):
             l = [word.strip().lower() for word in data.split(' ') \
                 if word not in stopList and word != '']
         else:
+            print type(data)
             raise TypeError
         
         return l
