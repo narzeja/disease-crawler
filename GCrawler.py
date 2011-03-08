@@ -174,7 +174,11 @@ class GCrawler():
         except AssertionError:
             return None
         for p in paragraphs:
-            tmp = p.xpath('text()')
+            try:
+                tmp = p.xpath('text()')
+            except UnicodeDecodeError:
+                print "Could not decode paragraph"
+                continue
             
             tmp = " ".join(tmp) #
             tmp = tmp.split()   ## Ugly but works...
