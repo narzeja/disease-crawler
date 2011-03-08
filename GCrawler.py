@@ -48,11 +48,12 @@ class GCrawler():
         blacklisted = self.db_cursor.execute("SELECT * FROM blacklisted_urls")
         blacklisted = [x[0] for x in blacklisted.fetchall()]
         
-        patres          = crawlData[0]#.decode('ascii', 'ignore')
-        initial_info    = crawlData[1]#.decode('ascii', 'ignore')
-        query           = crawlData[2].decode('latin-1', 'replace')
+        patres          = crawlData[0]
+        initial_info    = crawlData[1]
+        query           = crawlData[2]
         
-        print "Query:",query
+        # Decoded since the terminal print is only in ascii
+        print "Query:",query.decode('ascii', 'ignore')
         
         # Fetch synonyms of the disease name
         synonyms_sql = self.db_cursor.execute("SELECT DS.synonym "\
@@ -174,11 +175,13 @@ class GCrawler():
             paragraphs = tree.xpath('//p')
         except AssertionError:
             return None
+        decode_problem_counter = 0; # to see how serious this problem is..
         for p in paragraphs:
             try:
                 tmp = p.xpath('text()')
             except UnicodeDecodeError:
-                print "Could not decode paragraph"
+                decode_problem_counter+=1 # to see how serious this problem is..
+                print "Could not decode paragraph. Failed",decode_problem_counter
                 continue
             
             tmp = " ".join(tmp) #
