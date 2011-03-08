@@ -48,11 +48,11 @@ class GCrawler():
         blacklisted = self.db_cursor.execute("SELECT * FROM blacklisted_urls")
         blacklisted = [x[0] for x in blacklisted.fetchall()]
         
-        patres          = crawlData[0]
-        initial_info    = crawlData[1]
-        query           = crawlData[2]
+        patres          = crawlData[0]#.decode('ascii', 'ignore')
+        initial_info    = crawlData[1]#.decode('ascii', 'ignore')
+        query           = crawlData[2]#.decode('ascii', 'ignore')
         
-        print "Query:",query
+        print u"Query:",query
         
         # Fetch synonyms of the disease name
         synonyms_sql = self.db_cursor.execute("SELECT DS.synonym "\
