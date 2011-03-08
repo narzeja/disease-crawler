@@ -162,6 +162,7 @@ class GCrawler():
         while not page:
             print "Page could not be opened. Retrying in 2 secs (attempt "+str(count)+")"
             time.sleep(2)
+            page = self.searcher.open_url(url)
             count+=1
             if count>2: return None
         
