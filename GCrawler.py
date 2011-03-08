@@ -50,7 +50,7 @@ class GCrawler():
         
         patres          = crawlData[0]#.decode('ascii', 'ignore')
         initial_info    = crawlData[1]#.decode('ascii', 'ignore')
-        query           = crawlData[2].decode('ascii', 'ignore')
+        query           = crawlData[2].decode('latin-1', 'replace')
         
         print "Query:",query
         
