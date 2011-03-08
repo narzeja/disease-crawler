@@ -50,9 +50,9 @@ class GCrawler():
         
         patres          = crawlData[0]#.decode('ascii', 'ignore')
         initial_info    = crawlData[1]#.decode('ascii', 'ignore')
-        query           = crawlData[2]#.decode('ascii', 'ignore')
+        query           = crawlData[2].decode('ascii', 'ignore')
         
-        print u"Query:",query
+        print "Query:",query
         
         # Fetch synonyms of the disease name
         synonyms_sql = self.db_cursor.execute("SELECT DS.synonym "\
