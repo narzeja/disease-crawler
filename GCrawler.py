@@ -192,7 +192,9 @@ class GCrawler():
                 try:
                     s = s.text
                 except:
-                    print "Could not "
+                    print "Could not decode element in paragraph"
+                    continue
+                
                 if isinstance(s,unicode):
                     s = unicodedata.normalize('NFKD', s).encode('ascii','ignore')
                 if s:
