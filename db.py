@@ -95,7 +95,7 @@ class db(object):
             if row[2]: r2 = row[2]
             try:
                 self.c.execute("INSERT INTO icd_10 VALUES (?,?,?,?)",
-                                [r0,r2,None,None])
+                                [r0,r2,None,None])  
             except: continue
         print "Table initialized: icd_10"
         
