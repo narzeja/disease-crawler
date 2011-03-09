@@ -12,6 +12,7 @@ __version__= '1.0'
 __modified__='21-10-2010'
 
 import urllib2
+import socket
 
 import cookielib
 import os.path
@@ -29,7 +30,9 @@ class BaseCrawler(object):
     cj = None
 
     def __init__(self,query):
-        pass
+        timeout = 5
+        print "Current url opener timeout:",timeout
+        socket.setdefaulttimeout(timeout)
 
     def set_referer(self,referer):
         """Method for setting a referer (www.google.com by default)"""
