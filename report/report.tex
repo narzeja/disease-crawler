@@ -1,6 +1,6 @@
 %\documentclass[10pt,a4paper,final,oneside,openany,article]{memoir}
 %\documentclass[letterpaper,a4paper,10pt]{article}
-\documentclass[10pt,letterpaper,draft]{article}
+\documentclass[10pt,letterpaper,final]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
 \usepackage{hyperref}
@@ -205,7 +205,7 @@ model. The abstract flow model is available in figure \ref{fig:flow}.
 \begin{figure}[htp!]
 \begin{center}
 \includegraphics[scale=0.4]{images/pipeline}
-\caption{Some crap}
+\caption{Systems diagram}
 \label{fig:flow}
 \end{center}
 \end{figure}
@@ -220,7 +220,7 @@ To perform the initial testing we mimicked the setup of
 
 A sparse term-disease matrix (similar to the well-known term-document
 model) was build over the abstracts received from Orphanet. Each row in
-the matrix thus represented a the feature vector of a disease with the
+the matrix thus represented a feature vector of a disease with the
 features being a list of term frequencies. Prior to the creation of the
 matrix, the terms were stemmed (using the Porter stemming algorithm) and
 stopwords were removed along with non-alphanumerical symbols. The
@@ -229,15 +229,18 @@ originally proposed by \cite{tfidf}) along with additional logarithmic
 smoothing of the $tf_{t,d}$-parameter to flatten term-burstiness
 (\cite{burstiness}). The TF-IDF model 
 \[
-w_{t,d} = log(tf_{t,d}+1)\cdot log\frac{|D|}{|{d'\in D|t\in d'}|}
+w_{t,d} = log(tf_{t,d}+1)\cdot log\frac{|D|}{|\{d'\in D|t\in d'\}|}
 \]
-where $tf_{t,d}$ is term frequency of term $t$ in disease $d$, $|D|$ is
-the total number of diseases in the disease set, and $|{d'\in D|t\in
-d'}|$ if number of diseases containing the term $t$.
+where $tf_{t,d}$ is term frequency of term $t$ in disease $d$, $|D|$ 
+the total number of diseases in the disease set, and $|\{d'\in D|t\in
+d'\}|$ the number of diseases containing the term $t$.
 
-
-
-\todo[inline]{add short describtion of preliminary test cases}
+To compare the precision of the new model to the previous, we made the same queries to the model using the same scoring-scheme to obtain a rank for each disease. The rank of each disease represents the precision of the model. A query is given, stemmed and stopwords are removed. Each disease-vector that contain one or more of the queried terms is given a score which is based on a summation of each of the weigths of the queried terms relevant to the disease.
+\[
+s_{d} = \displaystyle\sum\limits_{t_1}^{t_n} w_{t,d}\quad t \in Q
+\]
+\todo[inline]{write a more reasonable formula}
+Though the model of \cite{jensenandersen} was based on large amounts of information gathered from PubMed, our tests showed that we could obtain close to the same precision solely based on the abstracts from Orphanet. This indicates large amounts of noise in previous project where the information (or model) of each disease was based on non-validated abstracts from PubMed using customized queries. The comperative results can be seen in appendix \ref{app:preliminary_results}.
 
 \subsection{Harvesting data, or: None Like it Raw!}
 Harvesting additional data to expand our existing TF-IDF model is done
@@ -256,7 +259,7 @@ the number of unique terms in both texts, after which the cosine
 similarity measure is calculated and accepted paragraphs pushed onto
 further processing.
 
-Something N-gram machine learning here.
+\todo[inline]{Something N-gram machine learning here.}
 
 \subsection{Feature Extraction}
 In order to iterate and collect information to expand the modelling of
@@ -440,9 +443,6 @@ in contrary to \cite{jensenandersen} and this project.
 
 \todo[inline]{Investigate possibility of significance testing. How do we fare mathematically compared to 'Googling for Diagnosis'? Students T-Test or equiv.}
 
-\subsection{Preliminary Tests}
-\todo[inline]{Some results and vague description of the similarity to previous work}
-
 
 \section{Conclusion}
 We have introduced a method to automate harvesting and 
@@ -468,18 +468,161 @@ symptoms, but have failed to harvest or construct an equally sized data
 set consisting of terms that are \textit{not} related to medicine.
 
 
-
+\renewcommand\bibname{References}
+\bibliography{bib}
+\bibliographystyle{apalike}
 
 \appendix
 \section{Appendix}
 \label{app:orphanet}
 
 \section{Test Cases}
-\label{app:tests}
 
+\section{Preliminary Tests}
+\label{app:preliminary_results}
+\todo[inline]{Describe how the tests below compare to the tests of the previous model (some diseases are missing, since they were not in the new orphanet test set!)}
 
-\renewcommand\bibname{References}
-\bibliography{bib}
-\bibliographystyle{apalike}
+\newpage
+%\vspace*{-3cm}
+\subsection{Orphanet tests}
+%\vspace*{-6cm}
+\begin{center}
+\begin{small}
+	\begin{tabular}{|p{3.5cm}|p{6cm}|p{1.8cm}|p{1.8cm}|}
+	\hline
+	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+    \hline\hline
+    Apparent mineralocorticoid excess & early-onset, severe hypertension, associated, low renin levels, hypoaldosteronism & 1 & 10\\
+    \hline
+    Rubinstein-Taybi syndrome  & congenital anomalies, intellectual deficit, behavioural characteristics & 1 & 91\\
+    \hline
+    Cholestasis - lymphedema  (Aagenaes syndrome) & chronic severe lymphoedema, severe neonatal cholestasis, lessens during early childhood and becomes episodic & 1 & 18\\
+    \hline
+    Aase-Smith syndrome  & congenital malformations: hydrocephalus, cleft palate, severe joint contractures & 2 & 10\\
+    \hline
+    Achondroplasia  & short limbs, hyperlordosis, short hands, macrocephaly, high forehead and saddle nose  & 1 & 5\\
+    \hline
+    Acalvaria  & missing scalp and flat bones over an area of the cranial vault  & 1 & 87\\
+    \hline
+    Acrodysostosis & abnormally short and malformed bones of the hands and feet (peripheral dysostosis), nasal hypoplasia and mental retardation & 1 & 80\\
+    \hline
+    Acromegaly & progressive somatic disfigurement (face and extremities) and systemic manifestations & 1 & 106\\
+    \hline
+    Biliary atresia & biliary obstruction of unknown origin, neonatal period & 1 & 3\\
+    \hline
+    Bronchiolitis obliterans with obstructive pulmonary disease & inflammatory and fibrosing thickening of bronchiolar walls, airflow obstruction & 1 & 8\\
+    \hline
+    Cholera & severe diarrhea and vomiting & 1 & 65\\
+    \hline
+    Choroideremia & progressive degeneration of the choroid, retinal pigment epithelium (RPE), and neural retina & 1 & 17\\
+    \hline
+    Coats disease & abnormal development of retinal vessels (telangiectasia) with a progressive deposition of intraretinal or subretinal exudates & 1 & 1\\
+    \hline
+    Omphalocele-cleft palate syndrome, lethal & omphalocele and cleft palate & 2 & 3\\
+    \hline
+    Darier disease & keratotic papules in seborrheic areas and specific nail anomalies & 1 & 2\\
+    \hline
+    Ichthyosis - hepatosplenomegaly - cerebellar degeneration & ichthyosis, hepatosplenomegaly and late-onset cerebellar ataxia & 5 & 7\\
+    \hline
+    \end{tabular}
+\label{tab:results_orphanet}
+\end{small}
+\end{center}
+
+\begin{center}
+\begin{small}
+\begin{tabular}{|p{3.5cm}|p{6cm}|p{1.8cm}|p{1.8cm}|}
+    \hline
+    Emery-Dreifuss muscular dystrophy & muscular weakness and atrophy, with early contractures of the tendons and cardiomyopathy & 1 & 1\\
+    \hline
+    Costello syndrome & postnatal growth retardation, coarse facies, intellectual deficit, skin anomalies and cardiac abnormalities & 1 & 2\\
+    \hline
+    Fibrodysplasia ossificans progressiva & congenital malformation of great toes, progressive, disabling heterotopic osteogenesis in predictable anatomical patterns & 1 & 1\\
+    \hline
+    Acropectorovertebral dysplasia & fusion of the carpal and tarsal bones, with complex anomalies of the fingers and toes & 1 & 3001\\
+    \hline
+    Osteogenesis imperfecta & increased bone fragility and low bone mass & 1 & 2\\
+    \hline
+    Primary biliary cirrhosis & injury of the intrahepatic bile ducts & 6 & 10\\
+    \hline
+    Hennekam syndrome & lymphoedema, intestinal lymphangiectasia, intellectual deficit and facial dysmorphism & 1 & 4\\
+    \hline
+    Hyperlysinemia & elevated levels of lysine in the cerebrospinal fluid and blood & 1 & 85\\
+    \hline
+    Jackson-Weiss syndrome & tarsal and/or metatarsal coalitions and variable craniosynostosis, accompanied by facial anomalies, broad halluces and normal hands & 1 & 40\\
+    \hline
+    Jalili syndrome & amelogenesis imperfecta and cone-rod retinal dystrophy \\
+    \hline
+    Jeune syndrome & narrow thorax and short limbs & 1 & 2\\
+    \hline
+    Myeloma, multiple & overproduction of abnormal plasma cells in the bone marrow and manifested by skeletal destruction, bone pain, and presence of abnormous immunoglobulins & 1 & 3\\
+    \hline
+    Trichodental syndrome & fine, dry and short hair with dental anomalies & 1 & 60\\
+    \hline
+    \end{tabular}
+\end{small}
+\end{center}
+
+\newpage
+\subsection{BMJ ('Googling for a Diagnosis') tests }
+
+\begin{center}
+\begin{small}
+	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
+	\hline
+	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+    \hline\hline
+    Cushing syndrome & hypertension, adrenal, mass & 3 & 2 \\
+    \hline
+    Eosinophilic granuloma & Hip, lesion, older, child & \textit{Not in the model} & 598 \\
+    \hline
+    Ehrlichiosis & fever, bilateral, thigh, pain, weakness & \textit{Not in the model} & 512 \\
+    \hline
+    Neurofibromatosis type 1 & multiple, spinal, tumours, skin, tumours & \textit{Not in the model} & 30 \\
+    \hline
+    Hereditary pheochromocytoma-paraganglioma syndrome & hypertension, papilledema, headache, renal, mass, cafe, au, lait & 10 & 414\\
+    \hline
+    Creutzfeldt-Jakob disease & ataxia, confusion, insomnia, death & 196 & 7\\
+    \hline
+    Churg-Strauss syndrome & Wheeze, weight, loss, ANCA, haemoptysis, haematuria & 3 & 2\\
+    \hline
+    Dermatomyositis & myopathy, neoplasia, dysphagia, rash, periorbital, swelling & 63 & 4\\
+    \hline
+    Cat-scratch disease & renal, transplant, fever, cat, lymphadenopathy & 1 & 1\\
+    \hline
+    Toxic epidermal necrolysis (TEN) & bullous, skin, conditions, respiratory, failure, carbamazepine & 1 & 4\\
+    \hline
+    MELAS syndrome & seizure, confusion, dysphasia, T2, lesions & 2 & 27\\
+    \hline
+    Brugada syndrome & cardiac arrest sleep & 3 & 7\\
+    \hline
+	\end{tabular}
+\label{tab:results_bmj}
+\end{small}
+\end{center}
+
+\newpage
+\subsection{Blind tests}
+
+\begin{center}
+\begin{small}
+	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
+	\hline
+	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+	\hline\hline
+    Fibrodysplasia ossificans progressiva & Boy, normal birth, deformity of both big toes (missing joint), quick development of bone tumor near spine and osteogenesis at biopsy. & 92 & 20\\
+    \hline
+    Adrenoleukodystrophy, X-linked & Normally developed boy age 5, progessive development of talking difficulties, seizures, ataxia, adrenal insufficiency and  degeneration of visual and auditory functions & 1 & 1718\\
+    \hline
+    Papillon-Lefevre syndrome & Boy age 14, yellow, keratotic plaques on the skin of palms and soles going up onto the dorsal side. Both hands and feet are affected. & 2 & 6\\
+    \hline
+    Kleine-Levin syndrome & Jewish boy age 16, monthly seizures, sleep deficiency, aggressive and irritable when woken, highly increased sexual appetite and hunger. & 5 & 2\\
+    \hline
+    Midface retraction syndrome, Schinzel-Giedion type & Male child, malformations at birth, midfacial retraction with a deep groove under the eyes, and hypertelorism, short nose with a low nasal bridge and large low-set ears, wide mouth and retrognathia. Hypertrichosis with bright reddish hair and a median frontal cutaneous angioma, short neck with redundant skin, Bilateral inguinal hernias, hypospadias with a megameatus, and cryptorchidism  & 14 & 164\\
+    \hline
+	\end{tabular}
+\label{tab:results_blindtest}
+\end{small}
+\end{center}
 
 \end{document}
