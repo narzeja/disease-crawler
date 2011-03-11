@@ -21,18 +21,33 @@ __modified__='16-02-2011'
 import nltk
 import SymptomListCrawler as SLC
 import string
-from nltk.corpus import brown
+from nltk.corpus import brown, treebank
+import re
+from cPickle import dump
+from cPickle import load
 
 class FeatureExtractor(object):
 
-    def __init__ (self, n=1):
+    def __init__ (self, n=1, onlypos=False, retrain=False):
 #        self.abstracts = abstracts
         self.symptomlistcrawler = SLC.SymptomListCrawler()
         self.symptomlistcrawler.get_symptoms_filesystem()
-        brown_tagged_sents = brown.tagged_sents()
+        brown_tagged_sents = brown.tagged_sents(categories="news")
         backofftagger = nltk.data.load('taggers/maxent_treebank_pos_tagger/english.pickle')
-        print "Training the NgramTagger, this will take a while"
-        self.ntagger = nltk.NgramTagger(n, brown_tagged_sents, backoff=backofftagger)
+        if not onlypos:
+            if retrain:
+                print "Training the NgramTagger, this will take a while"
+                self.ntagger = nltk.NgramTagger(n, brown_tagged_sents, backoff=backofftagger)
+                output = open('ngramtag.pkl', 'wb')
+                dump(self.ntagger, output, -1)
+                output.close()
+            else:
+                print "Reloading an old NgramTagger"
+                input = open('ngramtag.pkl', 'rb')
+                self.ntagger = load(input)
+                input.close()
+        else:
+            self.ntagger = backofftagger
 #    def loadDocuments(self):
 #        self.documents = [self.preprocess(doc) for doc in documents]
 
@@ -48,6 +63,10 @@ class FeatureExtractor(object):
         except IOError:
             corpora = doc
 
+        def remove_html_tags(data):
+            p = re.compile(r'<.*?>')
+            return p.sub('', data)
+        corpora = remove_html_tags(corpora)
         corpora = corpora.replace('\n', ' ')
 
         document = nltk.sent_tokenize(corpora)
@@ -58,50 +77,52 @@ class FeatureExtractor(object):
         return document
 
 
-    def feature_extractor(self, doc, strict=False, loop=3):
+    def _symptom_candidate_extractor(self, document, strict, loop):
+        """ extracts symptoms candidates from the POS-tagged sentence
+        """
+        #should catch "characterized by <listing>" and "characterised by <listing>"
+#        grammar = """CHUNK: {<VBD|G><IN>(<JJ|VBG>*<NN><,|CC>)*(<JJ|VBG>*<NN>)}"""
+        candidates = []
+
+        if strict:
+            grammar = r"""CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
+                         SYMPTOM: }<DT><NN>{
+                                  {<JJ|VBG>*<NN>+}
+                      """
+        else:
+            grammar = r"""SYMPTOM: }<DT><NN>{
+                                   {<JJ>*<NN>+}
+                    """
+
+        cp = nltk.RegexpParser(grammar, loop=loop)
+
+        for sentence in document:
+            result = cp.parse(sentence)
+            previous = None
+            for chunk in result:
+                try:
+                    if strict:
+                        if chunk.node == 'CANDIDATE':
+                            previous = 'CANDIDATE'
+                        elif (previous == 'CANDIDATE' or previous == 'SYMPTOM') and chunk.node == 'SYMPTOM':
+                            candidates.append(chunk.leaves())
+                            previous = 'SYMPTOM'
+                        else:
+                            previous = None
+                    else:
+                        if chunk.node == 'SYMPTOM':
+                            candidates.append(chunk.leaves())
+                except AttributeError:
+                    continue
+        return candidates
+
+    def feature_extractor(self, doc, strict=False, loop=1):
         """ function to extract features from document, returns a list of
         features
         """
 
-        def symptom_candidate_extractor(document, strict, loop):
-            """ extracts symptoms candidates from the POS-tagged sentence
-            """
-            #should catch "characterized by <listing>" and "characterised by <listing>"
-    #        grammar = """CHUNK: {<VBD|G><IN>(<JJ|VBG>*<NN><,|CC>)*(<JJ|VBG>*<NN>)}"""
-            candidates = []
-
-            if strict:
-                grammar = r"""CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
-                             SYMPTOM: {<JJ|VBG>*<NN>+}
-                          """
-            else:
-                grammar = r"""SYMPTOM: {<JJ|VBG>*<NN>+}
-                        """
-
-            cp = nltk.RegexpParser(grammar, loop=loop)
-
-            for sentence in document:
-                result = cp.parse(sentence)
-                previous = None
-                for chunk in result:
-                    try:
-                        if strict:
-                            if chunk.node == 'CANDIDATE':
-                                previous = 'CANDIDATE'
-                            elif (previous == 'CANDIDATE' or previous == 'SYMPTOM') and chunk.node == 'SYMPTOM':
-                                candidates.append(chunk.leaves())
-                                previous = 'SYMPTOM'
-                            else:
-                                previous = None
-                        else:
-                            if chunk.node == 'SYMPTOM':
-                                candidates.append(chunk.leaves())
-                    except AttributeError:
-                        continue
-            return candidates
-
         document = self.preprocess(doc)
-        symptom_candidates = symptom_candidate_extractor(document, strict, loop)
+        symptom_candidates = self._symptom_candidate_extractor(document, strict, loop)
         results = []
         for tree in symptom_candidates:
             searchTerm = ""
