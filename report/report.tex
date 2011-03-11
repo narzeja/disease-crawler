@@ -28,10 +28,10 @@
 \lstset{ %
     language=Python,                % choose the language of the code
     frame=single,                   % adds a frame around the code
-    keywordstyle = \textbf,
+    keywordstyle = \footnotesize\ttfamily,
     commentstyle = \color{kugrey}\textit,
     stringstyle = \ttfamily,
-    basicstyle   = \small\ttfamily,
+    basicstyle   = \footnotesize\ttfamily,
     numberstyle=\tiny,
     sensitive = true,
 }
@@ -79,12 +79,16 @@ paragraphs of text found in the search process.
 
 \section{Preface}
 \subsection{Expectations of the reader}
+The reader is expected to have knowledge in Computer Science at a
+Master's degree level.
+
 It is expected that the reader has read the project
 \cite{jensenandersen}, which explains the foundations needed for this
 project.
 
-We expect the reader to have knowledge of basic Natural Language
-Processing techniques, in particular POS-tagging and phrase chunking.
+We expect the reader to have knowledge of Natural Language Processing
+techniques, in particular POS-tagging and phrase chunking.
+
 
 \section{Introduction}
 \label{chap:introduction}
@@ -94,23 +98,25 @@ Internet as a resource for information gathering, with particular focus
 on utilizing Google or other search engines \cite{googlechangemedicine}
 \cite{diagnosissearchengines}.
 
-The current process of automating this process relies heavily on static
-information, which is only expanded through manual interaction. \fxwarning{citation needed}
-\url{http://www.wrongdiagnosis.com/},
-\url{http://www.rarediseases.org/}, \url{http://www.orpha.net/}.
+%The current process of automating this process relies heavily on static
+%information, which is only expanded through manual interaction. \fxwarning{citation needed}
+%\url{http://www.wrongdiagnosis.com/},
+%\url{http://www.rarediseases.org/}, \url{http://www.orpha.net/}.
 
 In this project, we investigate methods for automating information
 collection of specific features from rare diseases, with focus on
-establishing a model of which a practising physician may query a case
+establishing a model with which a practising physician may query a case
 report for some patient and get a prediction of possible diseases based
 on the knowledge of the model.
-To increase the precision of the prediction, we must expand the model
-and look into harvesting specific information of some disease through a
-number of iterations on popular search engines. We use Natural Language
-Processing (NLP) and Machine Learning techniques to extract unique
-information from some description of the disease, by assuming certain
-semantic and syntactic properties of symptoms and medically related
-phrases and terms.
+To increase the prediction precision, we must expand the model and look
+into harvesting specific information of some disease through a number of
+iterations on popular search engines. We use Natural Language Processing
+(NLP) to extract unique information from some description of the
+disease, and use Machine Learning to refine the search within the model.
+
+%by assuming certain semantic and
+%syntactic properties of symptoms and medically related phrases and
+%terms.
 
 In the following we will present and highlight current and previous work
 within this domain. In chapter 3, we will discuss our method
@@ -194,15 +200,20 @@ præciser!}
 
 
 \section{Method}
-Data gathered from Orphanet is initially used as prior knowledge to
+Data received from Orphanet, an online database of information
+specialised on rare diseases, is initially used as prior knowledge to
 harvest additional information from the Internet.
+
+
 
 As one of the premises of the project was to introduce prior knowledge
 of the disease model, we needed to process our available data. We were
 given a large corpus of data from Orphanet \ref{app:orphanet},
 consisting of \texttt{\{orphanum, disease name, disease
 description/abstract, maybe author and date\}} for each disease in the
-data set.
+data set.\todo[inline]{Rewrite this nonsense.}
+
+
 The data is processes similar to the method described in
 \cite{jensenandersen}, and will thus be used too bootstrap our knowledge
 of each disease, allowing us to iterate and harvest additional
@@ -212,9 +223,9 @@ given a query relevant to the disease (disease name and a possibly a
 number of keywords). For each website, we will collect paragraphs and
 save it for further processing if the cosine angle between the two
 vectors is within a reasonable threshold. For each accepted paragraph we
-use Natural Language Processing (NLP) techniques to identify candidates
-for relevant terms and phrases that will then be used to expand the
-model. The abstract flow model is available in figure \ref{fig:flow}.
+use NLP to identify candidates for relevant terms and phrases that will
+then be used to expand the model. The abstract flow model is available
+in figure \ref{fig:flow}.
 
 
 \begin{figure}[htp!]
@@ -228,21 +239,26 @@ model. The abstract flow model is available in figure \ref{fig:flow}.
 The process will be described in greater detail in the following
 sections.
 
+\todo[inline]{Something N-gram machine learning here.}
+
 \subsection{Building the preliminary model}
 To perform the initial testing we mimicked the setup of
 \cite{jensenandersen} where a TF-IDF matrix was build using information
-(abstracts,titles, keywords) gathered form Pubmed. 
+(abstracts,titles, keywords) gathered form Pubmed.
 
 A sparse term-disease matrix (similar to the well-known term-document
 model) was build over the abstracts received from Orphanet. Each row in
 the matrix thus represented a feature vector of a disease with the
 features being a list of term frequencies. Prior to the creation of the
 matrix, the terms were stemmed (using the Porter stemming algorithm) and
-stopwords were removed along with non-alphanumerical symbols. The
-term-disease matrix were then processed using the TF-IDF model (as
-originally proposed by \cite{tfidf}) along with additional logarithmic
-smoothing of the $tf_{t,d}$-parameter to flatten term-burstiness
-(\cite{burstiness}). The TF-IDF model 
+stopwords\footnote{The stopwords are a list of 127 English words provided
+by the Python NLTK library
+(\texttt{nltk.corpus.stopwords.words("english")}} were removed along
+with non-alphanumerical\footnote{Symbols not represented in the Danish
+Alphabet} symbols. The term-disease matrix were then processed using the
+TF-IDF model (as originally proposed by \cite{tfidf}) along with
+additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten
+term-burstiness (\cite{burstiness}). The TF-IDF model
 \[
 w_{t,d} = log(tf_{t,d}+1)\cdot log\frac{|D|}{|\{d'\in D|t\in d'\}|}
 \]
@@ -250,31 +266,56 @@ where $tf_{t,d}$ is term frequency of term $t$ in disease $d$, $|D|$
 the total number of diseases in the disease set, and $|\{d'\in D|t\in
 d'\}|$ the number of diseases containing the term $t$.
 
-To compare the precision of the new model to the previous, we made the same queries to the model using the same scoring-scheme to obtain a rank for each disease. The rank of each disease represents the precision of the model. A query is given, stemmed and stopwords are removed. Each disease-vector that contain one or more of the queried terms is given a score which is based on a summation of each of the weigths of the queried terms relevant to the disease.
+To compare the precision of the new model to the previous, we made the
+same queries to the model using the same scoring-scheme to obtain a rank
+for each disease. The rank of each disease represents the precision of
+the model.
+
+A query is given, stemmed and stopwords are removed. Each
+disease-vector that contain one or more of the queried terms is given a
+score which is based on a summation of each of the weights of the
+queried terms relevant to the disease.
 \[
 s_{d} = \displaystyle\sum\limits_{t_1}^{t_n} w_{t,d}\quad t \in Q
 \]
 \todo[inline]{write a more reasonable formula}
-Though the model of \cite{jensenandersen} was based on large amounts of information gathered from PubMed, our tests showed that we could obtain close to the same precision solely based on the abstracts from Orphanet. This indicates large amounts of noise in previous project where the information (or model) of each disease was based on non-validated abstracts from PubMed using customized queries. The comperative results can be seen in appendix \ref{app:preliminary_results}.
+Though the model used in \cite{jensenandersen} was based on large
+amounts of information gathered from PubMed, our tests showed that we
+could obtain close to the same precision solely based on the abstracts
+from Orphanet. This indicates large amounts of noise in previous project
+where the information (or model) of each disease was based on
+non-validated abstracts from PubMed using customised queries. The
+comparative results can be seen in appendix
+\ref{app:preliminary_results}.
 
-\subsection{Harvesting data, or: None Like it Raw!}
+
+\subsection{Harvesting data}
 Harvesting additional data to expand our existing TF-IDF model is done
 using the Google search engine. For each site corresponding to our
 query, disease name and a number of keywords from disease abstract, we
 extract paragraphs and measure the relevance of that paragraph compared
 to the corresponding abstract from Orphanet. The comparison is measured
-using a covariance measure, where 0 is complete correlation and 1 is no
-correlation, and accept paragraphs for further processing given a
-threshold of $0.8$. This number is used based on a number of anecdotal
-tests showing a reasonable amount of relevant information, where e.g.
-$0.9$ would introduce too much noise, and $0.7$ being too strict.
+using a cosine covariance measure of two term vectors representing
+known information, $\textbf{s}$ and a harvested paragraph of information
+$\textbf{p}$
+\[
+similarity(\textbf{s}, \textbf{p}) = \frac{\textbf{s} \cdot \textbf{p}}{||\textbf{s}|| ||\textbf{p}||}
+\]
+Which, using formula provided by the NLTK library gives us a score
+between $0$ and $1$, where 0 is complete correlation and 1 is no
+correlation. The acceptance threshold for paragraphs collected for
+further processing is set to $0.8$. This number is used based on a
+number of anecdotal tests showing a reasonable amount of relevant
+information, where $0.9$ would introduce too much noise, and $0.7$
+being too strict.
+\todo[inline]{Write pseudocode for this harvesting and paragraph
+selection procedure}
 
-The comparison consists of constructing a $2 x n$ matrix, for $n$ being
-the number of unique terms in both texts, after which the cosine
-similarity measure is calculated and accepted paragraphs pushed onto
-further processing.
 
-\todo[inline]{Something N-gram machine learning here.}
+%The comparison consists of constructing a $2 x n$ matrix, for $n$ being
+%the number of unique terms in both texts, after which the cosine
+%similarity measure is calculated and accepted paragraphs pushed onto
+%further processing.
 
 \subsection{Feature Extraction}
 In order to iterate and collect information to expand the modelling of
@@ -287,25 +328,28 @@ ultimate goal of this strategy is to expand the model and highlight
 unique keywords such that, given our assumption, it will increase the
 precision of the prediction.
 
-We have observed that symptoms are usually described as zero or more
-adjectives or verbs followed by one or more nouns\fxwarning{substantiate this claim somehow}.
-Thus we can build a regular grammar using the Python NLTK library\footnote{\url{http://nltk.org/}} as
-such:
+Through a number of anecdotal observations it is experienced that
+symptoms are usually described as zero or more adjectives or verbs
+followed by one or more nouns\fxwarning{substantiate this claim
+somehow}. Thus we can build a regular grammar using the Python NLTK
+library\footnote{\url{http://nltk.org/}} as such:
 \begin{lstlisting}
 grammar = """CANDIDATE: {VBD><IN>(<SYMPTOM><,|CC>)*}
              SYMPTOM: {<JJ|VB(D|G)>*<NN>+}"""
 \end{lstlisting}
-This will catch sentences such as \texttt{characterized by s$_{0}$,
+This will catch sentences such as \texttt{characterised by s$_{0}$,
 s$_{1}$, ... and s$_{n}$}, where \texttt{s$_{i}$} is a potential symptom
 candidate.
 This will allow us to catch the symptom \texttt{bleeding diathesis}, but
 will also match, for our purpose, insignificant medical-related terms
 such as \texttt{gene product}.
-The premise for the construction of this grammar is substantiated
-through anecdotal manual observations of a handful of abstracts from the
-orphanet data set, and utilized under the assumption that it will
-increase the amount of medically relevant terms as opposed to simply
-catching all combinations matching the \texttt{SYMPTOM} grammar above.
+
+%The premise for the construction of this grammar is substantiated
+%through anecdotal manual observations of a handful of abstracts from the
+%orphanet data set, and utilized under the assumption that it will
+%increase the amount of medically relevant terms as opposed to simply
+%catching all combinations matching the \texttt{SYMPTOM} grammar above.
+
 The grammar applied to the sentence \textit{``Hermansky-Pudlak syndrome
 type 2 (HPS-2) is a type of Hermansky-Pudlak syndrome (HPS; see this
 term), a multi-system disorder characterized by oculocutaneous albinism,
@@ -363,26 +407,26 @@ a total of 29856 symptoms, with possible minor overlap, example:
 \textit{neutropenia} as candidates.
 
 While the grammar does not explicitly collect symptoms or medical terms
-exclusively, we must figure out a way to filter out noise.
+exclusively, we filter out noise by doing ...
 
 \todo[inline]{explain selecting symptoms from databases}
 
 Having collected a number of symptom candidates $\mathbb{S}$ from some
-document or paragraph, we calculate number of unique terms and return
-the candidates, $\mathbb{S'}$, that appear more than once or a supterm of
-other candidates. I.e., consider the candidates $\mathbb{S} = $
-\texttt{\{bleeding diathesis, bleeding, sleep apnae\}} we will return
-the symptoms $\mathbb{S'} = $ \texttt{\{bleeding diathesis, bleeding\}},
-using the mathematical rule:
+document or paragraph, we calculate the number of unique terms and return
+the candidates $\mathbb{S'}$, that appear more than once or is a
+substring of other candidates. Using the rule:
 \begin{equation}
  s_{j}, s_{i} \in \mathbb{S'}\texttt{if count}(s_{j}) > 1 \wedge\texttt{count}(s_{i}) \wedge s_{j} \subset s_{i}, \texttt{for } s_{i}, s_{j} \in \mathbb{S}
 \end{equation}
 \todo[inline]{valider formel}
 Anecdotal observations during the development phase of this module
-showed that returning terms and supterms using this mathematical rule
-increased the amount of relevant symptoms, and seemed to decrease the
-amount of noise generated in the symptom harvesting process. We call
-this the \texttt{Term \textbf{x} Supterm Relevance Score} (TSRS).
+showed that returning terms and substrings of terms using this
+mathematical rule increased the amount of relevant symptoms, and seemed
+to decrease the amount of noise generated in the symptom harvesting
+process. E.g., consider the candidates $\mathbb{S} = $
+\texttt{\{bleeding diathesis, bleeding tendency, bleeding, sleep
+apnae\}} we will accept the symptoms $\mathbb{S'} = $ \texttt{\{bleeding
+diathesis, bleeding tendency, bleeding\}}.
 
 %\subsubsection{Feature Extraction using NLP}
 %We will use NLP techniques to extract candidates for this
@@ -425,15 +469,15 @@ this the \texttt{Term \textbf{x} Supterm Relevance Score} (TSRS).
 \section{Tests}
 We have chosen to base our tests on known test cases, from in particular
 those mentioned in \cite{jensenandersen}, \cite{googlingdiagnosis} and
-tests listed in \ref{app:tests}. We will then consider the significance
-across the results and introduce the independent variable
+tests listed in appendix \ref{app:tests}. We will then consider the
+significance across the results and introduce the independent variable
 \texttt{method} with the values \texttt{\{manual, semiautomatic,
 automatic\}}, where \texttt{manual} is the method used in
 \cite{googlingdiagnosis}, \texttt{semiautomatic} is the method used in
 \cite{jensenandersen} and finally \texttt{automatic} is the method
 described in this paper.
 
-The tests are compared using the dependant variable \texttt{prediction},
+The tests are compared using the dependent variable \texttt{prediction},
 that describes the position of the correct disease. I.e. the best result
 is 1 and worst result is $n$ where $n$ is the number of known diseases
 in the TF-IDF model.
@@ -639,5 +683,8 @@ set consisting of terms that are \textit{not} related to medicine.
 \label{tab:results_blindtest}
 \end{small}
 \end{center}
+
+\section{Tests}
+\label{app:tests}
 
 \end{document}
