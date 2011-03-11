@@ -76,6 +76,16 @@ paragraphs of text found in the search process.
 \end{abstract}
 %%-----------------------------
 %\newpage
+
+\section{Preface}
+\subsection{Expectations of the reader}
+It is expected that the reader has read the project
+\cite{jensenandersen}, which explains the foundations needed for this
+project.
+
+We expect the reader to have knowledge of basic Natural Language
+Processing techniques, in particular POS-tagging and phrase chunking.
+
 \section{Introduction}
 \label{chap:introduction}
 Physicians have expressed a need for aiding in the process of diagnosing
@@ -97,10 +107,10 @@ on the knowledge of the model.
 To increase the precision of the prediction, we must expand the model
 and look into harvesting specific information of some disease through a
 number of iterations on popular search engines. We use Natural Language
-Processing and Machine Learning techniques to extract unique information
-from some description of the disease, by assuming certain semantic and
-syntactic properties of symptoms and medically related phrases and
-terms.
+Processing (NLP) and Machine Learning techniques to extract unique
+information from some description of the disease, by assuming certain
+semantic and syntactic properties of symptoms and medically related
+phrases and terms.
 
 In the following we will present and highlight current and previous work
 within this domain. In chapter 3, we will discuss our method
@@ -117,7 +127,7 @@ for future work.
 \todo[inline]{Blanks to be filled.}
 
 \section{Previous Work}
-Current work by Radu Dragusin and Paula something investigate the same
+Current work by Radu Dragusin and Paula Petku investigate the same
 thesis of automating information gathering as those we are presenting.
 However, as this is a work in progress we do not have access to further
 information at this point in time \cite{radupaula}.
@@ -142,14 +152,16 @@ validity.
 
 The editorials \cite{googlechangemedicine} and
 \cite{diagnosissearchengines} suggest Google and search engines in
-general as being a very strong player in the taskTo perform the initial
-testing we mimicked the previous project where a TF-IDF matrix was build
+general as being a very strong player in the task To perform the initial
+testing we mimicked the previous project where a TF-IDF\footnote{Term Frequence - Inverse Document Frequence.} matrix was build
 using information (abstracts,titles, keywords) gathered form Pubmed. The
 knowledge of search engines being a valuable source of information is
 apparent, but the shear amount of misinformation and noise from regular
 searches make such a method in it’s current incarnation unreliable and
 error prone.\fxwarning{citation needed} \todo[inline]{Omformuler,
 præciser!}
+
+
 %(Our goal is to refine and provide means for filtering out this noise
 %and focus on harvesting information from related material with reference
 %to the original search terms as well as specific criteria for the text
@@ -182,6 +194,9 @@ præciser!}
 
 
 \section{Method}
+Data gathered from Orphanet is initially used as prior knowledge to
+harvest additional information from the Internet.
+
 As one of the premises of the project was to introduce prior knowledge
 of the disease model, we needed to process our available data. We were
 given a large corpus of data from Orphanet \ref{app:orphanet},
