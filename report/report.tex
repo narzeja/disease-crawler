@@ -78,7 +78,7 @@ paragraphs of text found in the search process.
 %\newpage
 
 \section{Preface}
-\subsection{Expectations of the reader}
+\subsection{Expectations to the reader}
 The reader is expected to have knowledge in Computer Science at a
 Master's degree level.
 
@@ -95,8 +95,8 @@ techniques, in particular POS-tagging and phrase chunking.
 Physicians have expressed a need for aiding in the process of diagnosing
 rare diseases \cite{googlingdiagnosis}, and point towards using the
 Internet as a resource for information gathering, with particular focus
-on utilizing Google or other search engines \cite{googlechangemedicine}
-\cite{diagnosissearchengines}.
+on utilizing Google or other popular search engines
+\cite{googlechangemedicine} \cite{diagnosissearchengines}.
 
 %The current process of automating this process relies heavily on static
 %information, which is only expanded through manual interaction. \fxwarning{citation needed}
@@ -111,8 +111,9 @@ on the knowledge of the model.
 To increase the prediction precision, we must expand the model and look
 into harvesting specific information of some disease through a number of
 iterations on popular search engines. We use Natural Language Processing
-(NLP) to extract unique information from some description of the
-disease, and use Machine Learning to refine the search within the model.
+(NLP) provided through a Python library \cite{NLTK} to extract unique
+information from some description of the disease, and use Machine
+Learning to refine the search within the model.
 
 %by assuming certain semantic and
 %syntactic properties of symptoms and medically related phrases and
@@ -139,8 +140,8 @@ However, as this is a work in progress we do not have access to further
 information at this point in time \cite{radupaula}.
 
 \cite{jensenandersen} proposed a system for diagnosing rare diseases
-using vector space models and text mining. They showed a clear potential
-in automating such a process, but their results were not statistically
+using vector space models and text mining. They showed a potential in
+automating such a process, but their results were not statistically
 significant. Their system did not rely on prior knowledge of particular
 diseases, but still showed that around 60\% of the tests were
 satisfactory.
@@ -156,16 +157,16 @@ validity.
 %machine learning and natural language processing techniques.
 
 
-The editorials \cite{googlechangemedicine} and
-\cite{diagnosissearchengines} suggest Google and search engines in
-general as being a very strong player in the task To perform the initial
-testing we mimicked the previous project where a TF-IDF\footnote{Term Frequence - Inverse Document Frequence.} matrix was build
-using information (abstracts,titles, keywords) gathered form Pubmed. The
-knowledge of search engines being a valuable source of information is
-apparent, but the shear amount of misinformation and noise from regular
-searches make such a method in it’s current incarnation unreliable and
-error prone.\fxwarning{citation needed} \todo[inline]{Omformuler,
-præciser!}
+%The editorials \cite{googlechangemedicine} and
+%\cite{diagnosissearchengines} suggest Google and search engines in
+%general as being a very strong player in the task To perform the initial
+%testing we mimicked the previous project where a TF-IDF\footnote{Term Frequence - Inverse Document Frequence.} matrix was build
+%using information (abstracts,titles, keywords) gathered form Pubmed. The
+%knowledge of search engines being a valuable source of information is
+%apparent, but the shear amount of misinformation and noise from regular
+%searches make such a method in it’s current incarnation unreliable and
+%error prone.\fxwarning{citation needed} \todo[inline]{Omformuler,
+%præciser!}
 
 
 %(Our goal is to refine and provide means for filtering out this noise
@@ -285,8 +286,7 @@ could obtain close to the same precision solely based on the abstracts
 from Orphanet. This indicates large amounts of noise in previous project
 where the information (or model) of each disease was based on
 non-validated abstracts from PubMed using customised queries. The
-comparative results can be seen in appendix
-\ref{app:preliminary_results}.
+results can be seen in appendix \ref{app:preliminary_results}.
 
 
 \subsection{Harvesting data}
@@ -318,6 +318,54 @@ selection procedure}
 %further processing.
 
 \subsection{Feature Extraction}
+Feature extraction is used as a means to extract unique or otherwise
+relevant information from a document regarding a specific disease. It
+consists mainly of POS-tagging and subsequent chunking into phrases,
+involving a nested iteration through an array of POS-taggers and
+subsequent chunking by exploiting certain syntactic and semantic
+properties of sentences.
+
+
+The POS-tagging procedure, also referred to as a
+braubt \cite{} \footnote{Brill, Regexp, Affix, Unigram, Bigram, Trigram}
+tagger is built using the following strategies, in decreasing order of
+complexity and context exploitation:
+\begin{description}
+\item[Unigram tagging] A unigram tagger finds the most likely tag for each word
+in the training corpus and uses that information to assign tags to new
+tokens.
+\item[Bigram tagging] A bigram tagger work similarly to the unigram
+tagger, except it finds the most likely tag for each word given the
+preceding tag.
+\item[Trigram tagger] This tagger works like the bigram tagger, except it
+uses two pieces of information. N-gram taggers assigned tags to tokens
+depending on the $N - 1$ preceding tags.
+\item[Affix tagging] The affix tagger is similar to the unigram tagger.
+It takes some fixed-size substring of a word and finds the most likely
+tag for that substring.
+\item[Regexp tagging] This tagger assigns tags to tokens based on regular
+expessions.
+\item[Brill tagging] The Brill tagger starts by running an initial
+tagger, and then improves the result by applying a list of
+transformation rules. These rules are automatically learned from the
+training corpus.
+\item[Brill] \cite{Brill:1992:SRP:974499.974526}, Trigram, Bigram,
+Unigram, Affix and RegExp tagging. \todo[inline]{briefly explain each tagger}
+ \end{description}
+The goal is to encode as much information about a sequence of words to
+get proper tagging based on the context. When a context analysing tagger
+fails to identify a context for a given sequence, a less complex tagger
+takes over and attempts to tag, iterating through the list of taggers
+and finally ending with a simple regular expression based tagger.
+
+The taggers are trained on the Brown Corpus \footnote{MISSING} provided
+through the python NLTK library. While the corpus is not directly
+applicable in a medical domain, and realising the importance of training
+on representative data, we have observed anecdotal increase in precision
+using a braubt tagger, as opposed to using much simpler strategies, such
+as regular expression or dictionary based taggers.
+
+
 In order to iterate and collect information to expand the modelling of
 relevant terms and phrases we use NLP to identify symptoms and medical
 terms (here-on referred to as just symptom) from abstracts and
@@ -500,7 +548,9 @@ Note that, for the manual googling method, the results presented in
 ranking of where the correct was found from a number of possibilities,
 in contrary to \cite{jensenandersen} and this project.
 
-\todo[inline]{Investigate possibility of significance testing. How do we fare mathematically compared to 'Googling for Diagnosis'? Students T-Test or equiv.}
+\todo[inline]{Investigate possibility of significance testing. How do we
+fare mathematically compared to 'Googling for Diagnosis'? Students
+T-Test or equiv.}
 
 
 \section{Conclusion}

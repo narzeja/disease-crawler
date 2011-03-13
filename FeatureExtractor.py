@@ -25,29 +25,79 @@ from nltk.corpus import brown, treebank
 import re
 from cPickle import dump
 from cPickle import load
+import nltk.tag
+from nltk.tag import brill
 
 class FeatureExtractor(object):
 
-    def __init__ (self, n=1, onlypos=False, retrain=False):
+    def __init__ (self, n=1, tagger='pos', retrain=True):
 #        self.abstracts = abstracts
         self.symptomlistcrawler = SLC.SymptomListCrawler()
         self.symptomlistcrawler.get_symptoms_filesystem()
         brown_tagged_sents = brown.tagged_sents(categories="news")
-        backofftagger = nltk.data.load('taggers/maxent_treebank_pos_tagger/english.pickle')
-        if not onlypos:
-            if retrain:
+        def backoff_tagger(tagged_sents, tagger_classes, backoff=None):
+            if not backoff:
+                backoff = tagger_classes[0](tagged_sents)
+                del tagger_classes[0]
+            for cls in tagger_classes:
+                tagger = cls(tagged_sents, backoff=backoff)
+                backoff = tagger
+
+            return backoff
+        if retrain:
+            backofftagger = nltk.data.load('taggers/maxent_treebank_pos_tagger/english.pickle')
+            if tagger == 'ngram':
                 print "Training the NgramTagger, this will take a while"
-                self.ntagger = nltk.NgramTagger(n, brown_tagged_sents, backoff=backofftagger)
-                output = open('ngramtag.pkl', 'wb')
-                dump(self.ntagger, output, -1)
-                output.close()
+                self.tagger = nltk.NgramTagger(n, brown_tagged_sents, backoff=backofftagger)
+            elif tagger == 'braubt':
+                word_patterns = [(r'^-?[0-9]+(.[0-9]+)?$', 'CD'),
+                                (r'.*ould$', 'MD'),
+                                (r'.*ing$', 'VBG'),
+                                (r'.*ed$', 'VBD'),
+                                (r'.*ness$', 'NN'),
+                                (r'.*ment$', 'NN'),
+                                (r'.*ful$', 'JJ'),
+                                (r'.*ious$', 'JJ'),
+                                (r'.*ble$', 'JJ'),
+                                (r'.*ic$', 'JJ'),
+                                (r'.*ive$', 'JJ'),
+                                (r'.*ic$', 'JJ'),
+                                (r'.*est$', 'JJ'),
+                                (r'^a$', 'PREP')
+                            ]
+
+                raubt_tagger = backoff_tagger(brown_tagged_sents, [nltk.tag.AffixTagger,
+                nltk.tag.UnigramTagger, nltk.tag.BigramTagger, nltk.tag.TrigramTagger],
+                backoff=backofftagger) #nltk.tag.RegexpTagger(word_patterns))
+
+                templates = [
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateTagsRule, (1,1)),
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateTagsRule, (2,2)),
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateTagsRule, (1,2)),
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateTagsRule, (1,3)),
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateWordsRule, (1,1)),
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateWordsRule, (2,2)),
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateWordsRule, (1,2)),
+                    brill.SymmetricProximateTokensTemplate(brill.ProximateWordsRule, (1,3)),
+                    brill.ProximateTokensTemplate(brill.ProximateTagsRule, (-1, -1), (1,1)),
+                    brill.ProximateTokensTemplate(brill.ProximateWordsRule, (-1, -1), (1,1))
+                ]
+
+                trainer = brill.FastBrillTaggerTrainer(raubt_tagger, templates)
+                self.tagger = trainer.train(brown_tagged_sents, max_rules=100, min_score=3)
             else:
-                print "Reloading an old NgramTagger"
-                input = open('ngramtag.pkl', 'rb')
-                self.ntagger = load(input)
-                input.close()
+                self.tagger = nltk.data.load('taggers/maxent_treebank_pos_tagger/english.pickle')
+            output = open('tagger.pkl', 'wb')
+            dump(self.tagger, output, -1)
+            output.close()
+
         else:
-            self.ntagger = backofftagger
+            print "Reloading an old Tagger"
+            input = open('tagger.pkl', 'rb')
+            self.tagger = load(input)
+            input.close()
+
+
 #    def loadDocuments(self):
 #        self.documents = [self.preprocess(doc) for doc in documents]
 
@@ -65,13 +115,15 @@ class FeatureExtractor(object):
 
         def remove_html_tags(data):
             p = re.compile(r'<.*?>')
+            data = p.sub('', data)
+            p = re.compile(r'\(.*?\)')
             return p.sub('', data)
         corpora = remove_html_tags(corpora)
         corpora = corpora.replace('\n', ' ')
 
         document = nltk.sent_tokenize(corpora)
         document = [nltk.word_tokenize(s) for s in document]
-        document = [self.ntagger.tag(s) for s in document]
+        document = [self.tagger.tag(s) for s in document]
 #        document = [nltk.pos_tag(s) for s in document]
 
         return document
@@ -85,13 +137,11 @@ class FeatureExtractor(object):
         candidates = []
 
         if strict:
-            grammar = r"""CANDIDATE: {<VBD><IN>(<SYMPTOM><,|CC>?)*}
-                         SYMPTOM: }<DT><NN>{
-                                  {<JJ|VBG>*<NN>+}
+            grammar = r"""CANDIDATE: {<VB(N|G|D)><IN>(<SYMPTOM><,|CC>?)*}
+                         SYMPTOM: {(<JJ|VBG>+<NN>+)|(<NP>)}
                       """
         else:
-            grammar = r"""SYMPTOM: }<DT><NN>{
-                                   {<JJ>*<NN>+}
+            grammar = r"""SYMPTOM: {(<JJ>+<NN>+)|(<NP>)}
                     """
 
         cp = nltk.RegexpParser(grammar, loop=loop)
