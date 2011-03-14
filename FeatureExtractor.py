@@ -117,6 +117,8 @@ class FeatureExtractor(object):
             p = re.compile(r'<.*?>')
             data = p.sub('', data)
             p = re.compile(r'\(.*?\)')
+            data = p.sub('', data)
+            p = re.compile(r'\[.*?\]')
             return p.sub('', data)
         corpora = remove_html_tags(corpora)
         corpora = corpora.replace('\n', ' ')
