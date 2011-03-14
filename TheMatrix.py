@@ -33,7 +33,8 @@ class EatTheRedPill(object):
         
         # Merge the data from different websites and merge each paragraph in a 
         # given website.
-        self.ready_data=[]
+        diseases_missing = []
+        ready_data=[]
         patreses = self.db.c.execute("select patres from disease_info").fetchall()
         for patres in patreses:
             data = self.db.c.execute("SELECT Q.patres, G.data, D.disease_name "\
@@ -41,13 +42,13 @@ class EatTheRedPill(object):
                                 "WHERE Q.query = G.query AND Q.patres = D.patres "\
                                                         "AND Q.patres=?",[patres[0]])
             data = data.fetchall()
-            paragraphs = " ".join([x[1] for x in data])
-            try:
-                self.ready_data.append((data[0][0],paragraphs,data[0][2]))
-            except:
-                print data
-                print patres[0]
+            if data:
+                paragraphs = " ".join([x[1] for x in data])
+            else: 
+                diseases_missing.append(patres[0])
+                continue
         
-        self.ready_data = ready_data
+        TermDoc, t_hash, d_hash, n_hash = self.miner.createTermDoc(ready_data)
+        TFIDF = self.miner.runTFIDF(TermDoc)
         
-#        self.miner.createTermDoc(ready_data)
+        return TFIDF
