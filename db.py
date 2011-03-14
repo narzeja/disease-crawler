@@ -62,15 +62,21 @@ class db(object):
                         "PRIMARY KEY (patres)"\
                         "FOREIGN KEY (patres) REFERENCES disease_info(patres))"
         self.c.execute('CREATE TABLE '+ table + attributes)
-        
+
         table = "googled_info"
+        attributes = "(query TEXT, url TEXT, data TEXT,"\
+                        "PRIMARY KEY (query,url)"\
+                        "FOREIGN KEY (query) REFERENCES query(query))"
+        self.c.execute('CREATE TABLE '+ table + attributes)
+
+        table = "googled_info_cleansed"
         attributes = "(query TEXT, url TEXT, data TEXT,"\
                         "PRIMARY KEY (query,url)"\
                         "FOREIGN KEY (query) REFERENCES query(query))"
         self.c.execute('CREATE TABLE '+ table + attributes)
         
         ############### INITIAL VALUES ###############
-        
+
         # TABLE: Disease info
         data = pod.parseOrphaDesc()
         key_list = []

@@ -345,12 +345,10 @@ It takes some fixed-size substring of a word and finds the most likely
 tag for that substring.
 \item[Regexp tagging] This tagger assigns tags to tokens based on regular
 expessions.
-\item[Brill tagging] The Brill tagger starts by running an initial
-tagger, and then improves the result by applying a list of
-transformation rules. These rules are automatically learned from the
-training corpus.
-\item[Brill] \cite{Brill:1992:SRP:974499.974526}, Trigram, Bigram,
-Unigram, Affix and RegExp tagging. \todo[inline]{briefly explain each tagger}
+\item[Brill tagging] The Brill\cite{Brill:1992:SRP:974499.974526} tagger
+starts by running an initial tagger, and then improves the result by
+applying a list of transformation rules. These rules are automatically
+learned from the training corpus.
  \end{description}
 The goal is to encode as much information about a sequence of words to
 get proper tagging based on the context. When a context analysing tagger
@@ -462,9 +460,9 @@ exclusively, we filter out noise by doing ...
 Having collected a number of symptom candidates $\mathbb{S}$ from some
 document or paragraph, we calculate the number of unique terms and return
 the candidates $\mathbb{S'}$, that appear more than once or is a
-substring of other candidates. Using the rule:
+substring of other candidates. \todo[inline]{rewrite} Using the rule:
 \begin{equation}
- s_{j}, s_{i} \in \mathbb{S'}\texttt{if count}(s_{j}) > 1 \wedge\texttt{count}(s_{i}) \wedge s_{j} \subset s_{i}, \texttt{for } s_{i}, s_{j} \in \mathbb{S}
+ s_{j}, s_{i} \in \mathbb{S'} ||s_{j}|| > 1 \wedge||s_{i}|| \wedge s_{j} \subset s_{i}, \texttt{for } s_{i}, s_{j} \in \mathbb{S}
 \end{equation}
 \todo[inline]{valider formel}
 Anecdotal observations during the development phase of this module

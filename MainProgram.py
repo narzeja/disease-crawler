@@ -5,23 +5,26 @@ import nltk
 import SymptomListCrawler as SLC
 import string
 import pod
-import GCrawler as GC
-import FeatureExtractor as FE
-import TextmineThis as TT
-import db as datab
+#import GCrawler as GC
+#import FeatureExtractor as FE
+#import TextmineThis as TT
+import db as database
+import TextCleaner as TC
 
 class MainProgram():
 
     def __init__ (self):
         print "Main: Initializing Google Search Engine"
-        self.g = GC.GCrawler()
+#        self.g = GC.GCrawler()
 
 #        print "Main: Importing Orpha.net data"
 #        self.data = pod.parseOrphaDesc() # SHOULD COLLECT FROM DATABASE INSTEAD
 #        self.newdata = self.g._convert_pod(self.data)
 
 #        print "Main: Importing Feature Extractor"
-        self.fe = FE.FeatureExtractor()
+#        self.fe = FE.FeatureExtractor()
+        self.tc = TC.TextCleaner()
+        self.db = database.db()
 
 #        print "Main: Constructing term document and related hashes"
 #        self.tt = TT.Textminer()
@@ -35,10 +38,10 @@ class MainProgram():
 #        self.tfidf = self.tt.runTFIDF(self.termdoc)
         pass
 
-    def constructQuery(self, caseReport, strict=False):
-        ''' novelty function to extract candidates usable in a search query
-        '''
-        return self.fe.feature_extractor(caseReport, strict)[0]
+#    def constructQuery(self, caseReport, strict=False):
+#        ''' novelty function to extract candidates usable in a search query
+#        '''
+#        return self.fe.feature_extractor(caseReport, strict)[0]
 
     def predict(self, query):
         #TODO: This program should pass the TF-IDF matrix a query and
@@ -51,20 +54,21 @@ class MainProgram():
         # knowledge, related to that particular query.
 
         # first harvest from google
-        if regoogle:
-            print "Eggspand: hold on, initializing search and harvest procedure"
-            try:
-                self.g.crawlGoogle(patres, additional, threshold)
-            except KeyError:
-                print "Disease with PatRes %s, not found" % patres
+#        if regoogle:
+#            print "Eggspand: hold on, initializing search and harvest procedure"
+#            try:
+#                self.g.crawlGoogle(patres, additional, threshold)
+#            except KeyError:
+#                print "Disease with PatRes %s, not found" % patres
 
         # pull data from DB
-        query = self.g.db_cursor.execute("SELECT query FROM query " \
+        query = self.db.c.execute("SELECT query FROM query " \
                                          "WHERE patres = %s" %patres).fetchone()
 
-        googled_info_data = self.g.db_cursor.execute("SELECT data FROM googled_info " \
+        googled_info_data = self.db.c.execute("SELECT data FROM googled_info " \
                                                     "WHERE query = ?", query)
         data = googled_info_data.fetchall()
+#        filtered_data = [self.tc.TextCleaner(d) for d in data if self.tc.TextCleaner(d)]
         alldata = " ".join([d[0] for d in data])
 
         raw, calc, weighted = self.fe.feature_extractor(alldata, strict, loop)
