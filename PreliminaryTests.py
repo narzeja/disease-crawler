@@ -10,18 +10,23 @@ class tester():
         pass
         
     def initialize(self):
-        self.db = DB.db()
-        self.data = self.db.c.execute("select patres,abstract,disease_name from disease_info")
-        self.data = self.data.fetchall()
+#        self.db = DB.db()
+#        self.data = self.db.c.execute("select patres,abstract,disease_name from disease_info")
+#        self.data = self.data.fetchall()
         
         self.miner = TextmineThis.Textminer()
-        self.termDoc,self.term_hash,self.doc_hash,self.name_hash = self.miner.createTermDoc(self.data)
-        self.termDoc = self.miner.runTFIDF(self.termDoc)
+#        self.termDoc,self.term_hash,self.doc_hash,self.name_hash = self.miner.createTermDoc(self.data)
+#        self.termDoc = self.miner.runTFIDF(self.termDoc)
 
-    def runTest(self,path):#,termDoc,term_hash,doc_hash,name_hash):
+    def runTest(self,path,termDoc,term_hash,doc_hash,name_hash):#,termDoc,term_hash,doc_hash,name_hash):
         """
         
         """
+        
+        self.termDoc = termDoc
+        self.term_hash = term_hash
+        self.doc_hash = doc_hash
+        self.name_hash = name_hash
         
         tests = re.split('\n',open(path).read())
         
