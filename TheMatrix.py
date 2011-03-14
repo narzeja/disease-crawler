@@ -42,7 +42,10 @@ class EatTheRedPill(object):
                                                         "AND Q.patres=?",[patres[0]])
             data = data.fetchall()
             paragraphs = " ".join([x[1] for x in data])
-            self.ready_data.append((data[0][0],paragraphs,data[0][2]))
+            try:
+                self.ready_data.append((data[0][0],paragraphs,data[0][2]))
+            except:
+                print data[0]
         
         self.ready_data = ready_data
         
