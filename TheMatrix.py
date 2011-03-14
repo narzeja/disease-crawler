@@ -22,7 +22,7 @@ class eatTheRedPill(object):
         self.data = self.db.c.execute("SELECT Q.patres, G.data, D.disease_name "\
                                  "FROM query Q, googled_info G, disease_info D "\
                                  "WHERE Q.query = G.query AND Q.patres = D.patres")
-        self.data = data.fetchall()
+        self.data = self.data.fetchall()
         
         self.icd10 = self.db.c.execute("SELECT * from icd_10")
         self.icd10 = self.icd10.fetchall()
