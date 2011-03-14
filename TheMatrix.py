@@ -34,7 +34,7 @@ class EatTheRedPill(object):
         # Merge the data from different websites and merge each paragraph in a 
         # given website.
         ready_data=[]
-        patreses = self.db.execute("select patres from disease_info").fetchall()
+        patreses = self.db.c.execute("select patres from disease_info").fetchall()
         for patres in patreses:
             data = self.db.c.execute("SELECT Q.patres, G.data, D.disease_name "\
                                 "FROM query Q, googled_info G, disease_info D "\
