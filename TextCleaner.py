@@ -33,6 +33,8 @@ class TextCleaner(object):
                            + " WHERE query=? AND url=?",
                             tup + [query,url])
 
+        self.db.sqlserver.commit()
+
     def clean_references(self, document):
         documents = self.fe.preprocess(document)
         dchunks = [nltk.ne_chunk(d) for d in documents]
