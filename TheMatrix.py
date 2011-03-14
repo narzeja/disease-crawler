@@ -44,6 +44,7 @@ class EatTheRedPill(object):
             data = data.fetchall()
             if data:
                 paragraphs = " ".join([x[1] for x in data])
+                ready_data.append(data[0][0],paragraphs,data[0][2])
             else: 
                 diseases_missing.append(patres[0])
                 continue
