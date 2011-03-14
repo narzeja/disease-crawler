@@ -40,9 +40,10 @@ class EatTheRedPill(object):
                                 "FROM query Q, googled_info G, disease_info D "\
                                 "WHERE Q.query = G.query AND Q.patres = D.patres "\
                                                         "AND Q.patres=?",[patres[0]])
-            self.data = data.fetchall()
+            data = data.fetchall()
             paragraphs = " ".join([x[1] for x in data])
-            ready_data.append((data[0][0],paragraphs,data[0][2]))
+            print data[0]
+            #ready_data.append((data[0][0],paragraphs,data[0][2]))
         
         self.ready_data = ready_data
         
