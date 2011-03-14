@@ -10,10 +10,10 @@ class TextCleaner(object):
         self.db = DB.db()
 
 
-    def red_pill(self):
+    def red_pill(self, start=0, end=100):
         qucursor = self.db.c.execute("select query, url, data from googled_info")
 
-        qufetch = qucursor.fetchall()[:1]
+        qufetch = qucursor.fetchall()[start:end]
         for (query, url, data) in qufetch:
             datasplit = data.split("::")
             newdata = []

@@ -308,6 +308,23 @@ further processing is set to $0.8$. This number is used based on a
 number of anecdotal tests showing a reasonable amount of relevant
 information, where $0.9$ would introduce too much noise, and $0.7$
 being too strict.
+
+To further filter noise from the accepted paragraphs, in particular to
+remove paragraphs which are only literature references, paragraphs are
+processed by entity chunker provided by the NLTK library, to remove
+paragraphs that have several names listed separated by commas, e.g.
+\textit{Post MC, Letteboer TGW, Johannes JM, et al. A pulmonary
+right-to-left shunt in patients with hereditary hemorrhagic
+telangiectasia is associated with an increased prevalence of migraine.
+2005;128(4):2485-9. Chest [Medline]}. It is apparent that this paragraph
+is a literature reference, and while the title itself contains terms
+that could be relevant for later symptom extraction, it has been decided
+that this entire term is considered noise, and can thus be filtered by
+investigating the occurrence of names in the first sentence. Manual
+observations confirm that such reference paragraphs uniquely hold this
+property.
+
+
 \todo[inline]{Write pseudocode for this harvesting and paragraph
 selection procedure}
 
