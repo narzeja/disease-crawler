@@ -87,11 +87,13 @@ It is expected that the reader has read the project
 project.
 
 We expect the reader to have knowledge of Natural Language Processing
-techniques, in particular POS-tagging and phrase chunking.
+techniques, in particular POS-tagging and phrase chunking. It is also
+required to have knowledge of the foundations and overall purpose of
+Machine Learning.
 
 
 \section{Introduction}
-\label{chap:introduction}
+%\label{chap:introduction}
 Physicians have expressed a need for aiding in the process of diagnosing
 rare diseases \cite{googlingdiagnosis}, and point towards using the
 Internet as a resource for information gathering, with particular focus
@@ -108,36 +110,67 @@ collection of specific features from rare diseases, with focus on
 establishing a model with which a practising physician may query a case
 report for some patient and get a prediction of possible diseases based
 on the knowledge of the model.
-To increase the prediction precision, we must expand the model and look
-into harvesting specific information of some disease through a number of
-iterations on popular search engines. We use Natural Language Processing
-(NLP) provided through a Python library \cite{NLTK} to extract unique
-information from some description of the disease, and use Machine
-Learning to refine the search within the model.
+To increase the prediction precision, The model is expanded by
+harvesting information of some disease through a number of iterations on
+popular search engines. The harvested data is sanitised and irrelevant
+or low-information paragraphs are removed to reduce noise within the
+model. The prediction process is performed by, given a query, a number
+of diseases are returned that match the the query, in addition to
+ICD10\footnote{The International Statistical Classification of Diseases
+and Related Health Problems 10th iteration (ICD10) is a classification
+of diseases, signs and symptoms, classified by the World Health
+Organization (WHO).} code clusters and Natural Language Processing (NLP)
+based unique keyword suggestions. \todo[inline]{rewrite to make it
+crystal clear!}
+
+
+%We use Natural Language Processing (NLP)
+%provided through a Python library \cite{NLTK} to extract unique
+%information from some description of the disease, and use Machine
+%Learning to refine the search within the model.
 
 %by assuming certain semantic and
 %syntactic properties of symptoms and medically related phrases and
 %terms.
 
-In the following we will present and highlight current and previous work
-within this domain. In chapter 3, we will discuss our method
-methodically, with particular focus on construction of model and feature
-extraction and post processing of harvested information.
-Then we will explain how we tested the system and argue statistical
-significances by comparing to previous work, as well as assessing the
-viability of our system as it is.
-Finally we will conclude our paper and discuss implications and other
-thoughts relevant to our method, while also proposing a number of topics
-for future work.
 
 \subsection{Limitations}
 \todo[inline]{Blanks to be filled.}
 
+
+\subsection{Content outline of this document}
+In chapter \ref{chap:previouswork} we will outline current and previous
+work.
+In chapter \ref{chap:method} we will present an overview of the method
+used, and go into detail with the most important steps, by discussing
+information harvesting, extraction, modelling and prediction.
+In chapter \ref{chap:test} we present the results from our tests, here
+among blind tests, BMJ \footnote{missing} and missing\footnote{missing},
+with comparisons to previous projects. We will discuss the tests with a
+strong focus on statistical analysis.
+Finally, in chapter \ref{chap:conclusion} we will conclude the project,
+and discuss major implications and advantages of the system, method and
+tests. We will also propose a number of topics for future work.
+
+
+%In the following we will present and highlight current and previous work
+%within this domain. In chapter 3, we will discuss our method
+%methodically, with particular focus on construction of model and feature
+%extraction and post processing of harvested information.
+%Then we will explain how we tested the system and argue statistical
+%significances by comparing to previous work, as well as assessing the
+%viability of our system as it is.
+%Finally we will conclude our paper and discuss implications and other
+%thoughts relevant to our method, while also proposing a number of topics
+%for future work.
+
 \section{Previous Work}
-Current work by Radu Dragusin and Paula Petku investigate the same
-thesis of automating information gathering as those we are presenting.
-However, as this is a work in progress we do not have access to further
-information at this point in time \cite{radupaula}.
+\label{chap:previouswork}
+Our colleagues Radu Dragusin and Paula Petku from the department of
+Computer Science at Copenhagen University investigate a related way of
+automating information gathering to what we are presenting. However, as
+this is a work in progress we do not have access to further information
+at this point in time \cite{radupaula}.
 
 \cite{jensenandersen} proposed a system for diagnosing rare diseases
 using vector space models and text mining. They showed a potential in
@@ -201,32 +234,36 @@ validity.
 
 
 \section{Method}
+\label{chap:method}
 Data received from Orphanet, an online database of information
 specialised on rare diseases, is initially used as prior knowledge to
 harvest additional information from the Internet.
 
 
 
-As one of the premises of the project was to introduce prior knowledge
-of the disease model, we needed to process our available data. We were
-given a large corpus of data from Orphanet \ref{app:orphanet},
-consisting of \texttt{\{orphanum, disease name, disease
-description/abstract, maybe author and date\}} for each disease in the
-data set.\todo[inline]{Rewrite this nonsense.}
+%As one of the premises of the project was to introduce prior knowledge
+%of the disease model, we needed to process our available data. We were
+%given a large corpus of data from Orphanet \ref{app:orphanet},
+%consisting of \texttt{\{orphanum, disease name, disease
+%description/abstract, maybe author and date\}} for each disease in the
+%data set.\todo[inline]{Rewrite this nonsense.}
 
 
-The data is processes similar to the method described in
-\cite{jensenandersen}, and will thus be used too bootstrap our knowledge
+The data is processes similar to what is described in
+\cite{jensenandersen}, and will thus be used to bootstrap the knowledge
 of each disease, allowing us to iterate and harvest additional
 information using various harvesting techniques roughly covering the use
 of the \textit{Google} search engine to collect an array of websites
 given a query relevant to the disease (disease name and a possibly a
 number of keywords). For each website, we will collect paragraphs and
-save it for further processing if the cosine angle between the two
-vectors is within a reasonable threshold. For each accepted paragraph we
-use NLP to identify candidates for relevant terms and phrases that will
-then be used to expand the model. The abstract flow model is available
-in figure \ref{fig:flow}.
+save it for further processing given an acceptance threshold.
+
+%For each
+%accepted paragraph we use NLP to identify candidates for relevant terms
+%and phrases that will then be used to expand the model. 
+
+The abstract
+flow model is available in figure \ref{fig:flow}.
 
 
 \begin{figure}[htp!]
@@ -530,6 +567,7 @@ diathesis, bleeding tendency, bleeding\}}.
 
 
 \section{Tests}
+\label{chap:test}
 We have chosen to base our tests on known test cases, from in particular
 those mentioned in \cite{jensenandersen}, \cite{googlingdiagnosis} and
 tests listed in appendix \ref{app:tests}. We will then consider the
@@ -569,6 +607,7 @@ T-Test or equiv.}
 
 
 \section{Conclusion}
+\label{chap:conclusion}
 We have introduced a method to automate harvesting and 
 
 Questions to answer: How do we introduce new diseases to the system?
