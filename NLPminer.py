@@ -25,16 +25,23 @@ class NLPtextminer(object):
         counter=0
         t1 = time.time()
         for pat in patres:
+            # Get paragraphs
             dbcurs = self.db.c.execute("SELECT Q.patres, G.data \
                                         FROM query Q, googled_info_cleansed G \
                                         WHERE G.query=Q.query \
                                           AND Q.patres = ?", [pat])
             dbfetch = dbcurs.fetchall()
             paragraphs = " ".join(" ".join([s[1] for s in dbfetch]).split("::"))
+            # Get orphanet abstract and add to paragraphs
+            dbcurs = self.db.c.execute("SELECT patres, abstract FROM disease_info \
+                                        WHERE patres=?",[pat])
+            dbfetch = dbcurs.fetchone()
+            paragraphs += " "+dbfetch[0]
+            print dbfetch
+            
             feats = self.fe.feature_extractor(paragraphs)
             
             # Insert non-weighted symptoms into the database
-            
             for freq,symptom in feats[1]:
                 try:
                     self.db.c.execute("INSERT INTO nlp_nonweighted VALUES (?,?,?)",
