@@ -143,7 +143,7 @@ class FeatureExtractor(object):
                          SYMPTOM: {(<JJ|VBG>+<NN>+)|(<NP>)}
                       """
         else:
-            grammar = r"""SYMPTOM: {(<JJ>+<NN>+)|(<NP>)}
+            grammar = r"""SYMPTOM: {(<NP>)|(<JJ|VBG>+<NN>+)}
                     """
 
         cp = nltk.RegexpParser(grammar, loop=loop)
