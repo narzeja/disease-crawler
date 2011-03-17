@@ -22,7 +22,7 @@ class NLPtextminer(object):
         patres = [s[0] for s in patres]
         
         # Hacked test to see if the tables have been made
-        try: db.c.execute("SELECT patres FROM nlp_weighted")
+        try: db.c.execute("SELECT * FROM nlp_weighted")
         except: print "No tables found. Run 'buildtabels()' first"; return None
         
         counter=0
