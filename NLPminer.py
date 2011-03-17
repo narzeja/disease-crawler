@@ -38,7 +38,7 @@ class NLPtextminer(object):
                     self.db.c.execute("INSERT INTO nlp_nonweighted VALUES (?,?,?)",
                                         [patres,freq,symptom])
                 except:
-                    self.db.execute("UPDATE nlp_nonweighted \
+                    self.db.c.execute("UPDATE nlp_nonweighted \
                                      SET patres=?, freq=?, symptom=? \
                                      WHERE patres=?",
                                      [patres,freq,symptom,patres])
@@ -49,7 +49,7 @@ class NLPtextminer(object):
                     self.db.c.execute("INSERT INTO nlp_weighted VALUES (?,?,?)",
                                         [patres,freq,symptom])
                 except:
-                    self.db.execute("UPDATE nlp_weighted \
+                    self.db.c.execute("UPDATE nlp_weighted \
                                      SET patres=?, freq=?, symptom=? \
                                      WHERE patres=?",
                                      [patres,freq,symptom,patres])
