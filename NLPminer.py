@@ -34,8 +34,10 @@ class NLPtextminer(object):
             feats = self.fe.feature_extractor(paragraphs)
             
             # Insert non-weighted symptoms into the database
+            print pat
+            print type(pat)
+            
             for freq,symptom in feats[1]:
-                print type(pat)
                 try:
                     self.db.c.execute("INSERT INTO nlp_nonweighted VALUES (?,?,?)",
                                         [pat,freq,symptom])
@@ -44,6 +46,7 @@ class NLPtextminer(object):
                                      SET patres=?, freq=?, symptom=? \
                                      WHERE patres=?",
                                      [pat,freq,symptom,pat])
+                self.db.commit()
             
             # Insert weighted symptoms into the database
             for freq,symptom in feats[2]:
@@ -55,6 +58,7 @@ class NLPtextminer(object):
                                      SET patres=?, freq=?, symptom=? \
                                      WHERE patres=?",
                                      [pat,freq,symptom,pat])
+                self.db.commit()
             
             counter +=1
             print "Diseases processed:",counter
@@ -76,6 +80,7 @@ class NLPtextminer(object):
                                 PRIMARY KEY (patres,symptom), \
                                 FOREIGN KEY (patres) REFERENCES disease_info(patres)\
                             )")
+        self.db.commit()
 
 
 #    for code, data, patres in dbfetch:
