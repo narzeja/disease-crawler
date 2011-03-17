@@ -34,6 +34,9 @@ class NLPtextminer(object):
             
             # Insert non-weighted symptoms into the database
             for freq,symptom in feats[1]:
+                print feats[1]
+                print freq
+                print symptom
                 try:
                     self.db.c.execute("INSERT INTO nlp_nonweighted VALUES (?,?,?)",
                                         [patres,freq,symptom])
