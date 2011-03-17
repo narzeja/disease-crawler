@@ -2,6 +2,7 @@ import db as DB
 import FeatureExtractor as FE
 import time
 import sys
+import unicodedata
 
 class NLPtextminer(object):
     
