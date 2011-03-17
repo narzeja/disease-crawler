@@ -44,8 +44,8 @@ class NLPtextminer(object):
                 except:
                     self.db.c.execute("UPDATE nlp_nonweighted \
                                      SET patres=?, freq=?, symptom=? \
-                                     WHERE patres=?",
-                                     [pat,freq,symptom,pat])
+                                     WHERE patres=? AND symptom=?",
+                                     [pat,freq,symptom,pat,symptom])
                 self.db.commit()
             
             # Insert weighted symptoms into the database
@@ -56,8 +56,8 @@ class NLPtextminer(object):
                 except:
                     self.db.c.execute("UPDATE nlp_weighted \
                                      SET patres=?, freq=?, symptom=? \
-                                     WHERE patres=?",
-                                     [pat,freq,symptom,pat])
+                                     WHERE patres=? AND symptom=?",
+                                     [pat,freq,symptom,pat,symptom])
                 self.db.commit()
             
             counter +=1
