@@ -274,30 +274,37 @@ flow model is available in figure \ref{fig:flow}.
 \end{center}
 \end{figure}
 
-The process will be described in greater detail in the following
-sections.
+Each step in the process will be described in greater detail in the
+following sections.
 
 \todo[inline]{Something N-gram machine learning here.}
 
 \subsection{Building the preliminary model}
-\label{chap:preliminary}
-To perform the initial testing we mimicked the setup of
-\cite{jensenandersen} where a TF-IDF matrix was build using information
-(abstracts,titles, keywords) gathered form Pubmed.
+The preliminary model is built using the prior information available
+from Orphanet. The TF-IDF model is essentially identical to the model
+constructed in \cite{jensenandersen}, except the underlying information
+is not harvested and thus prone to be noisy, but consists of validated
+abstracts and titles for each disease.
 
-A sparse term-disease matrix (similar to the well-known term-document
-model) was build over the abstracts received from Orphanet. Each row in
-the matrix thus represented a feature vector of a disease with the
-features being a list of term frequencies. Prior to the creation of the
-matrix, the terms were stemmed (using the Porter stemming algorithm) and
-stopwords\footnote{The stopwords are a list of 127 English words provided
-by the Python NLTK library
-(\texttt{nltk.corpus.stopwords.words("english")}} were removed along
+%To perform the initial testing we mimicked the setup of
+%\cite{jensenandersen} where a TF-IDF matrix was build using information
+%(abstracts,titles, keywords) gathered form Pubmed.
+
+%A sparse term-disease matrix (similar to the well-known term-document
+%model) is built over the abstracts received from Orphanet. 
+Each row in the matrix thus represents a feature vector of a disease
+with the features being a list of term frequencies \todo[inline]{quick mini-example}. Prior to the
+creation of the matrix, the terms were stemmed \todo[inline]{explain stemming}(using the Porter
+stemming algorithm \todo[inline]{explain algorithm}) and stopwords\footnote{The stopwords a defined by a
+list of 127 English words provided by the Python NLTK library
+(\texttt{nltk.corpus.stopwords.words("english")}} are removed along
 with non-alphanumerical\footnote{Symbols not represented in the Danish
-Alphabet} symbols. The term-disease matrix were then processed using the
+Alphabet} symbols. The term-disease matrix is then processed using the
 TF-IDF model (as originally proposed by \cite{tfidf}) along with
 additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten
-term-burstiness (\cite{burstiness}). The TF-IDF model
+term-burstiness (\cite{burstiness}) \todo[inline]{Why is this smoothing good?}.
+
+The TF-IDF model is thus constructed as such:
 \[
 w_{t,d} = log(tf_{t,d}+1)\cdot log\frac{|D|}{|\{d'\in D|t\in d'\}|}
 \]
@@ -313,7 +320,7 @@ the model.
 A query is given, stemmed and stopwords are removed. Each
 disease-vector that contain one or more of the queried terms is given a
 score which is based on a summation of each of the weights of the
-queried terms relevant to the disease.
+queried terms relevant to the disease. \todo[inline]{give an example}
 \[
 s_{d} = \displaystyle\sum\limits_{t_1}^{t_n} w_{t,d}\quad t \in Q
 \]
@@ -321,14 +328,15 @@ s_{d} = \displaystyle\sum\limits_{t_1}^{t_n} w_{t,d}\quad t \in Q
 Though the model used in \cite{jensenandersen} was based on large
 amounts of information gathered from PubMed, our tests showed that we
 could obtain close to the same precision solely based on the abstracts
-from Orphanet. This indicates large amounts of noise in previous project
-where the information (or model) of each disease was based on
-non-validated abstracts from PubMed using customised queries. The
-results can be seen in appendix \ref{app:preliminary_results}.
+from Orphanet. This may indicate a large amount of noise being present
+in the data set used in the previous project where the information (or
+model) of each disease was based on non-validated abstracts from PubMed
+using customised queries. The results can be seen in appendix
+\ref{app:preliminary_results}.
 
 
 \subsection{Harvesting data}
-Harvesting additional data to expand our existing TF-IDF model is done
+Harvesting additional data to expand the existing TF-IDF model is done
 using the Google search engine. For each site corresponding to our
 query, disease name and a number of keywords from disease abstract, we
 extract paragraphs and measure the relevance of that paragraph compared
@@ -347,21 +355,20 @@ number of anecdotal tests showing a reasonable amount of relevant
 information, where $0.9$ would introduce too much noise, and $0.7$
 being too strict.
 
-To further filter noise from the accepted paragraphs, in particular to
-remove paragraphs which are only literature references, paragraphs are
-processed by entity chunker provided by the NLTK library, to remove
-paragraphs that have several names listed separated by commas, e.g.
-\textit{Post MC, Letteboer TGW, Johannes JM, et al. A pulmonary
+It is observed that many of the harvested paragraphs are literature
+references and should be considered noise, due to it's low information
+value.
+These paragraphs are structured by a listing of names followed by a
+title and other meta information and the filtering process is done by
+utilizing the named entity chunker provided by the NLTK library, e.g.
+\textit{``Post MC, Letteboer TGW, Johannes JM, et al. A pulmonary
 right-to-left shunt in patients with hereditary hemorrhagic
 telangiectasia is associated with an increased prevalence of migraine.
-2005;128(4):2485-9. Chest [Medline]}. It is apparent that this paragraph
+2005;128(4):2485-9. Chest [Medline]''}. It is apparent that this paragraph
 is a literature reference, and while the title itself contains terms
 that could be relevant for later symptom extraction, it has been decided
 that this entire term is considered noise, and can thus be filtered by
-investigating the occurrence of names in the first sentence. Manual
-observations confirm that such reference paragraphs uniquely hold this
-property.
-
+investigating the occurrence of names in the first sentence.
 
 \todo[inline]{Write pseudocode for this harvesting and paragraph
 selection procedure}
@@ -386,30 +393,30 @@ braubt \cite{} \footnote{Brill, Regexp, Affix, Unigram, Bigram, Trigram}
 tagger is built using the following strategies, in decreasing order of
 complexity and context exploitation:
 \begin{description}
-\item[Unigram tagging] A unigram tagger finds the most likely tag for each word
-in the training corpus and uses that information to assign tags to new
-tokens.
-\item[Bigram tagging] A bigram tagger work similarly to the unigram
-tagger, except it finds the most likely tag for each word given the
-preceding tag.
-\item[Trigram tagger] This tagger works like the bigram tagger, except it
-uses two pieces of information. N-gram taggers assigned tags to tokens
-depending on the $N - 1$ preceding tags.
-\item[Affix tagging] The affix tagger is similar to the unigram tagger.
-It takes some fixed-size substring of a word and finds the most likely
-tag for that substring.
-\item[Regexp tagging] This tagger assigns tags to tokens based on regular
-expessions.
 \item[Brill tagging] The Brill\cite{Brill:1992:SRP:974499.974526} tagger
 starts by running an initial tagger, and then improves the result by
 applying a list of transformation rules. These rules are automatically
 learned from the training corpus.
- \end{description}
+\item[Affix tagging] The affix tagger is similar to the unigram tagger.
+It takes some fixed-size substring of a word and finds the most likely
+tag for that substring.
+\item[Trigram tagger] This tagger works like the bigram tagger, except it
+uses two pieces of information. N-gram taggers assigned tags to tokens
+depending on the $N - 1$ preceding tags.
+\item[Bigram tagging] A bigram tagger work similarly to the unigram
+tagger, except it finds the most likely tag for each word given the
+preceding tag.
+\item[Unigram tagging] A unigram tagger finds the most likely tag for each word
+in the training corpus and uses that information to assign tags to new
+tokens.
+\item[Regexp tagging] This tagger assigns tags to tokens based on regular
+expessions.
+\end{description}
 The goal is to encode as much information about a sequence of words to
-get proper tagging based on the context. When a context analysing tagger
-fails to identify a context for a given sequence, a less complex tagger
-takes over and attempts to tag, iterating through the list of taggers
-and finally ending with a simple regular expression based tagger.
+get proper tagging based on the context. When a tagger fails to identify
+a context for a given sequence, a less complex tagger takes over and
+attempts to tag, and thus running through the list of taggers and
+finally ending with a simple regular expression based tagger.
 
 The taggers are trained on the Brown Corpus \footnote{MISSING} provided
 through the python NLTK library. While the corpus is not directly
@@ -452,30 +459,18 @@ such as \texttt{gene product}.
 %catching all combinations matching the \texttt{SYMPTOM} grammar above.
 
 The grammar applied to the sentence \textit{``Hermansky-Pudlak syndrome
-type 2 (HPS-2) is a type of Hermansky-Pudlak syndrome (HPS; see this
-term), a multi-system disorder characterized by oculocutaneous albinism,
+type 2 is a type of Hermansky-Pudlak syndrome, a multi-system disorder characterized by oculocutaneous albinism,
 bleeding diathesis and neutropenia.''}\footnote{Excerpt from the
 Hermansky-Pudlak syndrome abstract from the Orphanet data set.} gives us
 the following POS-tagged syntax tree:
 \begin{lstlisting}
 (S
   (SYMPTOM Hermansky-Pudlak/JJ syndrome/NN type/NN)
-  2/CD
-  (/CD
-  HPS-2/-NONE-
-  )/:
   is/VBZ
   a/DT
   (SYMPTOM type/NN)
   of/IN
   (SYMPTOM Hermansky-Pudlak/JJ syndrome/NN)
-  (/:
-  HPS/NNP
-  ;/:
-  see/VB
-  this/DT
-  (SYMPTOM term/NN)
-  )/:
   ,/,
   a/DT
   (SYMPTOM multi-system/JJ disorder/NN)
