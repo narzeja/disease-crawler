@@ -34,7 +34,6 @@ class NLPtextminer(object):
             feats = self.fe.feature_extractor(paragraphs)
             
             # Insert non-weighted symptoms into the database
-            print pat
             
             for freq,symptom in feats[1]:
                 try:
