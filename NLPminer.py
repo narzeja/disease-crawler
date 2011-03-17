@@ -35,28 +35,26 @@ class NLPtextminer(object):
             
             # Insert non-weighted symptoms into the database
             for freq,symptom in feats[1]:
-                if isinstance(symptom,unicode):
-                    symptom = unicodedata.normalize('NFKD', symptom).encode('ascii','ignore')
                 
                 try:
                     self.db.c.execute("INSERT INTO nlp_nonweighted VALUES (?,?,?)",
-                                        [patres,freq,symptom])
+                                        [pat,freq,symptom])
                 except:
                     self.db.c.execute("UPDATE nlp_nonweighted \
                                      SET patres=?, freq=?, symptom=? \
                                      WHERE patres=?",
-                                     [patres,freq,symptom,patres])
+                                     [pat,freq,symptom,pat])
             
             # Insert weighted symptoms into the database
             for freq,symptom in feats[2]:
                 try:
                     self.db.c.execute("INSERT INTO nlp_weighted VALUES (?,?,?)",
-                                        [patres,freq,symptom])
+                                        [pat,freq,symptom])
                 except:
                     self.db.c.execute("UPDATE nlp_weighted \
                                      SET patres=?, freq=?, symptom=? \
                                      WHERE patres=?",
-                                     [patres,freq,symptom,patres])
+                                     [pat,freq,symptom,pat])
             
             counter +=1
             print "Diseases processed:",counter
