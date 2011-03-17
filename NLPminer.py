@@ -36,8 +36,7 @@ class NLPtextminer(object):
             dbcurs = self.db.c.execute("SELECT patres, abstract FROM disease_info \
                                         WHERE patres=?",[pat])
             dbfetch = dbcurs.fetchone()
-            paragraphs += " "+dbfetch[1]
-            print dbfetch
+            paragraphs += " "+unicodedata.normalize('NFKD', dbfetch[1]).encode('ascii','ignore')
             
             feats = self.fe.feature_extractor(paragraphs)
             
