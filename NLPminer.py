@@ -70,13 +70,13 @@ class NLPtextminer(object):
         self.db.c.execute("CREATE TABLE nlp_weighted ( \
                                 patres INT, symptom TEXT, freq INT, \
                                 PRIMARY KEY (patres,symptom), \
-                                FOREIGN KEY (patres) REFERENCES disease_info(patres))\
+                                FOREIGN KEY (patres) REFERENCES disease_info(patres)\
                             )")
         
         self.db.c.execute("CREATE TABLE nlp_nonweighted ( \
                                 patres INT, symptom TEXT, freq INT, \
                                 PRIMARY KEY (patres,symptom), \
-                                FOREIGN KEY (patres) REFERENCES disease_info(patres))\
+                                FOREIGN KEY (patres) REFERENCES disease_info(patres)\
                             )")
 
 
