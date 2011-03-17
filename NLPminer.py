@@ -37,7 +37,7 @@ class NLPtextminer(object):
             feats = self.fe.feature_extractor(paragraphs)
             
             # Insert non-weighted symptoms into the database
-            for freq,symptom in feast[1]
+            for freq,symptom in feast[1]:
                 try:
                     self.db.c.execute("INSERT INTO nlp_nonweighted VALUES (?,?,?)",
                                         [patres,freq,symptom])
@@ -48,7 +48,7 @@ class NLPtextminer(object):
                                      [patres,freq,symptom,patres])
             
             # Insert weighted symptoms into the database
-            for freq,symptom in feast[2]
+            for freq,symptom in feast[2]:
                 try:
                     self.db.c.execute("INSERT INTO nlp_weighted VALUES (?,?,?)",
                                         [patres,freq,symptom])
