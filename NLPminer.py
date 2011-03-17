@@ -21,10 +21,6 @@ class NLPtextminer(object):
         patres = self.db.c.execute("select patres from disease_info").fetchall()
         patres = [s[0] for s in patres]
         
-        # Hacked test to see if the tables have been made
-        try: db.c.execute("SELECT * FROM nlp_weighted")
-        except: print "No tables found. Run 'buildtabels()' first"; return None
-        
         counter=0
         t1 = time.time()
         for pat in patres:
