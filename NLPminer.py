@@ -38,6 +38,7 @@ class NLPtextminer(object):
             dbfetch = dbcurs.fetchone()
             paragraphs += " "+unicodedata.normalize('NFKD', dbfetch[1]).encode('ascii','ignore')
             
+            # Extract symptoms
             feats = self.fe.feature_extractor(paragraphs)
             
             # Insert non-weighted symptoms into the database
