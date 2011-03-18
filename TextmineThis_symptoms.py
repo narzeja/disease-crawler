@@ -79,7 +79,7 @@ class Textminer:
                 except:
                     print score
         
-        return termDoc, symptom_hash, doc_hash, name_hash
+        return self.termDoc, symptom_hash, doc_hash, name_hash
     
     
     def runTFIDF(self,termDoc):
