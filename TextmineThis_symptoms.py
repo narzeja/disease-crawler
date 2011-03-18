@@ -92,13 +92,9 @@ class Textminer:
         @returns a tf-idf processed sparse matrix
         """
         
-#        print "Converting to lil matrix format..."
-#        tfidf = termDoc.tolil()
-#        print "Converting to csr and counting terms/doc occurences."
         term_counts = sum(termDoc>0).tolist()[0]
         
         print "Running TF-IDF..."
-        print type(termDoc)
         for row in range(0,termDoc.shape[0]):
             for col in termDoc[row,:].nonzero()[1].tolist()[0]:
                 tf = termDoc[row,col]
@@ -114,12 +110,11 @@ class Textminer:
                     raise ZeroDivisionError
                 
                 termDoc[row,col]=tf*idf
-        print type(termDoc)
+        
         return termDoc
     
     def queryTheMatrix(self,termDoc,query,term_hash,doc_hash, name_hash,
-                        stemming=True,rm_stopwords=True, 
-                        sanitizer=re.compile('[\W]')):
+                        stemming=True):
         """
         Given a term-dcoument matrix and a term, document and name hash,
         a list of document scores are returned based on a string or list of
@@ -143,25 +138,13 @@ class Textminer:
         - sorted by score in descending order.
         """
         
-#        print "Converting to lil matrix format..."
-        termDoc = termDoc.tolil()
-#        print "Converting to csc matrix format..."
-        termDoc_csc = termDoc.tocsc()
-        
-        # Sanitize query terms
-#        query = sanitizer.sub(' ',query)
-        
-        if isinstance(query,list):
-            searchTerms = [s.strip().lower() for s in query if s!='']
-        elif isinstance(query,str):
-            searchTerms = [s.strip().lower() for s in query.split(' ') if s!='']
+        # split by comma into symptom-terms
+        if isinstance(query,str) or isinstance(query,unicode):
+            searchTerms = [s.strip().lower() for s in query.split(',') if s!='']
         else:
             raise TypeError
         
-        if rm_stopwords: 
-            searchTerms = self.removeStopwords(searchTerms) # remove stopwords
-        if stemming: 
-            searchTerms = self.stem(searchTerms) # stem the document
+        if stemming: searchTerms = self.stem(" ".join(searchTerms)) # stem the document
         
         print "Search terms: ",searchTerms
         

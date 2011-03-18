@@ -73,8 +73,6 @@ class EatTheRedPill(object):
         
         TermDoc, self.t_hash, self.d_hash, self.n_hash = self.symptom_miner.createTermDoc(ready_data)
         
-#        return TermDoc
-        
         TFIDF = self.symptom_miner.runTFIDF(TermDoc)
         
         return TFIDF, diseases_missing
