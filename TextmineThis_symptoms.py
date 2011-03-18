@@ -108,11 +108,11 @@ class Textminer:
                     print "Error on term frequency. Got:",tf
                 
                 print col,row
-                try:
-                    idf = math.log(termDoc.shape[0] / float(term_counts[col]))
-                except:
-                    print 
-                    raise ZeroDivisionError
+#                try:
+                idf = math.log(termDoc.shape[0] / term_counts[col])
+#                except:
+#                    print 
+#                    raise ZeroDivisionError
                 
                 termDoc[row,col]=tf*idf
         
