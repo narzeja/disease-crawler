@@ -156,8 +156,8 @@ class Textminer:
             except:
                 print "Term not found: '"+term+"'"
                 continue
-                
-            docs = termDoc[:,n].nonzero()[1].tolist()[0]
+            
+            docs = termDoc[:,n].nonzero()[0].tolist()[0]
             
             
             # Sum score measure:
