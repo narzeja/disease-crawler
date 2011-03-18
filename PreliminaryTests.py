@@ -39,7 +39,7 @@ class tester():
                 orpha_num = self.data[0]
                 query = self.data[2]
                 
-                results = self.miner.queryTheMatrix(self.termDoc,query,self.term_hash,self.doc_hash,self.name_hash)
+                results = self.miner.queryTheMatrix(self.termDoc,query,self.term_hash,self.doc_hash,self.name_hash,False)
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
