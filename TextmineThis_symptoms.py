@@ -79,7 +79,6 @@ class Textminer:
                 except:
                     print score
         
-        self.TD = termDoc
         return termDoc, symptom_hash, doc_hash, name_hash
     
     
