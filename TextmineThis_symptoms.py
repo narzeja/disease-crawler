@@ -74,6 +74,7 @@ class Textminer:
         termDoc = numpy.matrix(numpy.zeros((m,n)))
         for doc,tscores in score_hash.items():
             for term,score in tscores.items():
+                print score
                 termDoc[doc_hash[doc],symptom_hash[term]] = score
         
         return termDoc, symptom_hash, doc_hash, name_hash
