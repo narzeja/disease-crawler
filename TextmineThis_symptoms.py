@@ -179,8 +179,8 @@ class Textminer:
         
         # EXPERIMENT:
         # Normalized cumultative summation of the scores
-        totalsum = float(sum([s[1] for s in scores]))
-        scores = [(s[0],s[1]/totalsum*100) for s in scores]
+#        totalsum = float(sum([s[1] for s in scores]))
+#        scores = [(s[0],s[1]/totalsum*100) for s in scores]
         
         return scores
     
