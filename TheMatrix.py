@@ -48,9 +48,9 @@ class EatTheRedPill(object):
         
         return TermDoc
         
-        TFIDF = self.miner.runTFIDF(TermDoc)
+#        TFIDF = self.miner.runTFIDF(TermDoc)
         
-        return TFIDF, diseases_missing
+#        return TFIDF, diseases_missing
     
     def moveReallyFast(self):
         """ Creating the symptom-doc-matrix/tfidf...
