@@ -1,5 +1,6 @@
 import re
 import TextmineThis
+import TextmineThis_symptoms as TTs
 import db as DB
 
 #Orphanet: path = "testdata1/orphanet.txt"
@@ -14,7 +15,9 @@ class tester():
 #        self.data = self.db.c.execute("select patres,abstract,disease_name from disease_info")
 #        self.data = self.data.fetchall()
         
-        self.miner = TextmineThis.Textminer()
+        #self.miner = TextmineThis.Textminer()
+        self.miner = TTs.Textminer()
+        
 #        self.termDoc,self.term_hash,self.doc_hash,self.name_hash = self.miner.createTermDoc(self.data)
 #        self.termDoc = self.miner.runTFIDF(self.termDoc)
 
