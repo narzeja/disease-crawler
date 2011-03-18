@@ -144,7 +144,8 @@ class Textminer:
         else:
             raise TypeError
         
-        if stemming: searchTerms = self.stem(" ".join(searchTerms)) # stem the document
+        # stem the document
+        if stemming: searchTerms = [self.stem(x) for x in searchTerms if x]
         
         print "Search terms: ",searchTerms
         
@@ -156,7 +157,7 @@ class Textminer:
                 print "Term not found: '"+term+"'"
                 continue
                 
-            docs = termDoc_csc.getcol(n).nonzero()[0]
+            docs = termDoc[row,:].nonzero()[1].tolist()[0]:
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
