@@ -254,8 +254,6 @@ class Textminer:
             # build symptom hashes and term-doc scores
             score_hash[doc_id] = {}
             for symptom,score in symptom_dist:
-                print symptom
-                print score
                 if not symptom_hash.has_key(symptom): 
                     symptom_hash[symptom] = len(symptom_hash)
                 score_hash[doc_id][symptom] = score
