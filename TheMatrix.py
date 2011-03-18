@@ -58,14 +58,14 @@ class EatTheRedPill(object):
         ready_data=[]
         patreses = self.db.c.execute("SELECT patres FROM disease_info").fetchall()
         for patres in patreses:
-#            data = self.db.c.execute("SELECT N.patres, N.freq, N.symptom, D.disease_name \
-#                                    FROM nlp_nonweighted N, disease_info D \
-#                                    WHERE D.patres=N.patres \
-#                                        AND N.patres=?",[patres[0]])
             data = self.db.c.execute("SELECT N.patres, N.freq, N.symptom, D.disease_name \
-                                    FROM nlp_weighted N, disease_info D \
+                                    FROM nlp_nonweighted N, disease_info D \
                                     WHERE D.patres=N.patres \
                                         AND N.patres=?",[patres[0]])
+#            data = self.db.c.execute("SELECT N.patres, N.freq, N.symptom, D.disease_name \
+#                                    FROM nlp_weighted N, disease_info D \
+#                                    WHERE D.patres=N.patres \
+#                                        AND N.patres=?",[patres[0]])
 
             data = data.fetchall()
             
