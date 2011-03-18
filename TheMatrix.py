@@ -45,12 +45,9 @@ class EatTheRedPill(object):
                 continue
         
         TermDoc, self.t_hash, self.d_hash, self.n_hash = self.miner.createTermDoc(ready_data)
+        TFIDF = self.miner.runTFIDF(TermDoc)
         
-        return TermDoc
-        
-#        TFIDF = self.miner.runTFIDF(TermDoc)
-        
-#        return TFIDF, diseases_missing
+        return TFIDF, diseases_missing
     
     def moveReallyFast(self):
         """ Creating the symptom-doc-matrix/tfidf...
@@ -75,9 +72,12 @@ class EatTheRedPill(object):
                 continue
         
         TermDoc, self.t_hash, self.d_hash, self.n_hash = self.symptom_miner.createTermDoc(ready_data)
-        TFIDF = self.symptom_miner.runTFIDF(TermDoc)
         
-        return TFIDF, diseases_missing
+        return TermDoc
+        
+#        TFIDF = self.symptom_miner.runTFIDF(TermDoc)
+        
+#        return TFIDF, diseases_missing
         
         
         
