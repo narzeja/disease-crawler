@@ -98,9 +98,9 @@ class Textminer:
 #        term_counts = [t.getnnz() for t in termDoc.tocsr().transpose()]
         
         print "Running TF-IDF..."
-        for row in range(0,tfidf.shape[0]):
+        for row in range(0,termDoc.shape[0]):
             for col in termDoc[row,:].nonzero()[1].tolist()[0]:
-                tf = tfidf[row,col]
+                tf = termDoc[row,col]
                 
                 try:
                     tf = math.log(1 + tf)
@@ -108,13 +108,13 @@ class Textminer:
                     print "Error on term frequency. Got:",tf
                 
                 try:
-                    idf = math.log(tfidf.shape[0] / term_counts[col])
+                    idf = math.log(termDoc.shape[0] / term_counts[col])
                 except:
                     raise ZeroDivisionError
                 
-                tfidf[row,col]=tf*idf
+                termDoc[row,col]=tf*idf
         
-        return tfidf
+        return termDoc
     
     def queryTheMatrix(self,termDoc,query,term_hash,doc_hash, name_hash,
                         stemming=True,rm_stopwords=True, 
