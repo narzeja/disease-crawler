@@ -107,6 +107,7 @@ class Textminer:
                 except:
                     print "Error on term frequency. Got:",tf
                 
+                print col,row
                 try:
                     idf = math.log(termDoc.shape[0] / term_counts[col])
                 except:
