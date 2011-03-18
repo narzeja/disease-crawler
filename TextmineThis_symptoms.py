@@ -95,7 +95,7 @@ class Textminer:
 #        print "Converting to lil matrix format..."
 #        tfidf = termDoc.tolil()
 #        print "Converting to csr and counting terms/doc occurences."
-        term_counts = float(sum(termDoc.T>0).tolist()[0])
+        term_counts = sum(termDoc.T>0).tolist()[0]
         
         print "Running TF-IDF..."
         for row in range(0,termDoc.shape[0]):
@@ -109,7 +109,7 @@ class Textminer:
                 
                 print col,row
                 try:
-                    idf = math.log(termDoc.shape[0] / term_counts[col])
+                    idf = math.log(termDoc.shape[0] / float(term_counts[col]))
                 except:
                     print 
                     raise ZeroDivisionError
