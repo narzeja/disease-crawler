@@ -41,8 +41,6 @@ class tester():
                 
                 results = self.miner.queryTheMatrix(self.termDoc,query,self.term_hash,self.doc_hash,self.name_hash)
                 
-                print results
-                
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
                 rev_name_hash = dict(zip(self.name_hash.values(),self.name_hash.keys()))
