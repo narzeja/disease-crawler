@@ -98,6 +98,7 @@ class Textminer:
         term_counts = sum(termDoc>0).tolist()[0]
         
         print "Running TF-IDF..."
+        print type(termDoc)
         for row in range(0,termDoc.shape[0]):
             for col in termDoc[row,:].nonzero()[1].tolist()[0]:
                 tf = termDoc[row,col]
@@ -107,16 +108,13 @@ class Textminer:
                 except:
                     print "Error on term frequency. Got:",tf
                 
-                print col,row
-                print len(term_counts)
-#                try:
-                idf = math.log(termDoc.shape[0] / term_counts[col])
-#                except:
-#                    print 
-#                    raise ZeroDivisionError
+                try:
+                    idf = math.log(termDoc.shape[0] / term_counts[col])
+                except:
+                    raise ZeroDivisionError
                 
                 termDoc[row,col]=tf*idf
-        
+        print type(termDoc)
         return termDoc
     
     def queryTheMatrix(self,termDoc,query,term_hash,doc_hash, name_hash,
