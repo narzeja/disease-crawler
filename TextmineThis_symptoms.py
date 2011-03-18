@@ -157,7 +157,8 @@ class Textminer:
                 print "Term not found: '"+term+"'"
                 continue
                 
-            docs = termDoc[n,:].nonzero()[1].tolist()[0]
+            docs = termDoc[:,n].nonzero()[1].tolist()[0]
+            
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
