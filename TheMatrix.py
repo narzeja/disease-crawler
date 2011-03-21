@@ -135,7 +135,7 @@ class EatTheRedPill(object):
         query = data[2]
         
         if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
-        else: results = self.miner_symptom.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
+        else: results = self.symptom_miner.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
         
         return results
         
