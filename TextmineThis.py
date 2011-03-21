@@ -131,7 +131,8 @@ class Textminer:
         
 #        print "Building sparse term-doc matrix of size",m,"x",n
         
-        termDoc = scipy.sparse.dok_matrix((m, n))
+#        termDoc = scipy.sparse.dok_matrix((m, n))
+        termDoc = numpy.matrix(numpy.zeros((m,n)))
         for doc,tscores in score_hash.items():
             for term,score in tscores.items():
                 termDoc[doc_hash[doc],term_hash[term]] = score
@@ -139,7 +140,7 @@ class Textminer:
         return termDoc, term_hash, doc_hash, name_hash
     
     
-    def runTFIDF(self,termDoc):
+    def runTFIDF(self,tfidf):
         """
         Creates a Term-Frequency Inverse-Document-Frequency from a sparse
         coo_matrix, using log-transformation on TF and IDF.
@@ -150,14 +151,16 @@ class Textminer:
         """
         
         print "Converting to lil matrix format..."
-        tfidf = termDoc.tolil()
+#        tfidf = termDoc.tolil()
         print "Converting to csr and counting terms/doc occurences."
-        term_counts = [t.getnnz() for t in termDoc.tocsr().transpose()]
+#        term_counts = [t.getnnz() for t in termDoc.tocsr().transpose()]
+        term_counts = sum(tfidf>0).tolist()[0]
         
         print "Running TF-IDF..."
         for row in range(0,tfidf.shape[0]):
 #            n=tfidf.getrow(row).nonzero()[1]
-            for col in (tfidf.getrow(row).nonzero()[1]):
+#            for col in (tfidf.getrow(row).nonzero()[1]):
+            for col in tfidf[row,:].nonzero()[1].tolist()[0]:
                 tf = tfidf[row,col]
                 
                 try:
@@ -201,9 +204,9 @@ class Textminer:
         """
         
 #        print "Converting to lil matrix format..."
-        termDoc = termDoc.tolil()
+#        termDoc = termDoc.tolil()
 #        print "Converting to csc matrix format..."
-        termDoc_csc = termDoc.tocsc()
+#        termDoc_csc = termDoc.tocsc()
         
         # Sanitize query terms
         query = sanitizer.sub(' ',query)
@@ -230,7 +233,8 @@ class Textminer:
                 print "Term not found: '"+term+"'"
                 continue
                 
-            docs = termDoc_csc.getcol(n).nonzero()[0]
+#            docs = termDoc_csc.getcol(n).nonzero()[0]
+            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))

@@ -152,18 +152,21 @@ class Textminer:
         scores = {}
         for term in searchTerms:
             try:
-                n = term_hash[term]
+                n = [term_hash[term]]
             except:
                 print "Term not found: '"+term+"'"
-                continue
+                # Try subsets...
+                n = [term_hash[x] for x in term_hash.keys() if x and term in x]
+                if not n: continue # if also nothing found in round two...
             
-            docs = termDoc[:,n].nonzero()[0].tolist()[0]
-            
+            # NOTE: Consider using sets...
+            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
+            print len(docs)
             for doc in docs:
-                score = termDoc[doc,n]
+                score = termDoc[doc,n].sum()
                 
                 doc_id = rev_doc_hash[doc] # extract the original orpha-nums 
                 

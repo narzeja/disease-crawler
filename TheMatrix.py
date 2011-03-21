@@ -2,6 +2,7 @@
 
 """
 
+import re
 import db as DB
 import TextmineThis as TT
 import TextmineThis_symptoms as TT_symptoms
@@ -44,10 +45,10 @@ class EatTheRedPill(object):
                 diseases_missing.append(patres[0])
                 continue
         
-        TermDoc, self.t_hash, self.d_hash, self.n_hash = self.miner.createTermDoc(ready_data)
+        TermDoc, self.t1_hash, self.d1_hash, self.n1_hash = self.miner.createTermDoc(ready_data)
         TFIDF = self.miner.runTFIDF(TermDoc)
         
-        return TFIDF, diseases_missing
+        return TermDoc, TFIDF, diseases_missing
     
     def moveReallyFast(self):
         """ Creating the symptom-doc-matrix/tfidf...
@@ -77,10 +78,68 @@ class EatTheRedPill(object):
                 continue
         
         self.symptTermDoc, self.t_hash, self.d_hash, self.n_hash = self.symptom_miner.createTermDoc(ready_data)
+        TermDoc, self.t2_hash, self.d2_hash, self.n2_hash = self.symptom_miner.createTermDoc(ready_data)
         
         TFIDF = self.symptom_miner.runTFIDF(self.symptTermDoc)
         
         return TFIDF, diseases_missing
+    
+    
+    
+    def callTheMatrices(self):
+        
+        _,tfidf_uni,_ = self.becomeMessiah()
+        tfidf_nlp,_ = self.moveReallyFast()
+        
+        return tfidf_uni, tfidf_nlp
+    
+    
+    def combineTheSizzle(self,path,tfidf_uni,tfidf_nlp):
+        
+#        r1 = self.pt.runTest(tfidf_uni,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
+        
+#        r2 = self.pt.runTest(tfidf_nlp,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
+        
+        test_file = re.split('\n',open(path).read())
+        
+        results=[]
+        for testcase in test_file:
+            r1 = self._getscores(testcase,tfidf_uni,False)
+            r2 = self._getscores(testcase,tfidf_nlp,True)
+            
+            result = dict(r1)
+            for r in r2:
+                if results.contains(r[0]): results[r[0]] += r[1]
+                else: results[r[0]] = r[1]
+            
+            results.append(result.items())
+        
+        #########
+        
+        # Hack: Reverse the hash for name-to-doc-id lookup 
+        # (no disease names should occur twice)
+        rev_name_hash = dict(zip(self.n_hash.values(),self.n_hash.keys()))
+        
+        for result in results:
+            rank=0
+            for r in result:
+                rank+=1
+                
+                # get the doc-id by name lookup
+                doc_id = rev_name_hash[r[0]]
+                if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
+    
+    def _getscores(self,testcase,nlp,termDoc):
+        
+        data = re.split('\t',testcase)
+        orpha_num = data[0]
+        query = data[2]
+        
+        if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
+        else: results = self.symptom_miner.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
+        
+        return results
+        
         
         
         
