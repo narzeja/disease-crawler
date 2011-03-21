@@ -160,9 +160,8 @@ class Textminer:
                 if not n: continue # if also nothing found in round two...
             
             # NOTE: Consider using sets...
-            docs = termDoc[:,n].nonzero()[0].tolist()[0]
+            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
             
-            print docs
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
