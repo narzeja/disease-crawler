@@ -11,7 +11,14 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     relevant_patreses = [x[0] for x in icd10 if code in x[1]]
     
     # Get the diseases belonging to the icd 10 category
-    rows = [d_hash[x] for x in relevant_patreses]
+    rows=[]
+    for patres in relevant_patreses:
+        try:
+            rows.append(d_hash[x])
+        except:
+            print "Disease not icd 10 coded,",patres
+            continue
+#    rows = [d_hash[x] for x in relevant_patreses ]
     submatrix_tfidf = TFIDF[rows,:]
     
     # Get the indices (aka. the term hashes) sorted by summed-tfidf score
