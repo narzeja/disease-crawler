@@ -140,7 +140,7 @@ class Textminer:
         return termDoc, term_hash, doc_hash, name_hash
     
     
-    def runTFIDF(self,termDoc):
+    def runTFIDF(self,tfidf):
         """
         Creates a Term-Frequency Inverse-Document-Frequency from a sparse
         coo_matrix, using log-transformation on TF and IDF.
