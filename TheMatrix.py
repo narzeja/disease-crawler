@@ -44,7 +44,7 @@ class EatTheRedPill(object):
                 diseases_missing.append(patres[0])
                 continue
         
-        TermDoc, self.t_hash, self.d_hash, self.n_hash = self.miner.createTermDoc(ready_data)
+        TermDoc, self.t1_hash, self.d1_hash, self.n1_hash = self.miner.createTermDoc(ready_data)
         TFIDF = self.miner.runTFIDF(TermDoc)
         
         return TermDoc, TFIDF, diseases_missing
@@ -76,19 +76,26 @@ class EatTheRedPill(object):
                 diseases_missing.append(patres[0])
                 continue
         
-        TermDoc, self.t_hash, self.d_hash, self.n_hash = self.symptom_miner.createTermDoc(ready_data)
+        TermDoc, self.t2_hash, self.d2_hash, self.n2_hash = self.symptom_miner.createTermDoc(ready_data)
         
         TFIDF = self.symptom_miner.runTFIDF(TermDoc)
         
         return TFIDF, diseases_missing
     
     
-    def combineTheSizzle(self,path):
+    
+    def callTheMatrices(self):
         
         _,tfidf_uni,_ = becomeMessiah()
+        tfidf_nlp,_ = moveReallyFast()
+        
+        return tfidf_uni, tfidf_nlp
+    
+    
+    def combineTheSizzle(self,path):
+        
         r1 = self.pt.runTest(tfidf_uni,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
         
-        tfidf_nlp,_ = moveReallyFast()
         r2 = self.pt.runTest(tfidf_nlp,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
         
         test_file = re.split('\n',open(path).read())
@@ -126,8 +133,8 @@ class EatTheRedPill(object):
         orpha_num = data[0]
         query = data[2]
         
-        if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t_hash, self.d_hash, self.n_hash)
-        else: results = self.miner_symptom.queryTheMatrix(termDoc, query, self.t_hash, self.d_hash, self.n_hash)
+        if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
+        else: results = self.miner_symptom.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
         
         return results
         
