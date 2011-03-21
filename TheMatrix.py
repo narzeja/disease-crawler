@@ -108,7 +108,7 @@ class EatTheRedPill(object):
         results=[]
         for testcase in test_file[:-1]:
             r1,orpha_num = self._getscores(testcase,tfidf_uni,False)
-            r2,_         = self._getscores(testcase,tfidf_nlp,True)
+            #r2,_         = self._getscores(testcase,tfidf_nlp,True)
             
             
             
@@ -130,7 +130,7 @@ class EatTheRedPill(object):
             orpha_num = result[0]
             for r in result[1]:
                 rank+=1
-                
+                print rank
                 # get the doc-id by name lookup
                 try:
                     doc_id = rev_name_hash[r[0]]
