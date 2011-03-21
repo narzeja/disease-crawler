@@ -20,7 +20,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]))
     
     rev_term_hash = dict(zip(t_hash.values(),t_hash.keys()))
-    sorted_tfidf_terms = [rev_t_hash[x] for x in scores_tfidf]
+    sorted_tfidf_terms = [rev_term_hash[x] for x in scores_tfidf]
     
     return sorted_tfidf_terms
     
