@@ -1,4 +1,5 @@
 import db as DB
+import numpy
 #import TextmineThis as TT
 
 
@@ -15,7 +16,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     submatrix_tfidf = TFIDF[rows,:]
     
     # Get the indices (aka. the term hashes) sorted by summed-tfidf score
-    scores = sum(submatrix_tfidf[:]).tolist()#[0]
+    scores = numpy.sum(submatrix_tfidf[:]).tolist()[0]
     print scores
     scores_tfidf = range(len(scores))
     scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]))
