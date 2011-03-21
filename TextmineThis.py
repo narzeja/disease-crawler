@@ -154,13 +154,13 @@ class Textminer:
 #        tfidf = termDoc.tolil()
         print "Converting to csr and counting terms/doc occurences."
 #        term_counts = [t.getnnz() for t in termDoc.tocsr().transpose()]
-        term_counts = sum(termDoc>0).tolist()[0]
+        term_counts = sum(tfidf>0).tolist()[0]
         
         print "Running TF-IDF..."
         for row in range(0,tfidf.shape[0]):
 #            n=tfidf.getrow(row).nonzero()[1]
 #            for col in (tfidf.getrow(row).nonzero()[1]):
-            for col in termDoc[row,:].nonzero()[1].tolist()[0]:
+            for col in tfidf[row,:].nonzero()[1].tolist()[0]:
                 tf = tfidf[row,col]
                 
                 try:
