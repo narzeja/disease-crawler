@@ -169,7 +169,6 @@ class Textminer:
             print len(docs)
             for doc in docs:
                 score = termDoc[doc,n].sum()
-                print score
                 
                 doc_id = rev_doc_hash[doc] # extract the original orpha-nums 
                 
