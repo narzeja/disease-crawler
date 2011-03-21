@@ -14,6 +14,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     rows = [d_hash[x] for x in relevant_patreses]
     submatrix_tfidf = TFIDF[rows,:]
     
+    print submatrix_tfidf
     # Get the indices (aka. the term hashes) sorted by summed-tfidf score
     scores = sum(submatrix_tfidf[:]).tolist()[0]
     scores_tfidf = range(len(scores))
