@@ -152,10 +152,12 @@ class Textminer:
         scores = {}
         for term in searchTerms:
             try:
-                n = term_hash[term]
+                n = [term_hash[term]]
             except:
                 print "Term not found: '"+term+"'"
-                continue
+                # Try subsets...
+                n = [term_hash[x] for x in term_hash.keys() if x in term_hash]
+                if not n: continue # if also nothing found in round two...
             
             docs = termDoc[:,n].nonzero()[0].tolist()[0]
             
