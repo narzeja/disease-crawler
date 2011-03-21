@@ -81,6 +81,56 @@ class EatTheRedPill(object):
         TFIDF = self.symptom_miner.runTFIDF(TermDoc)
         
         return TFIDF, diseases_missing
+    
+    
+    def combineTheSizzle(self,path):
+        
+        _,tfidf_uni,_ = becomeMessiah()
+        r1 = self.pt.runTest(tfidf_uni,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
+        
+        tfidf_nlp,_ = moveReallyFast()
+        r2 = self.pt.runTest(tfidf_nlp,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
+        
+        test_file = re.split('\n',open(path).read())
+        
+        results=[]
+        for testcase in test_file:
+            r1 = _getscores(self,testcase,tfidf_uni,False)
+            r2 = _getscores(self,testcase,tfidf_nlp,True)
+            
+            result = dict(r1)
+            for r in r2:
+                if results.contains(r[0]): results[r[0]] += r[1]
+                else: results[r[0]] = r[1]
+            
+            results.append(result.items())
+        
+        #########
+        
+        # Hack: Reverse the hash for name-to-doc-id lookup 
+        # (no disease names should occur twice)
+        rev_name_hash = dict(zip(self.n_hash.values(),self.n_hash.keys()))
+        
+        for result in results:
+            rank=0
+            for r in result:
+                rank+=1
+                
+                # get the doc-id by name lookup
+                doc_id = rev_name_hash[r[0]]
+                if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
+    
+    def _getscores(self,testcase,nlp,termDoc):
+        
+        data = re.split('\t',testcase)
+        orpha_num = data[0]
+        query = data[2]
+        
+        if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t_hash, self.d_hash, self.n_hash)
+        else: results = self.miner_symptom.queryTheMatrix(termDoc, query, self.t_hash, self.d_hash, self.n_hash)
+        
+        return results
+        
         
         
         

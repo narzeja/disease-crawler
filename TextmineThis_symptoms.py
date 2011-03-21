@@ -162,7 +162,6 @@ class Textminer:
             # NOTE: Consider using sets...
             docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
             
-            
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
             print len(docs)
