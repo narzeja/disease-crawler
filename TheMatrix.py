@@ -110,10 +110,12 @@ class EatTheRedPill(object):
             r1,orpha_num = self._getscores(testcase,tfidf_uni,False)
             r2,_         = self._getscores(testcase,tfidf_nlp,True)
             
+            
+            
             result = dict(r1)
-            for r in r2:
-                if result.has_key(r[0]): result[r[0]] += r[1]
-                else: result[r[0]] = r[1]
+            #for r in r2:
+            #    if result.has_key(r[0]): result[r[0]] += r[1]
+            #    else: result[r[0]] = r[1]
             
             results.append((orpha_num,result.items()))
         
