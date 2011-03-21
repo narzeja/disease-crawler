@@ -156,6 +156,7 @@ class Textminer:
             except:
                 print "Term not found: '"+term+"'"
                 # Try subsets...
+                print term
                 n = [term_hash[x] for x in term_hash.keys() if term in x]
                 if not n: continue # if also nothing found in round two...
             
