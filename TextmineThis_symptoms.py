@@ -168,8 +168,9 @@ class Textminer:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
             print len(docs)
             for doc in docs:
+                print doc
                 score = termDoc[doc,n]
-                print score
+                
                 doc_id = rev_doc_hash[doc] # extract the original orpha-nums 
                 
                 try:
