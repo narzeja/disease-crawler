@@ -92,7 +92,7 @@ class EatTheRedPill(object):
         return tfidf_uni, tfidf_nlp
     
     
-    def combineTheSizzle(self,path):
+    def combineTheSizzle(self,path,tfidf_uni,tfidf_nlp):
         
         r1 = self.pt.runTest(tfidf_uni,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
         
