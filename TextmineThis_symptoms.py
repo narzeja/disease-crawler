@@ -158,6 +158,7 @@ class Textminer:
                 # Try subsets...
                 n = [term_hash[x] for x in term_hash.keys() if x in term_hash]
                 if not n: continue # if also nothing found in round two...
+                print "Found term in",n
             
             docs = termDoc[:,n].nonzero()[0].tolist()[0]
             
