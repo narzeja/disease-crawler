@@ -106,7 +106,7 @@ class EatTheRedPill(object):
         test_file = re.split('\n',open(path).read())
         
         results=[]
-        for testcase in test_file:
+        for testcase in test_file[:-1]:
             r1,orpha_num = self._getscores(testcase,tfidf_uni,False)
             r2,_         = self._getscores(testcase,tfidf_nlp,True)
             
