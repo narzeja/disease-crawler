@@ -159,7 +159,7 @@ class Textminer:
                 n = [term_hash[x] for x in term_hash.keys() if x in term_hash]
                 if not n: continue # if also nothing found in round two...
             
-            docs = termDoc[:,n].nonzero()[0].tolist()[0]
+            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
             
             
             # Sum score measure:
