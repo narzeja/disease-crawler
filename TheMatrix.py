@@ -112,7 +112,7 @@ class EatTheRedPill(object):
             
             result = dict(r1)
             for r in r2:
-                if result.contains(r[0]): result[r[0]] += r[1]
+                if result.keys().contains(r[0]): result[r[0]] += r[1]
                 else: result[r[0]] = r[1]
             
             results.append((orpha_num,result.items()))
