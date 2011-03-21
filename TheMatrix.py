@@ -130,7 +130,6 @@ class EatTheRedPill(object):
                 rank+=1
                 
                 # get the doc-id by name lookup
-                print r[0]
                 try:
                     doc_id = rev_name_hash[r[0]]
                 except: print "not found:"
