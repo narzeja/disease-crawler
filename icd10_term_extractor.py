@@ -2,7 +2,7 @@ import db as DB
 #import TextmineThis as TT
 
 
-def run(TFIDF,TermDoc,t_hash,code):
+def run(TFIDF,TermDoc,t_hash,d_hashcode):
     
     db = DB.db()
     
