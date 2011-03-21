@@ -158,13 +158,13 @@ class Textminer:
                 # Try subsets...
                 n = [term_hash[x] for x in term_hash.keys() if x in term_hash]
                 if not n: continue # if also nothing found in round two...
-                print "Found term in",n
             
             docs = termDoc[:,n].nonzero()[0].tolist()[0]
             
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
+            print len(docs)
             for doc in docs:
                 score = termDoc[doc,n]
                 
