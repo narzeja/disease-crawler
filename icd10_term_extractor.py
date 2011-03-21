@@ -5,6 +5,7 @@ import db as DB
 def run(TFIDF,TermDoc,t_hash,d_hash,code):
     
     db = DB.db()
+    codes = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","V","Z"]
     
     #patres INT, code TEXT, category TEXT, keywords TEXT,
     icd10 = db.c.execute("select patres,code from icd_10").fetchall()

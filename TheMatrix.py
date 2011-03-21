@@ -135,6 +135,9 @@ class EatTheRedPill(object):
         orpha_num = data[0]
         query = data[2]
         
+        print query
+        print orpha_num
+        
         if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
         else: results = self.symptom_miner.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
         
