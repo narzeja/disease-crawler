@@ -2,6 +2,7 @@
 
 """
 
+import re
 import db as DB
 import TextmineThis as TT
 import TextmineThis_symptoms as TT_symptoms
