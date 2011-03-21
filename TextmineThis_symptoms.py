@@ -162,6 +162,8 @@ class Textminer:
             # NOTE: Consider using sets...
             docs = termDoc[:,n].nonzero()[0].tolist()[0]
             
+            print docs
+            
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
             print len(docs)
@@ -174,8 +176,6 @@ class Textminer:
                     scores[doc_id] += score
                 except:
                     scores[doc_id] = score
-        
-        print scores
         
         # Sort the scores (by value of course)
         scores = sorted(scores.items(), key=lambda (k,v): (v,k), reverse=True)
