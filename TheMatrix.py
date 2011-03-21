@@ -136,6 +136,7 @@ class EatTheRedPill(object):
     def _getscores(self,testcase,termDoc,nlp):
         
         data = re.split('\t',testcase)
+        print data
         orpha_num = data[0]
         query = data[2]
         

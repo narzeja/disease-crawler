@@ -164,7 +164,7 @@ class Textminer:
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
-            print len(docs)
+#            print len(docs)
             for doc in docs:
                 score = termDoc[doc,n].sum()
                 
