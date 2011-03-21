@@ -19,6 +19,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
             print "Disease not icd 10 coded,",patres
             continue
 #    rows = [d_hash[x] for x in relevant_patreses ]
+    print rows
     submatrix_tfidf = TFIDF[rows,:]
     
     # Get the indices (aka. the term hashes) sorted by summed-tfidf score
