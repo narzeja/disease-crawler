@@ -121,7 +121,7 @@ class EatTheRedPill(object):
         
         # Hack: Reverse the hash for name-to-doc-id lookup 
         # (no disease names should occur twice)
-        rev_name_hash = dict(zip(self.n_hash.values(),self.n_hash.keys()))
+        rev_name_hash = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
         
         for result in results:
             rank=0
