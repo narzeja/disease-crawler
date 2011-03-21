@@ -86,8 +86,8 @@ class EatTheRedPill(object):
     
     def callTheMatrices(self):
         
-        _,tfidf_uni,_ = becomeMessiah()
-        tfidf_nlp,_ = moveReallyFast()
+        _,tfidf_uni,_ = self.becomeMessiah()
+        tfidf_nlp,_ = self.moveReallyFast()
         
         return tfidf_uni, tfidf_nlp
     
@@ -102,8 +102,8 @@ class EatTheRedPill(object):
         
         results=[]
         for testcase in test_file:
-            r1 = _getscores(self,testcase,tfidf_uni,False)
-            r2 = _getscores(self,testcase,tfidf_nlp,True)
+            r1 = self._getscores(self,testcase,tfidf_uni,False)
+            r2 = self._getscores(self,testcase,tfidf_nlp,True)
             
             result = dict(r1)
             for r in r2:
