@@ -93,6 +93,9 @@ class EatTheRedPill(object):
         
         return tfidf_uni, tfidf_nlp
     
+    def setHashes(self,t1_hash, t2_hash, d1_hash, d2_hash, n1_hash, n2_hash)
+        self.t1_hash = t1_hash; self.t2_hash = t2_hash; self.d1_hash = d1_hash; self.d2_hash = d2_hash; self.n1_hash = n1_hash; self.n2_hash = n2_hash
+    
     
     def combineTheSizzle(self,path,tfidf_uni,tfidf_nlp):
         
@@ -109,8 +112,8 @@ class EatTheRedPill(object):
             
             result = dict(r1)
             for r in r2:
-                if results.contains(r[0]): results[r[0]] += r[1]
-                else: results[r[0]] = r[1]
+                if result.contains(r[0]): result[r[0]] += r[1]
+                else: result[r[0]] = r[1]
             
             results.append((orpha_num,result.items()))
         
