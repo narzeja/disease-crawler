@@ -130,6 +130,7 @@ class EatTheRedPill(object):
                 rank+=1
                 
                 # get the doc-id by name lookup
+                print r[0]
                 doc_id = rev_name_hash[r[0]]
                 if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
     
