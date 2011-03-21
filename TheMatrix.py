@@ -104,15 +104,15 @@ class EatTheRedPill(object):
         
         results=[]
         for testcase in test_file:
-            r1 = self._getscores(testcase,tfidf_uni,False)
-            r2 = self._getscores(testcase,tfidf_nlp,True)
+            r1,orpha_num = self._getscores(testcase,tfidf_uni,False)
+            r2,_         = self._getscores(testcase,tfidf_nlp,True)
             
             result = dict(r1)
             for r in r2:
                 if results.contains(r[0]): results[r[0]] += r[1]
                 else: results[r[0]] = r[1]
             
-            results.append(result.items())
+            results.append((orpha_num,result.items()))
         
         #########
         
@@ -122,26 +122,24 @@ class EatTheRedPill(object):
         
         for result in results:
             rank=0
-            for r in result:
+            orpha_num = result[0]
+            for r in result[1]:
                 rank+=1
                 
                 # get the doc-id by name lookup
                 doc_id = rev_name_hash[r[0]]
                 if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
     
-    def _getscores(self,testcase,nlp,termDoc):
+    def _getscores(self,testcase,termDoc,nlp):
         
         data = re.split('\t',testcase)
         orpha_num = data[0]
         query = data[2]
         
-        print query
-        print orpha_num
-        
         if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
         else: results = self.symptom_miner.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
         
-        return results
+        return results, orpha_num
         
         
         
