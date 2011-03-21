@@ -132,7 +132,7 @@ class EatTheRedPill(object):
                 # get the doc-id by name lookup
                 try:
                     doc_id = rev_name_hash[r[0]]
-                except: print "not found:"
+                except: print "not found..something.."
                 if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
     
     def _getscores(self,testcase,termDoc,nlp):
