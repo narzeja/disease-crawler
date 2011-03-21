@@ -19,8 +19,6 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     scores_tfidf = range(len(scores))
     scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]))
     
-    print scores_tfidf
-    
     rev_term_hash = dict(zip(t_hash.values(),t_hash.keys()))
     sorted_tfidf_terms = [rev_t_hash[x] for x in scores_tfidf]
     
