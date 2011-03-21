@@ -21,7 +21,8 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     
     print scores_tfidf
     
-    sorted_tfidf_terms = [t_hash[x] for x in scores_tfidf]
+    rev_term_hash = dict(zip(t_hash.values(),t_hash.keys()))
+    sorted_tfidf_terms = [rev_t_hash[x] for x in scores_tfidf]
     
     return sorted_tfidf_terms
     
