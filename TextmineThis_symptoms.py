@@ -159,8 +159,8 @@ class Textminer:
                 n = [term_hash[x] for x in term_hash.keys() if x and term in x]
                 if not n: continue # if also nothing found in round two...
             
+            # NOTE: Consider using sets...
             docs = termDoc[:,n].nonzero()[0].tolist()[0]
-            
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
@@ -174,6 +174,8 @@ class Textminer:
                     scores[doc_id] += score
                 except:
                     scores[doc_id] = score
+        
+        print scores
         
         # Sort the scores (by value of course)
         scores = sorted(scores.items(), key=lambda (k,v): (v,k), reverse=True)
