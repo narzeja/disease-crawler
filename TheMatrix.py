@@ -103,8 +103,8 @@ class EatTheRedPill(object):
         
         results=[]
         for testcase in test_file:
-            r1 = self._getscores(self,testcase,tfidf_uni,False)
-            r2 = self._getscores(self,testcase,tfidf_nlp,True)
+            r1 = self._getscores(testcase,tfidf_uni,False)
+            r2 = self._getscores(testcase,tfidf_nlp,True)
             
             result = dict(r1)
             for r in r2:
