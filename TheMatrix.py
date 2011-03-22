@@ -6,6 +6,7 @@ import re
 import db as DB
 import TextmineThis as TT
 import TextmineThis_symptoms as TT_symptoms
+import TextmineThis_symptoms as TT_backup
 
 class EatTheRedPill(object):
     """There's not going back...
@@ -18,7 +19,8 @@ class EatTheRedPill(object):
         """
         
         self.db = DB.db(database)
-        self.miner = TT.Textminer()
+#        self.miner = TT.Textminer()
+        self.miner = TT.Textminer_backup()
         self.symptom_miner = TT_symptoms.Textminer()
 #        self.icd10 = self.db.c.execute("SELECT * from icd_10").fetchall()
     
@@ -34,7 +36,7 @@ class EatTheRedPill(object):
         patreses = self.db.c.execute("SELECT patres FROM disease_info").fetchall()
         for patres in patreses:
             data = self.db.c.execute("SELECT Q.patres, G.data, D.disease_name "\
-                                "FROM query Q, googled_info G, disease_info D "\
+                                "FROM query Q, googled_info_cleansed G, disease_info D "\
                                 "WHERE Q.query = G.query AND Q.patres = D.patres "\
                                                         "AND Q.patres=?",[patres[0]])
             data = data.fetchall()
@@ -134,7 +136,7 @@ class EatTheRedPill(object):
                 try:
                     doc_id = rev_name_hash[r[0]]
                 except: continue
-                print r[1],r[0]
+                
                 if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
     
     def _getscores(self,testcase,termDoc,nlp):
