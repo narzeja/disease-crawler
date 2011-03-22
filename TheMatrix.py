@@ -5,8 +5,8 @@
 import re
 import db as DB
 import TextmineThis as TT
-import TextmineThis_symptoms as TT_symptoms
-import TextmineThis_symptoms as TT_backup
+#import TextmineThis_symptoms as TT_symptoms
+import TextmineThis_backup as TT_backup
 
 class EatTheRedPill(object):
     """There's not going back...
@@ -20,7 +20,7 @@ class EatTheRedPill(object):
         
         self.db = DB.db(database)
 #        self.miner = TT.Textminer()
-        self.miner = TT.TextmineThis_backup()
+        self.miner = TT_backup.TextmineThis()
         self.symptom_miner = TT_symptoms.Textminer()
 #        self.icd10 = self.db.c.execute("SELECT * from icd_10").fetchall()
     
