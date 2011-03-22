@@ -20,7 +20,7 @@ class EatTheRedPill(object):
         
         self.db = DB.db(database)
 #        self.miner = TT.Textminer()
-        self.miner = TT_backup.TextmineThis()
+        self.miner = TT_backup.Textminer()
         self.symptom_miner = TT_symptoms.Textminer()
 #        self.icd10 = self.db.c.execute("SELECT * from icd_10").fetchall()
     
