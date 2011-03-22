@@ -1,5 +1,5 @@
 import re
-import TextmineThis
+import TextmineThis as TT
 #import TextmineThis_symptoms as TTs
 import TextmineThis_backup as TTb
 import db as DB
@@ -17,7 +17,7 @@ class tester():
 #        self.data = self.data.fetchall()
         
         #self.miner = TextmineThis.Textminer()
-        self.miner = TTb.Textminer()
+        self.miner = TT.Textminer()
         
 #        self.termDoc,self.term_hash,self.doc_hash,self.name_hash = self.miner.createTermDoc(self.data)
 #        self.termDoc = self.miner.runTFIDF(self.termDoc)
