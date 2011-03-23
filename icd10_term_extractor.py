@@ -93,7 +93,11 @@ def gogo(query,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     pt.initialize()
     
     codes = top_two(miner.stem(query),icd_featurevectors)
-    sub_tfidf = miner.runTFIDF(tfidf[icd_featurevectors[1],:])
+    rows=[]
+    for code in codes:
+        rows.extend(icd_featurevectors[code][1])
+    rows = set(rows)
+    sub_tfidf = miner.runTFIDF(tfidf[rows,:])
     
     print "Submatrix size:",sub_tfidf.shape
     
