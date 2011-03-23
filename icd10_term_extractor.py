@@ -93,6 +93,8 @@ def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     pt.initialize()
     
     codes = top_two(miner.stem(query),icd_featurevectors)
+    print codes
+    
     rows=[]
     for code in codes:
         rows.extend(icd_featurevectors[code][1])
@@ -110,7 +112,7 @@ def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     rank=0
     for r in results:
         rank+=1
-            
+        
         # get the doc-id by name lookup
         doc_id = rev_name_hash[r[0]]
         if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
