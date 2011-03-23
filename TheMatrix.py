@@ -116,13 +116,19 @@ class EatTheRedPill(object):
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
-                rev_name_hash = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
+                
+                rev_name_hash1 = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
+                rev_name_hash2 = dict(zip(self.n2_hash.values(),self.n2_hash.keys()))
                 
                 rank=0
                 for r in results:
                     rank+=1
                     # get the doc-id by name lookup
-                    doc_id = rev_name_hash[r[0]]
+                    try:
+                        doc_id = rev_name_hash1[r[0]]
+                    except:
+                        doc_id = rev_name_hash2[r[0]]
+                    
                     if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
     
     
