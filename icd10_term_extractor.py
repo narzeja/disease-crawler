@@ -50,7 +50,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     # remove non-symptom candidates
     sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
     
-    return sorted_tfidf_terms, sorted_tfidf_terms_cleaned,symp
+    return sorted_tfidf_terms, sorted_tfidf_terms_cleaned,symptom_list
     
 #    submatrix_termDoc = TermDoc[rows,:]
     
