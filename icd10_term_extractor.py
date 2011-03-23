@@ -17,13 +17,12 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
         symptoms = db.c.execute("select N.symptom \
                                  from nlp_nonweighted N \
                                  where N.patres=?",[patres]).fetchall()
+        print symptoms
         symptoms = [x[0] for x in symptoms if x]
         symptom_list.extend(symptoms)
     symptom_list = set(symptom_list)
     # try splitting it...hacked version!
-    print symptom_list
     symptom_list = list(itertools.chain(*[x.split() for x in symptom_list]))
-    print symptom_list
     
     
     # Get the diseases belonging to the icd 10 category
