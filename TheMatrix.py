@@ -116,10 +116,11 @@ class EatTheRedPill(object):
                 
                 r1 = self.miner.queryTheMatrix(tfidf_uni, query,self.t1_hash, self.d1_hash, self.n1_hash)
                 r2 = self.miner.queryTheMatrix(tfidf_uni, query,self.t1_hash, self.d1_hash, self.n1_hash)
-                print r1[:10]
                 
                 # Note that this merger reverses the positions of the tuples...
                 results = self._merge_scores(r1,r2) 
+                
+                print results[:5]
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
@@ -138,10 +139,10 @@ class EatTheRedPill(object):
         Simply adds and merges two tupled lists where the score is the first
         element and the enitity name the second element.
         """
-        result = dict([(x[1],x[0]) for x in r1])
+        result = dict([(x[0],x[1]) for x in r1])
         for r in r2:
-            if result.has_key(r[1]): result[r[1]]+=r[0]
-            else: result[r[1]] = r[0]
+            if result.has_key(r[0]): result[r[0]]+=r[1]
+            else: result[r[0]] = r[1]
         return result
     
     
