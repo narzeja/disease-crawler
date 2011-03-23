@@ -36,6 +36,8 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
                 missing_patreses.append(patres)
                 continue
         
+        print "Based on",len(rows),"diseases"
+        
         # Get the indices (aka. the term hashes) sorted by summed-tfidf score
         submatrix_tfidf = TFIDF[rows,:]
         if submatrix_tfidf[:].shape[0] > 0:
@@ -51,7 +53,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         
         # remove non-symptom candidates
         sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
-        print len(sorted_tfidf_terms_cleaned)
+        
         icd_featurevectors[code] = sorted_tfidf_terms_cleaned
     
     return icd_featurevectors
@@ -75,8 +77,8 @@ def locate_entire_query(query,icd_featurevectors):
     
     return ranked_terms
 
-def top_three(query):
-    ranked_terms = locate_entire_query(query)
+def top_three(query,icd_featurevectors):
+    ranked_terms = locate_entire_query(query,icd_featurevectors)
     potentials={}
     for item in ranked_terms.items():
         for cand in item[1][:3]:
