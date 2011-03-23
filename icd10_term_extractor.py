@@ -86,7 +86,7 @@ def top_two(query,icd_featurevectors):
 
 import TextmineThis as TT
 import PreliminaryTests as PT
-def (query,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
+def gogo(query,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     
     miner  = TT.Textminer()
     pt = PT.tester()
