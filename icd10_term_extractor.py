@@ -31,9 +31,9 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         rows=[]
         for patres in relevant_patreses:
             try:
-                if patres=130: print "Yes!"
+                if patres==130: print "Yes!"
                 rows.append(d_hash[patres])
-                if patres=130: print "I found it!"
+                if patres==130: print "I found it!"
             except: 
                 missing_patreses.append(patres)
                 continue
