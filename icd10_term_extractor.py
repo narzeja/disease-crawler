@@ -54,7 +54,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         # remove non-symptom candidates
         sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
         
-        icd_featurevectors[code] = sorted_tfidf_terms_cleaned
+        icd_featurevectors[code] = (sorted_tfidf_terms_cleaned,rows)
     
     return icd_featurevectors
 
@@ -62,8 +62,8 @@ def locate_term_category(term,icd_featurevectors):
     
     ranked_groups=[]
     for code,feature_vec in icd_featurevectors.items():
-        if term in feature_vec:
-            ranked_groups.append((feature_vec.index(term),code))
+        if term in feature_vec[0]:
+            ranked_groups.append((feature_vec[0].index(term),code))
     
     return ranked_groups
 
@@ -77,9 +77,36 @@ def locate_entire_query(query,icd_featurevectors):
     
     return ranked_terms
 
-def top_three(query,icd_featurevectors):
+def top_two(query,icd_featurevectors):
     ranked_terms = locate_entire_query(query,icd_featurevectors)
     potentials=[]
     for item in ranked_terms.items():
         potentials.extend([x[1] for x in item[1][:2]])
     return set(potentials)
+
+import TextmineThis as TT
+import Preliminary Test as PT
+def (query,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
+    
+    miner  = TT.Textminer()
+    pt = PT.tester()
+    pt.initialize()
+    
+    codes = top_two(miner.stem(query),icd_featurevectors)
+    sub_tfidf = miner.runTFIDF(tfidf[rows,:])
+    
+    print "Submatrix size:",sub_tfidf.shape
+    
+    results = miner.queryTheMatrix(sub_tfidf,query,t_hash,d_hash,n_hash)
+    
+    # Hack: Reverse the hash for name-to-doc-id lookup 
+    # (no disease names should occur twice)
+    rev_name_hash = dict(zip(self.name_hash.values(),self.name_hash.keys()))
+    
+    rank=0
+    for r in results:
+        rank+=1
+            
+        # get the doc-id by name lookup
+        doc_id = rev_name_hash[r[0]]
+        if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
