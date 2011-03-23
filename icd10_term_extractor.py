@@ -11,6 +11,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     
     #patres INT, code TEXT, category TEXT, keywords TEXT,
     icd10 = db.c.execute("select patres,code from icd_10").fetchall()
+    print len(icd10)
     relevant_patreses = [x[0] for x in icd10 if code in x[1]]
     
     # Get the symptoms extracted for the icd10 group
