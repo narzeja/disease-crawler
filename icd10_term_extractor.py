@@ -13,16 +13,20 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     
     # Get the symptoms extracted for the icd10 group
     symptom_list=[]
-    for patres in relevant_patreses:
-        symptoms = db.c.execute("select N.freq \
-                                 from nlp_weighted N \
-                                 where N.patres=?",[patres]).fetchall()
-        print symptoms
-        symptoms = [x[0] for x in symptoms if x]
-        symptom_list.extend(symptoms)
-    symptom_list = set(symptom_list)
-    # try splitting it...hacked version!
+    symptoms = db.c.execute("select N.freq from nlp_weighted N").fetchall()
     symptom_list = list(itertools.chain(*[x.split() for x in symptom_list]))
+    symptom_list = set(symptom_list)
+    
+#    for patres in relevant_patreses:
+#        symptoms = db.c.execute("select N.freq \
+#                                 from nlp_weighted N \
+#                                 where N.patres=?",[patres]).fetchall()
+#        symptoms = [x[0] for x in symptoms if x]
+#        symptom_list.extend(symptoms)
+#    symptom_list = set(symptom_list)
+#    # try splitting it...hacked version!
+#    symptom_list = list(itertools.chain(*[x.split() for x in symptom_list]))
+#    symptom_list = set(symptom_list)
     
     
     # Get the diseases belonging to the icd 10 category
@@ -46,7 +50,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     # remove non-symptom candidates
     sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
     
-    return sorted_tfidf_terms, sorted_tfidf_terms_cleaned, symptom_list
+    return sorted_tfidf_terms, sorted_tfidf_terms_cleaned
     
 #    submatrix_termDoc = TermDoc[rows,:]
     
