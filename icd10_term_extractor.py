@@ -105,7 +105,7 @@ def gogo(query,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     
     # Hack: Reverse the hash for name-to-doc-id lookup 
     # (no disease names should occur twice)
-    rev_name_hash = dict(zip(self.name_hash.values(),self.name_hash.keys()))
+    rev_name_hash = dict(zip(n_hash.values(),n_hash.keys()))
     
     rank=0
     for r in results:
