@@ -4,7 +4,7 @@ import itertools
 import TextmineThis_symptoms as TTS
 
 
-def run(TFIDF,TermDoc,t_hash,d_hash,code):
+def run(TFIDF,TermDoc,t_hash,d_hash):
     
     db = DB.db()
     tts = TTS.Textminer()
@@ -51,7 +51,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
         
         # remove non-symptom candidates
         sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
-        
+        print len(sorted_tfidf_terms_cleaned)
         icd_featurevectors[code] = sorted_tfidf_terms_cleaned
     
     return icd_featurevectors
