@@ -70,7 +70,7 @@ def locate_term_category(term,icd_featurevectors):
 def locate_entire_query(query,icd_featurevectors):
     
     ranked_terms = {}
-    for term in query.split():
+    for term in query:
         if term:
             ranked_groups = locate_term_category(term,icd_featurevectors)
             ranked_terms[term] = sorted(ranked_groups)
