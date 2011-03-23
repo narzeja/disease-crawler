@@ -79,9 +79,7 @@ def locate_entire_query(query,icd_featurevectors):
 
 def top_three(query,icd_featurevectors):
     ranked_terms = locate_entire_query(query,icd_featurevectors)
-    potentials={}
+    potentials=[]
     for item in ranked_terms.items():
-        for cand in item[1][:3]:
-            if potentials.has_key(cand[1]): potentials[cand[1]] += 1
-            else: potentials[cand[1]] = 1
-    return potentials
+        potentials.extend(item[1][:3])
+    return set(potentials)
