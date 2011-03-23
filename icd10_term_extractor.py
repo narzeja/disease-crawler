@@ -14,7 +14,6 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     # Get the symptoms extracted for the icd10 group
     symptoms = db.c.execute("select N.freq from nlp_nonweighted N").fetchall()
     symptoms = [x[0] for x in symptoms if x]
-    print symptoms[:10]
     symptom_list = list(itertools.chain(*[str(x).split() for x in symptoms]))
     symptom_list = set(symptom_list)
     
@@ -51,7 +50,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     # remove non-symptom candidates
     sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
     
-    return sorted_tfidf_terms, sorted_tfidf_terms_cleaned
+    return sorted_tfidf_terms, sorted_tfidf_terms_cleaned,symp
     
 #    submatrix_termDoc = TermDoc[rows,:]
     
