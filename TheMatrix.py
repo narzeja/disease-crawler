@@ -5,8 +5,8 @@
 import re
 import db as DB
 import TextmineThis as TT
-#import TextmineThis_symptoms as TT_symptoms
-import TextmineThis_backup as TT_backup
+import TextmineThis_symptoms as TT_symptoms
+#import TextmineThis_backup as TT_backup
 
 class EatTheRedPill(object):
     """There's not going back...
@@ -19,10 +19,8 @@ class EatTheRedPill(object):
         """
         
         self.db = DB.db(database)
-#        self.miner = TT.Textminer()
         self.miner = TT.Textminer()
-#        self.symptom_miner = TT_symptoms.Textminer()
-#        self.icd10 = self.db.c.execute("SELECT * from icd_10").fetchall()
+        self.symptom_miner = TT_symptoms.Textminer()
     
     def becomeMessiah(self):
         """ Create the simple term-doc/tfidf...
@@ -101,10 +99,6 @@ class EatTheRedPill(object):
     
     def combineTheSizzle(self,path,tfidf_uni,tfidf_nlp):
         
-#        r1 = self.pt.runTest(tfidf_uni,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
-        
-#        r2 = self.pt.runTest(tfidf_nlp,"testdata1/bmj.txt", self.t_hash, self.d_hash, self.n_hash)
-        
         test_file = re.split('\n',open(path).read())
         
         results=[]
@@ -115,7 +109,7 @@ class EatTheRedPill(object):
                 query = data[2]
                 
                 r1 = self.miner.queryTheMatrix(tfidf_uni, query,self.t1_hash, self.d1_hash, self.n1_hash)
-                r2 = self.miner.queryTheMatrix(tfidf_uni, query,self.t1_hash, self.d1_hash, self.n1_hash)
+                r2 = self.symptom_miner.queryTheMatrix(tfidf_nlp, query,self.t1_hash, self.d1_hash, self.n1_hash)
                 
                 # Note that this merger reverses the positions of the tuples...
                 results = self._merge_scores(r1,r2) 
@@ -134,8 +128,7 @@ class EatTheRedPill(object):
     
     def _merge_scores(self,r1,r2):
         """
-        Simply adds and merges two tupled lists where the score is the first
-        element and the enitity name the second element.
+        Simply adds and merges two tupled lists.
         """
         result = dict([(x[0],x[1]) for x in r1])
         for r in r2:
