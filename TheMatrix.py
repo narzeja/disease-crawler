@@ -110,7 +110,7 @@ class EatTheRedPill(object):
         results=[]
         for testcase in test_file:
             if testcase: # avoid empty rows
-                data = re.split('\t',test)
+                data = re.split('\t',testcase)
                 orpha_num = self.data[0]
                 query = self.data[2]
                 
