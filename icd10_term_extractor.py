@@ -59,8 +59,8 @@ def locate_term_category(term,icd_featurevectors):
     for code,feature_vec in icd_featurevectors.items():
         if term in feature_vec:
             ranked_groups.append((feature_vec.index(term),code))
-     
-     return ranked_groups
+    
+    return ranked_groups
 
 def locate_entire_query(query,icd_featurevectors):
     
