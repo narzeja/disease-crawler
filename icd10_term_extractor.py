@@ -15,7 +15,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     symptoms = db.c.execute("select N.freq from nlp_nonweighted N").fetchall()
     symptoms = [x[0] for x in symptoms if x]
     print symptoms[:10]
-    symptom_list = list(itertools.chain(*[x.split() for x in symptoms]))
+    symptom_list = list(itertools.chain(*[str(x).split() for x in symptoms]))
     symptom_list = set(symptom_list)
     
 #    symptom_list=[]
