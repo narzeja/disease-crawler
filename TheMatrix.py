@@ -120,7 +120,7 @@ class EatTheRedPill(object):
                 # Note that this merger reverses the positions of the tuples...
                 results = self._merge_scores(r1,r2) 
                 
-                print results[:5]
+                print results
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
