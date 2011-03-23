@@ -126,12 +126,12 @@ class EatTheRedPill(object):
                 rank=0
                 for r in results:
                     rank+=1
-                    
+                    print r
                     # get the doc-id by name lookup
                     doc_id = rev_name_hash[r[1]]
                     if doc_id == int(orpha_num): print rank,"\t",r[0],"\t",r[1]
-        
-        
+    
+    
     def _merge_scores(self,r1,r2):
         """
         Simply adds and merges two tupled lists where the score is the first
@@ -144,36 +144,5 @@ class EatTheRedPill(object):
         return result
     
     
-        #########
-        
-        # Hack: Reverse the hash for name-to-doc-id lookup 
-        # (no disease names should occur twice)
-#        rev_name_hash = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
-#        
-#        for result in results:
-#            rank=0
-#            orpha_num = result[0]
-#            for r in result[1]:
-#                rank+=1
-#                # get the doc-id by name lookup
-#                try:
-#                    doc_id = rev_name_hash[r[0]]
-#                except: continue
-#                
-#                if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
-#    
-#    def _getscores(self,testcase,termDoc,nlp):
-#        
-#        data = re.split('\t',testcase)
-#        
-#        orpha_num = data[0]
-#        query = data[2]
-#        
-#        if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
-#        else: results = self.symptom_miner.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
-#        
-#        return results, orpha_num
-#        
-        
-        
-        
+    
+    
