@@ -85,7 +85,7 @@ def top_two(query,icd_featurevectors):
     return set(potentials)
 
 import TextmineThis as TT
-import Preliminary Test as PT
+import PreliminaryTests as PT
 def (query,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     
     miner  = TT.Textminer()
