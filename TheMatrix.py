@@ -108,49 +108,58 @@ class EatTheRedPill(object):
         test_file = re.split('\n',open(path).read())
         
         results=[]
-        for testcase in test_file[:-1]:
-            r1,orpha_num = self._getscores(testcase,tfidf_uni,False)
-            #r2,_         = self._getscores(testcase,tfidf_nlp,True)
-            
-            
-            
-            result = dict(r1)
-            #for r in r2:
-            #    if result.has_key(r[0]): result[r[0]] += r[1]
-            #    else: result[r[0]] = r[1]
-            
-            results.append((orpha_num,result.items()))
+        for testcase in test_file:
+            if testcase: # avoid empty rows
+                data = re.split('\t',test)
+                orpha_num = self.data[0]
+                query = self.data[2]
+                
+                results = self.miner.queryTheMatrix(self.termDoc, query,self.term_hash, self.doc_hash, self.name_hash)
+                
+                # Hack: Reverse the hash for name-to-doc-id lookup 
+                # (no disease names should occur twice)
+                rev_name_hash = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
+                
+                rank=0
+                for r in results:
+                    rank+=1
+                    
+                    # get the doc-id by name lookup
+                    doc_id = rev_name_hash[r[0]]
+                    if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
+        
+        
         
         #########
         
         # Hack: Reverse the hash for name-to-doc-id lookup 
         # (no disease names should occur twice)
-        rev_name_hash = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
-        
-        for result in results:
-            rank=0
-            orpha_num = result[0]
-            for r in result[1]:
-                rank+=1
-                # get the doc-id by name lookup
-                try:
-                    doc_id = rev_name_hash[r[0]]
-                except: continue
-                
-                if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
-    
-    def _getscores(self,testcase,termDoc,nlp):
-        
-        data = re.split('\t',testcase)
-        
-        orpha_num = data[0]
-        query = data[2]
-        
-        if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
-        else: results = self.symptom_miner.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
-        
-        return results, orpha_num
-        
+#        rev_name_hash = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
+#        
+#        for result in results:
+#            rank=0
+#            orpha_num = result[0]
+#            for r in result[1]:
+#                rank+=1
+#                # get the doc-id by name lookup
+#                try:
+#                    doc_id = rev_name_hash[r[0]]
+#                except: continue
+#                
+#                if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
+#    
+#    def _getscores(self,testcase,termDoc,nlp):
+#        
+#        data = re.split('\t',testcase)
+#        
+#        orpha_num = data[0]
+#        query = data[2]
+#        
+#        if not nlp: results = self.miner.queryTheMatrix(termDoc, query, self.t1_hash, self.d1_hash, self.n1_hash)
+#        else: results = self.symptom_miner.queryTheMatrix(termDoc, query, self.t2_hash, self.d2_hash, self.n2_hash)
+#        
+#        return results, orpha_num
+#        
         
         
         
