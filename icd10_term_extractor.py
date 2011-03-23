@@ -35,7 +35,6 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
             except: 
                 missing_patreses.append(patres)
                 continue
-        print len(rows)
         
         # Get the indices (aka. the term hashes) sorted by summed-tfidf score
         submatrix_tfidf = TFIDF[rows,:]
@@ -44,6 +43,8 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         else: continue
         scores_tfidf = range(len(scores))
         scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]),reverse=True)
+        
+        print len(scores_tfidf)
         
         # Reverse term hash (terms can be looked up by hash)
         rev_term_hash = dict(zip(t_hash.values(),t_hash.keys()))
