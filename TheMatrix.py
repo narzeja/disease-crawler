@@ -114,7 +114,7 @@ class EatTheRedPill(object):
                 orpha_num = data[0]
                 query = data[2]
                 
-                results = self.miner.queryTheMatrix(self.termDoc, query,self.t1_hash, self.d1_hash, self.n1_hash)
+                results = self.miner.queryTheMatrix(tfidf_uni, query,self.t1_hash, self.d1_hash, self.n1_hash)
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
