@@ -14,7 +14,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     # Get the symptoms extracted for the icd10 group
     symptom_list=[]
     for patres in relevant_patreses:
-        symptoms = db.c.execute("select N.symptom \
+        symptoms = db.c.execute("select N.freq \
                                  from nlp_nonweighted N \
                                  where N.patres=?",[patres]).fetchall()
         print symptoms
