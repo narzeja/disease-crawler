@@ -30,10 +30,10 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         # Get the diseases belonging to the icd 10 category
         rows=[]
         for patres in relevant_patreses:
+            if patres==130: print code
             try:
                 rows.append(d_hash[patres])
             except: 
-                if patres==130: print "Damn!"
                 missing_patreses.append(patres)
                 continue
         
