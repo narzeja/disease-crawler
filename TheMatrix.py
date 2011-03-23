@@ -111,10 +111,10 @@ class EatTheRedPill(object):
         for testcase in test_file:
             if testcase: # avoid empty rows
                 data = re.split('\t',testcase)
-                orpha_num = self.data[0]
-                query = self.data[2]
+                orpha_num = data[0]
+                query = data[2]
                 
-                results = self.miner.queryTheMatrix(self.termDoc, query,self.term_hash, self.doc_hash, self.name_hash)
+                results = self.miner.queryTheMatrix(self.termDoc, query,self.t1_hash, self.d1_hash, self.n1_hash)
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
