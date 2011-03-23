@@ -44,7 +44,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
         # Reverse term hash (terms can be looked up by hash)
         rev_term_hash = dict(zip(t_hash.values(),t_hash.keys()))
         
-        sorted_tfidf_terms = [(rev_term_hash[x], for x in scores_tfidf]
+        sorted_tfidf_terms = [rev_term_hash[x] for x in scores_tfidf]
         
         # remove non-symptom candidates
         sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
