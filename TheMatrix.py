@@ -130,8 +130,8 @@ class EatTheRedPill(object):
                 for r in results:
                     rank+=1
                     # get the doc-id by name lookup
-                    doc_id = rev_name_hash[r[1]]
-                    if doc_id == int(orpha_num): print rank,"\t",r[0],"\t",r[1]
+                    doc_id = rev_name_hash[r[0]]
+                    if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
     
     
     def _merge_scores(self,r1,r2):
