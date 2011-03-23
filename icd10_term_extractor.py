@@ -16,7 +16,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     for patres in relevant_patreses:
         symptoms = db.c.execute("select N.symptom \
                                  from nlp_nonweighted N \
-                                 where N.patres=?"[patres]).fetchall()
+                                 where N.patres=?",[patres]).fetchall()
         symptoms = [x[0] for x in symptoms if x]
         symptom_list.extend(symptoms)
     symptom_list = set(symptom_list)
