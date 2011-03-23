@@ -115,4 +115,5 @@ def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
         
         # get the doc-id by name lookup
         doc_id = rev_name_hash[r[0]]
+        print doc_id
         if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
