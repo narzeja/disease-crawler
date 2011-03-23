@@ -51,7 +51,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     sorted_tfidf_terms = [rev_term_hash[x] for x in scores_tfidf]
     
     # remove non-symptom candidates
-    sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
+    sorted_tfidf_terms_cleaned = ['*'+x for x in sorted_tfidf_terms if x not in symptom_list]
     
     return sorted_tfidf_terms, sorted_tfidf_terms_cleaned,symptom_list
     
