@@ -14,6 +14,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     # Get the symptoms extracted for the icd10 group
     symptom_list=[]
     symptoms = db.c.execute("select N.freq from nlp_weighted N").fetchall()
+    symptoms = [x[0] for x in symptoms if x]
     symptom_list = list(itertools.chain(*[x.split() for x in symptom_list]))
     symptom_list = set(symptom_list)
     
