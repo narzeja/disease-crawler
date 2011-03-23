@@ -12,22 +12,21 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     relevant_patreses = [x[0] for x in icd10 if code in x[1]]
     
     # Get the symptoms extracted for the icd10 group
-    symptom_list=[]
-#    symptoms = db.c.execute("select N.freq from nlp_weighted N").fetchall()
-#    symptoms = [x[0] for x in symptoms if x]
+    symptoms = db.c.execute("select N.freq from nlp_weighted N").fetchall()
+    symptoms = [x[0] for x in symptoms if x]
+    symptom_list = list(itertools.chain(*[x.split() for x in symptoms]))
+    symptom_list = set(symptom_list)
+    
+#    symptom_list=[]
+#    for patres in relevant_patreses:
+#        symptoms = db.c.execute("select N.freq \
+#                                 from nlp_nonweighted N \
+#                                 where N.patres=?",[patres]).fetchall()
+#        symptoms = [x[0] for x in symptoms if x]
+#        symptom_list.extend(symptoms)
+#    # try splitting it...hacked version!
 #    symptom_list = list(itertools.chain(*[x.split() for x in symptom_list]))
 #    symptom_list = set(symptom_list)
-    
-    for patres in relevant_patreses:
-        symptoms = db.c.execute("select N.freq \
-                                 from nlp_nonweighted N \
-                                 where N.patres=?",[patres]).fetchall()
-        symptoms = [x[0] for x in symptoms if x]
-        symptom_list.extend(symptoms)
-#    symptom_list = set(symptom_list)
-    # try splitting it...hacked version!
-    symptom_list = list(itertools.chain(*[x.split() for x in symptom_list]))
-    symptom_list = set(symptom_list)
     
     
     # Get the diseases belonging to the icd 10 category
