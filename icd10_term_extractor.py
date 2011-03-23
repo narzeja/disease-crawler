@@ -37,10 +37,10 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
                 continue
         
         # Get the indices (aka. the term hashes) sorted by summed-tfidf score
+        submatrix_tfidf = TFIDF[rows,:]
         try:
-            submatrix_tfidf = TFIDF[rows,:]
-        except: print rows; return None
-        scores = sum(submatrix_tfidf[:]).tolist()[0]
+            scores = sum(submatrix_tfidf[:]).tolist()[0]
+        except: print submatrix_tfidf.shape; print submatrix_tfidf[:]
         scores_tfidf = range(len(scores))
         scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]),reverse=True)
         
