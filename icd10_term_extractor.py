@@ -35,6 +35,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
             except: 
                 missing_patreses.append(patres)
                 continue
+        print len(rows)
         
         # Get the indices (aka. the term hashes) sorted by summed-tfidf score
         submatrix_tfidf = TFIDF[rows,:]
