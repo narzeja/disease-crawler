@@ -1,11 +1,13 @@
 import db as DB
 import itertools
 #import TextmineThis as TT
+import TextmineThis_symptoms as TTS
 
 
 def run(TFIDF,TermDoc,t_hash,d_hash,code):
     
     db = DB.db()
+    tts = TTS.Textminer()
     
     #patres INT, code TEXT, category TEXT, keywords TEXT,
     icd10 = db.c.execute("select patres,code from icd_10").fetchall()
@@ -15,6 +17,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     symptoms = db.c.execute("select N.freq from nlp_nonweighted N").fetchall()
     symptoms = [x[0] for x in symptoms if x]
     symptom_list = list(itertools.chain(*[str(x).split() for x in symptoms]))
+    symptom_list = [tts.stem(x) for x in symptom_list]
     symptom_list = set(symptom_list)
     
 #    symptom_list=[]
