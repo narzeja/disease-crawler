@@ -69,7 +69,7 @@ class EatTheRedPill(object):
 #                                        AND N.patres=?",[patres[0]])
 
             data = data.fetchall()
-            
+            # ARGH!! freq and symptom are switched!
             if data:
                 symptom_list = [(x[1],x[2]) for x in data if x]
                 ready_data.append((data[0][0],symptom_list,data[0][3]))

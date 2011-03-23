@@ -239,6 +239,7 @@ class Textminer:
             
             # stem the symptoms
             if stemming: symptom_dist = [(self.stem(x[0]),x[1]) for x in symptom_dist]
+            print symptom_dist
             
 #            fdist = self.getWordCount(doc) # get the term distribution
             
