@@ -109,7 +109,7 @@ class EatTheRedPill(object):
                 query = data[2]
                 
                 r1 = self.miner.queryTheMatrix(tfidf_uni, query,self.t1_hash, self.d1_hash, self.n1_hash)
-                r2 = self.symptom_miner.queryTheMatrix(tfidf_nlp, query,self.t1_hash, self.d1_hash, self.n1_hash)
+                r2 = self.symptom_miner.queryTheMatrix(tfidf_nlp, query,self.t2_hash, self.d2_hash, self.n2_hash)
                 
                 # Note that this merger reverses the positions of the tuples...
                 results = self._merge_scores(r1,r2) 
