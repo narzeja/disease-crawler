@@ -81,5 +81,5 @@ def top_three(query,icd_featurevectors):
     ranked_terms = locate_entire_query(query,icd_featurevectors)
     potentials=[]
     for item in ranked_terms.items():
-        potentials.extend([x[1] for x in item[1][0]])
+        potentials.extend([x[1] for x in item[1][:1]])
     return set(potentials)
