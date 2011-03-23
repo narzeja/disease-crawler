@@ -25,7 +25,12 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     
     
     # Get the diseases belonging to the icd 10 category
-    rows = [d_hash[x] for x in relevant_patreses]
+    rows=[]
+    for patres in relevant_patreses:
+        try:
+            rows.append(d_hash[patres])
+        except: continue
+#    rows = [d_hash[x] for x in relevant_patreses]
     
     submatrix_tfidf = TFIDF[rows,:]
     
