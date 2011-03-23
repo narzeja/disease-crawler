@@ -23,6 +23,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
     icd_featurevectors = {}
     missing_patreses=[]
     for code in codes:
+        print "Grouping by",code
         # Get diseases belonging to the icd 10 group
         relevant_patreses = [x[0] for x in icd10 if code in x[1]]
         
@@ -36,7 +37,9 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
                 continue
         
         # Get the indices (aka. the term hashes) sorted by summed-tfidf score
-        submatrix_tfidf = TFIDF[rows,:]
+        try:
+            submatrix_tfidf = TFIDF[rows,:]
+        except: print rows; return None
         scores = sum(submatrix_tfidf[:]).tolist()[0]
         scores_tfidf = range(len(scores))
         scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]),reverse=True)
