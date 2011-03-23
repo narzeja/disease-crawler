@@ -119,6 +119,8 @@ class EatTheRedPill(object):
                 # Note that this merger reverses the positions of the tuples...
                 results = self._merge_scores(r1,r2) 
                 
+                print results
+                
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
                 rev_name_hash = dict(zip(self.n1_hash.values(),self.n1_hash.keys()))
@@ -126,7 +128,6 @@ class EatTheRedPill(object):
                 rank=0
                 for r in results:
                     rank+=1
-                    print r
                     # get the doc-id by name lookup
                     doc_id = rev_name_hash[r[1]]
                     if doc_id == int(orpha_num): print rank,"\t",r[0],"\t",r[1]
