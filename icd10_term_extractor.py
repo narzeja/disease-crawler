@@ -40,7 +40,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash,code):
         submatrix_tfidf = TFIDF[rows,:]
         if submatrix_tfidf[:].shape[0] > 0:
             scores = sum(submatrix_tfidf[:]).tolist()[0]
-        else : scores = submatrix_tfidf[:]).tolist()[0]
+        else : scores = submatrix_tfidf[:].tolist()[0]
         scores_tfidf = range(len(scores))
         scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]),reverse=True)
         
