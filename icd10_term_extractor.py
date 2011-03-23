@@ -39,9 +39,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         # Get the indices (aka. the term hashes) sorted by summed-tfidf score
         submatrix_tfidf = TFIDF[rows,:]
         if submatrix_tfidf[:].shape[0] > 0:
-            print submatrix_tfidf.shape
             scores = sum(submatrix_tfidf[:]).tolist()[0]
-            print len(scores)
         else: continue
         scores_tfidf = range(len(scores))
         scores_tfidf.sort(lambda x,y: cmp(scores[x],scores[y]),reverse=True)
@@ -73,6 +71,14 @@ def locate_entire_query(query,icd_featurevectors):
     for term in query.split():
         if term:
             ranked_groups = locate_term_category(term,icd_featurevectors)
-            ranked_terms[term] = sorted(ranked_groups,reverse=True)
+            ranked_terms[term] = sorted(ranked_groups)
     
     return ranked_terms
+    
+def top_three(ranked_terms):
+    potentials={}
+    for item in ranked_terms.items():
+        for cand in item[1][:3]:
+            if potentials.has_key(cand[1]): potentials[cand[1]] += 1
+            else: potentials[cand[1]] = 1
+    return potentials
