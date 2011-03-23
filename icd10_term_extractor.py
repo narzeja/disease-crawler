@@ -74,8 +74,9 @@ def locate_entire_query(query,icd_featurevectors):
             ranked_terms[term] = sorted(ranked_groups)
     
     return ranked_terms
-    
-def top_three(ranked_terms):
+
+def top_three(query):
+    ranked_terms = locate_entire_query(query)
     potentials={}
     for item in ranked_terms.items():
         for cand in item[1][:3]:
