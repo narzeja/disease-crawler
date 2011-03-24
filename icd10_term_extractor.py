@@ -82,6 +82,7 @@ def top_two(query,icd_featurevectors):
     potentials=[]
     for item in ranked_terms.items():
         potentials.extend([x[1] for x in item[1][:2]])
+    print potentials
     return set(potentials)
 
 
