@@ -80,7 +80,7 @@ def locate_entire_query(query,icd_featurevectors):
 def top_two(query,icd_featurevectors):
     ranked_terms = locate_entire_query(query,icd_featurevectors)
     potentials=[]
-    print ranked_terms
+    
     for item in ranked_terms.items():
         potentials.extend([x[1] for x in item[1][:3]])
     return set(potentials)
