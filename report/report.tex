@@ -139,15 +139,24 @@ crystal clear!}
 
 
 \subsection{Content outline of this document}
-In chapter \ref{chap:previouswork} we will outline current and previous
-work.
-In chapter \ref{chap:method} we will present an overview of the method
+%In section \ref{chap:previouswork} we will outline current and previous
+%work.
+
+In section \ref{chap:method} we will present an overview of the method
 used, and go into detail with the most important steps, by discussing
 information harvesting, extraction, modelling and prediction.
-In chapter \ref{chap:test} we present the results from our tests, here
-among blind tests, BMJ \footnote{missing} and missing\footnote{missing},
-with comparisons to previous projects. We will discuss the tests with a
-strong focus on statistical analysis.
+
+In section \ref{chap:implementation} we will go into the implementation
+details in specific areas of interest, highlighting the overall
+architecture and pipeline of constructing the different models, while
+explaining the more important parts of the the architecture, with
+particular focus on NLP and model construction.
+
+In section \ref{chap:test} we present the results from our tests, here
+among blind tests, BMJ and Orphanet, further explained in section
+\ref{chap:test}, comparing our results with previous similar projects.
+We will discuss the tests with a strong focus on statistical analysis.
+
 Finally, in chapter \ref{chap:conclusion} we will conclude the project,
 and discuss major implications and advantages of the system, method and
 tests. We will also propose a number of topics for future work.
@@ -294,7 +303,7 @@ abstracts and titles for each disease.
 Each row in the matrix thus represents a feature vector of a disease
 with the features being a list of term frequencies \todo[inline]{quick mini-example}. Prior to the
 creation of the matrix, the terms were stemmed \todo[inline]{explain stemming}(using the Porter
-stemming algorithm \todo[inline]{explain algorithm}) and stopwords\footnote{The stopwords a defined by a
+stemming algorithm \todo[inline]{explain algorithm}) and stopwords \footnote{The stopwords a defined by a
 list of 127 English words provided by the Python NLTK library
 (\texttt{nltk.corpus.stopwords.words("english")}} are removed along
 with non-alphanumerical\footnote{Symbols not represented in the Danish
@@ -340,19 +349,21 @@ using the Google search engine. For each site corresponding to our
 query, disease name and a number of keywords from disease abstract, we
 extract paragraphs and measure the relevance of that paragraph compared
 to the corresponding abstract from Orphanet. The comparison is measured
-using a cosine covariance measure of two term vectors representing
+using a cosine distance measure of two term vectors representing
 known information, $\textbf{s}$ and a harvested paragraph of information
-$\textbf{p}$
+$\textbf{p}$ which is defined as \footnote{Definition extracted from the
+HCluster cosine source code definition.}:
 \[
-similarity(\textbf{s}, \textbf{p}) = \frac{\textbf{s} \cdot \textbf{p}}{||\textbf{s}|| ||\textbf{p}||}
+similarity(\textbf{s}, \textbf{p}) = \frac{1 - sp^T}{||s||_2 ||p||_2}
 \]
-Which, using formula provided by the NLTK library gives us a score
-between $0$ and $1$, where 0 is complete correlation and 1 is no
-correlation. The acceptance threshold for paragraphs collected for
+Which, using algorithms provided by the HCluster
+\footnote{\url{http://code.google.com/p/scipy-cluster/}} library returns
+a score between $0$ and $1$, where 0 is complete correlation and 1 is
+no correlation. The acceptance threshold for paragraphs collected for
 further processing is set to $0.8$. This number is used based on a
 number of anecdotal tests showing a reasonable amount of relevant
-information, where $0.9$ would introduce too much noise, and $0.7$
-being too strict.
+information, where $0.9$ would introduce too much noise, and $0.7$ being
+too strict.
 
 It is observed that many of the harvested paragraphs are literature
 references and should be considered noise, due to it's low information
@@ -606,7 +617,7 @@ The test sets are described as such:
 \cite{jensenandersen} provided by a practising physician only as a list
 of terms, and was later correlated with the proper diagnosis after the
 model returned a prediction.
-\item[Orpha tests] Tests provided by ... ?
+\item[Orpha tests] Tests provided by \todo[inline]{how did we get these tests?}
 \item[BMJ tests] Selected tests from \cite{googlingdiagnosis}, yielding
 only tests that are labelled as 'rare diseases' \footnote{A disease is
 considered a rare disease if it is listed in
@@ -624,13 +635,17 @@ considered a rare disease if it is listed in
 %\cite{jensenandersen} and finally \texttt{automatic} is the method
 %described in this paper.
 
+\subsection{Kruskal Wallis Test Statistics}
 The tests are compared using the prediction ranking of the correct
 diseases in the various models. As we are unsure whether the data
 samples are normally distributed, which is an assumption in the commonly
 used Student's T test, we will use the Kruskal Wallis
 \footnote{\url{http://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/kruskwal.htm}}
 test for multiple groups (models) to determine the statistical
-significance as this does not rely on that assumption.
+significance as this does not rely on that assumption. It does, however,
+assume the observations come from distributions of the same shape, i.e.
+if one distribution is skewed left($<0$) and the other is skewed right
+($>0$), the test will be likely to yield inaccurate results.
 
 We will calculate the Kruskal Wallis test statistic
 \[
@@ -640,16 +655,30 @@ where $n_{i} (i = 1, 2, ..., k)$ represent the samples for each of
 the k groups. $R_{i}$ is the sum of ranks for group $i$. The ranks are
 acquired by sorting the sample values and ranking in ascending order.
 
-$H_{stat}$ approximates a chi-square distribution with k-1 degrees of
-freedom if the null hypothesis of equal populations is true, when the
-number of samples is at least 5.
+$H_{stat}$ approximates a chi-square ($\chi^2$) distribution with k-1
+degrees of freedom if the null hypothesis of equal populations is true,
+when the number of samples is at least 5. The benefit of estimating a
+chi-square distribution is that it only assumes randomly selected
+samples and a large enough sample size ($>5$).
 
-The critical value $H_{crit}$ can now be calculated as the chi-square
-percent point function (CHIPPF) or CHIINV as provided by \textit{Open
-Office 3.2} for $\alpha = 0.05$.
+To assess whether the null hypothesis can be rejected or not the P-value
+is estimated by chi-square with 1 degree of freedom ($k-1$) with an
+acceptance threshold of $\alpha = 0.05$:
+\[
+\chi^2_{0.05}(df=1) = 3.84
+\]
+
+%The critical value $H_{crit}$ can now be calculated as the chi-square
+%percent point function (CHIPPF).
+
+% or CHIINV as provided by \textit{Open
+%Office 3.2} for $\alpha = 0.05$. \todo[inline]{find a proper formula for
+%CHIINV: \url{http://en.wikipedia.org/wiki/Inverse-chi-square_distribution}}
 
 Therefore, we can conclude a statistical significance, if $H_{stat} >
-H_{crit}$, that there is a difference between the groups.
+\chi^2$, that there is a difference between the groups.
+
+The results of the significance tests are presented in the following.
 
 % We will measure statistical significance
 %across the models using the Mann-Whitney U test. Alternatively, we will
@@ -657,23 +686,29 @@ H_{crit}$, that there is a difference between the groups.
 %Kurtosis test, and accordingly use the Student's T test where
 %appropriate, as this test assumes normally distributed samples.
 
-\subsection{Significance testing}
+\subsection{Significance testing results}
+In this section, we will highlight our most important results from the
+previously described models and test scenarios.
+
 \begin{table}[here]
 \begin{center}
 \begin{tabular}{lll}
-    Parameter & Old model & New model \\ \hline
-    $R_{i}$ & 1133 & 463 \\
+    \textbf{Data set} & & \textbf{Orphanet} \\ \hline\hline
+    \textbf{Parameter} & \textbf{Old model} & \textbf{New model} \\ \hline
+    Skew & 3.34 & 5.26 \\
+    $R_{i}$ & 1161 & 435 \\
     $n_{i}$ & 28 & 28 \\ \hline\hline
-    Parameter & & Value \\ \hline
+    \textbf{Test Parameter} & & \textbf{Value} \\ \hline
     $n$ && 56  \\
     k && 2  \\
     df && 1  \\ \hline \hline
-    Result & & \\\hline
-    $H_{stat}$ & & 30.14 \\
+    \textbf{Result} & & \\\hline
+    $H_{stat}$ & & 35.38 \\
     $H_{crit}$ & & 3.84 \\
     \label{tab:orpha_old_new}
 \end{tabular}
-    \caption{Significance testing of the Orphanet tests.}
+    \caption{Results from the Kruskal Wallis significance test of the
+    Orphanet tests on the old and new model.}
 \end{center}
 \end{table}
 
