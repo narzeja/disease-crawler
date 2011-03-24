@@ -27,10 +27,6 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         # Get diseases belonging to the icd 10 group
         relevant_patreses = [x[0] for x in icd10 if code in x[1]]
         
-        for x in icd10:
-            #if "I" in x[1]: print x
-            if 130==x[0]: print x
-        
         # Get the diseases belonging to the icd 10 category
         rows=[]
         for patres in relevant_patreses:
@@ -88,6 +84,8 @@ def top_two(query,icd_featurevectors):
         potentials.extend([x[1] for x in item[1][:2]])
     return set(potentials)
 
+
+
 import TextmineThis as TT
 import PreliminaryTests as PT
 def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
@@ -105,9 +103,14 @@ def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     rows = list(set(rows))
     sub_tfidf = miner.runTFIDF(tfidf[rows,:])
     
+    # create hashes to the new submatrix
+    dd_hash={}; c=0;
+    for row in rows:
+        dd_hash[c] = row
+    
     print "Submatrix size:",sub_tfidf.shape
     
-    results = miner.queryTheMatrix(sub_tfidf,query,t_hash,d_hash,n_hash)
+    results = miner.queryTheMatrix(sub_tfidf,query,t_hash,dd_hash,n_hash)
     
     # Hack: Reverse the hash for name-to-doc-id lookup 
     # (no disease names should occur twice)
