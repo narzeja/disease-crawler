@@ -103,6 +103,8 @@ def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     rows = list(set(rows))
     sub_tfidf = miner.runTFIDF(tfidf[rows,:])
     
+    print rows
+    
     # create hashes to the new submatrix
     dd_hash={}; c=0;
     for row in rows:
