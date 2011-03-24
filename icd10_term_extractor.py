@@ -30,7 +30,7 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
             print icd10[0]
             try:
                 if not icd10 in x[1]: print x
-            except
+            except:
                 print x
         
         # Get the diseases belonging to the icd 10 category
