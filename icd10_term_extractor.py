@@ -27,8 +27,8 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         # Get diseases belonging to the icd 10 group
         relevant_patreses = [x[0] for x in icd10 if code in x[1]]
         for x in icd10:
-            if not code in x[1]: 
-                if x[0] == 130: print "yes"
+            if code in x[1]:
+                if x[0]==130: print x
         
         # Get the diseases belonging to the icd 10 category
         rows=[]
