@@ -107,8 +107,9 @@ def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     
     # create hashes to the new submatrix
     dd_hash={}; c=0;
+    rev_d_hash = dict(zip(d_hash.values(),d_hash.keys()))
     for row in rows:
-        dd_hash[d_hash[row]] = c
+        dd_hash[rev_d_hash[row]] = c
     
     print "Submatrix size:",sub_tfidf.shape
     
