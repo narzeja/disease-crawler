@@ -26,11 +26,12 @@ def run(TFIDF,TermDoc,t_hash,d_hash):
         print "Grouping by",code
         # Get diseases belonging to the icd 10 group
         relevant_patreses = [x[0] for x in icd10 if code in x[1]]
+        for x in icd10:
+            if not icd10 in x[1]: print x
         
         # Get the diseases belonging to the icd 10 category
         rows=[]
         for patres in relevant_patreses:
-            if patres==u'130': print code
             try:
                 rows.append(d_hash[patres])
             except: 
