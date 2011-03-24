@@ -1,0 +1,5 @@
+337	Fibrodysplasia ossificans progressiva 	 Boy, normal birth, deformity of big toes, missing joint, quick development of bone tumor, bone tumor, spine, osteogenesis.
+43	Adrenoleukodystrophy autosomal neonatal form 	 Normally developed, boy, age 5, progessive development, talking difficulties, seizures, ataxia, adrenal insufficiency, degeneration, visual, auditory functions
+678	Papillon Lefevre syndrome 	 Boy, age 14, yellow, keratotic plaques, skin, palms, soles , dorsal side, hands, feet, affected.
+33543	Kleine Levin Syndrome 	 Jewish, boy, age 16, monthly seizures, sleep deficiency, aggressive, irritable, highly, increased sexual appetite, hunger.
+798	Schinzel-Giedion Syndrome 	 Male, child, malformations at birth, midfacial retraction, deep groove, the eyes, hypertelorism, short nose, low nasal bridge, large low-set ears, large ears, wide mouth, retrognathia, hypertrichosis, bright reddish hair, median frontal, cutaneous angioma, short neck, redundant skin, Bilateral inguinal hernias, hypospadias, megameatus, cryptorchidism 
