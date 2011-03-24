@@ -101,8 +101,8 @@ def gogo(query,orpha_num,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
     for code in codes:
         rows.extend(icd_featurevectors[code][1])
     rows = list(set(rows))
-#    sub_tfidf = miner.runTFIDF(tfidf[rows,:])
-    sub_tfidf = tfidf[rows,:]
+    sub_tfidf = miner.runTFIDF(tfidf[rows,:])
+#    sub_tfidf = tfidf[rows,:]
     
     # create hashes to the new submatrix
     dd_hash={}; c=0;
