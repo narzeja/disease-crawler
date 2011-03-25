@@ -240,7 +240,7 @@ class Textminer:
                 
                 docs.append(list(set(termDoc[:,n].nonzero()[0].tolist()[0])))
             
-            print docs
+            docs = docs[0]
             fq = nltk.FreqDist(docs)
             docs = [x for x in docs if fq[x]==len(terms)]
             
