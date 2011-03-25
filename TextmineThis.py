@@ -237,16 +237,17 @@ class Textminer:
                 except:
                     print "Term not found: '"+term+"'"
                     continue
-                
+                print termDoc[:,n].nonzero()[0].tolist()[0]
+                print term
                 docs.append(termDoc[:,n].nonzero()[0].tolist()[0])
             
             docs = docs[0]
             fq = nltk.FreqDist(docs)
             docs = [x for x in docs if fq[x]==len(terms)]
             
-            print fq
-            print terms
-            print len(terms)
+#            print fq
+#            print terms
+#            print len(terms)
             
             
             # Sum score measure:
