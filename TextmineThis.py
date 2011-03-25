@@ -244,7 +244,9 @@ class Textminer:
             fq = nltk.FreqDist(docs)
             docs = [x for x in docs if fq[x]==len(terms)]
             
-            print docs
+            print fq
+            print terms
+            print len(terms)
             
             
             # Sum score measure:
