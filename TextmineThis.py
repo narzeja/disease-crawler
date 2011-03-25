@@ -238,7 +238,7 @@ class Textminer:
                     print "Term not found: '"+term+"'"
                     continue
                 
-                docs.append(list(set(termDoc[:,n].nonzero()[0].tolist()[0])))
+                docs.append(termDoc[:,n].nonzero()[0].tolist()[0])
             
             docs = docs[0]
             fq = nltk.FreqDist(docs)
