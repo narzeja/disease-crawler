@@ -203,13 +203,14 @@ class Textminer:
         - sorted by score in descending order.
         """
         
-#        print "Converting to lil matrix format..."
-#        termDoc = termDoc.tolil()
-#        print "Converting to csc matrix format..."
-#        termDoc_csc = termDoc.tocsc()
-        
         # Sanitize query terms
         query = sanitizer.sub(' ',query)
+        
+        ######
+        queryx = [s.strip().lower() for s in query.split(',') if s!='']
+        queryx = [self.stem(x) for x in queryx if x]
+        print queryx
+        
         
         if isinstance(query,list):
             searchTerms = [s.strip().lower() for s in query if s!='']
@@ -233,7 +234,6 @@ class Textminer:
                 print "Term not found: '"+term+"'"
                 continue
                 
-#            docs = termDoc_csc.getcol(n).nonzero()[0]
             docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
             
             # Sum score measure:
