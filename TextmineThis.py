@@ -206,7 +206,7 @@ class Textminer:
         ####
         queryx = [s.strip().lower() for s in query.split(',') if s!='']
         queryx = [" ".join(self.stem(x)) for x in queryx if x]
-        queryx = [[self.removeStopwords(x.split(' '))] for x in queryx]
+        queryx = [self.removeStopwords(x.split(' ')) for x in queryx]
         print queryx
         
         
