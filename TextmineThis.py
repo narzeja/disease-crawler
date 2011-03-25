@@ -207,7 +207,7 @@ class Textminer:
         queryx = [s.strip().lower() for s in query.split(',') if s!='']
         queryx = [" ".join(self.stem(x)) for x in queryx if x]
         queryx = [self.removeStopwords(x.split(' ')) for x in queryx]
-        print queryx
+        ####
         
         
         # Sanitize query terms
@@ -227,15 +227,22 @@ class Textminer:
         
         print "Search terms: ",searchTerms
         
+        #######
         scores = {}
-        for term in searchTerms:
-            try:
-                n = term_hash[term]
-            except:
-                print "Term not found: '"+term+"'"
-                continue
+        for terms in queryx:
+            docs=[]
+            for term in terms:
+                try:
+                    n = term_hash[term]
+                except:
+                    print "Term not found: '"+term+"'"
+                    continue
                 
-            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
+                docs.append(list(set(termDoc[:,n].nonzero()[0].tolist()[0])))
+            
+            fq = nltk.FreqDist(docs)
+            docs = [x for x in docs if fq[x]==len(terms)]
+            print terms
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
@@ -248,6 +255,29 @@ class Textminer:
                     scores[doc_id] += score
                 except:
                     scores[doc_id] = score
+        #######
+        
+#        scores = {}
+#        for term in searchTerms:
+#            try:
+#                n = term_hash[term]
+#            except:
+#                print "Term not found: '"+term+"'"
+#                continue
+#            
+#            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
+#            
+#            # Sum score measure:
+#            rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
+#            for doc in docs:
+#                score = termDoc[doc,n]
+#                
+#                doc_id = rev_doc_hash[doc] # extract the original orpha-nums 
+#                
+#                try:
+#                    scores[doc_id] += score
+#                except:
+#                    scores[doc_id] = score
         
         # Sort the scores (by value of course)
         scores = sorted(scores.items(), key=lambda (k,v): (v,k), reverse=True)
