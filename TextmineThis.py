@@ -208,7 +208,7 @@ class Textminer:
         
         ######
         queryx = [s.strip().lower() for s in query.split(',') if s!='']
-        queryx = [self.stem(x) for x in queryx if x]
+        queryx = [" ".join(self.stem(x)) for x in queryx if x]
         print queryx
         
         
