@@ -240,9 +240,10 @@ class Textminer:
                 
                 docs.append(list(set(termDoc[:,n].nonzero()[0].tolist()[0])))
             
+            print terms
             fq = nltk.FreqDist(docs)
             docs = [x for x in docs if fq[x]==len(terms)]
-            print terms
+            
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
