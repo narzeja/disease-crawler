@@ -152,14 +152,13 @@ class ICD10tester(object):
                 print "Submatrix size:",sub_tfidf.shape
                 
                 ##############################
-#                icd_featurevectors = self.getFeatures(sub_tfidf,None,t_hash,dd_hash,True)
                 codes = self.categorizeQuery(query,icd_featurevectors_v2)
                 
                 rows=[]
                 for code in codes:
                     rows.extend(icd_featurevectors_v2[code][1])
                 rows = list(set(rows))
-                sub_tfidf = tfidf[rows,:]
+                sub_tfidf = sub_tfidf[rows,:]
         #        sub_tfidf = miner.runTFIDF(tfidf[rows,:])
                 
                 
@@ -169,6 +168,8 @@ class ICD10tester(object):
                 for row in rows:
                     ddd_hash[rev_dd_hash[row]] = c
                     c+=1
+                
+                print "SubSUBmatrix size:",sub_tfidf.shape
                 
                 ##############################
                 
