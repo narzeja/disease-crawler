@@ -153,7 +153,7 @@ class ICD10tester(object):
                     doc_id = rev_name_hash[r[0]]
                     
                     if doc_id == int(orpha_num): 
-                        print rank,"\t",r[1],"\t",r[0]
+                        print rank,"\t",r[1],"\t",r[0],"\n"
                         disease_found = True
-                if not disease_found: print "Disease not found!",n_hash[orpha_num]
+                if not disease_found: print "Disease not found!",n_hash[orpha_num],"\n"
                 else: continue
