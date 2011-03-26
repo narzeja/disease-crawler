@@ -126,7 +126,7 @@ class ICD10tester(object):
                 orpha_num = data[0]
                 query = data[2]
                 
-                codes = categorizeQuery(self.miner.stem(query),icd_featurevectors)
+                codes = self.categorizeQuery(self.miner.stem(query),icd_featurevectors)
                 print codes
                 
                 rows=[]
