@@ -103,12 +103,13 @@ class ICD10tester(object):
         potentials = []
         while len(potentials)<=3:
             numcat +=1
-            print numcat
             for item in ranked_terms.items():
                 potentials.extend([x[1] for x in item[1][:numcat]])
                 
             potentials = list(set(potentials))
-            if numcat > 4: break
+            if numcat > 10: break
+        
+        print "Numcat:",numcat
         
         return potentials
     
