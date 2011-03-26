@@ -98,7 +98,6 @@ class ICD10tester(object):
                     if term in feature_vec[0]:
                         ranked_groups.append((feature_vec[0].index(term),code))
                 ranked_terms[term] = sorted(ranked_groups)
-                print term,len(ranked_groups)
         
         # Get the icd 10 categories defining the reduced search-space
         numcat = 1
