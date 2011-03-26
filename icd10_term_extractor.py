@@ -3,7 +3,7 @@ import db as DB
 import itertools
 import TextmineThis as TT
 import nltk
-#import TextmineThis_symptoms as TTS
+import TextmineThis_symptoms as TTS
 
 class ICD10tester(object):
     """
@@ -17,6 +17,7 @@ class ICD10tester(object):
         
         self.db = DB.db()
         self.miner = TT.Textminer()
+        self.symptom_miner = TTS.Textminer()
         
     
     def getFeatures(self,TFIDF,TermDoc,t_hash,d_hash,sub_features):
@@ -38,8 +39,7 @@ class ICD10tester(object):
         symptoms = self.db.c.execute("select N.freq from nlp_nonweighted N").fetchall()
         symptoms = [x[0] for x in symptoms if x]
         symptom_list = list(itertools.chain(*[str(x).split() for x in symptoms]))
-        symptom_list = [self.miner.stem(x) for x in symptom_list]
-        print symptom_list
+        symptom_list = [self.symptom_miner.stem(x) for x in symptom_list]
         symptom_list = set(symptom_list)
         
         icd_featurevectors = {}
