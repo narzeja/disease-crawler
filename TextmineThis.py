@@ -208,6 +208,7 @@ class Textminer:
         queryx = [sanitizer.sub(' ',x) for x in queryx]
         queryx = [" ".join(self.stem(x)) for x in queryx if x]
         queryx = [self.removeStopwords(x.split(' ')) for x in queryx]
+        print "Search terms:",queryx
         ####
         
         
