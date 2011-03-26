@@ -102,7 +102,7 @@ class ICD10tester(object):
         
         # Get the icd 10 categories defining the reduced search-space
 #        numcat = 1
-#        potentials = []
+        potentials = []
 #        while len(potentials)<=3:
 #            numcat +=1
         for item in ranked_terms.items():
