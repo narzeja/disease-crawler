@@ -152,7 +152,7 @@ class ICD10tester(object):
                 print "Submatrix size:",sub_tfidf.shape
                 
                 ##############################
-                icd_featurevectors = self.getFeatures(sub_tfidf,None,t_hash,dd_hash,True)
+#                icd_featurevectors = self.getFeatures(sub_tfidf,None,t_hash,dd_hash,True)
                 codes = self.categorizeQuery(query,icd_featurevectors_v2)
                 
                 rows=[]
