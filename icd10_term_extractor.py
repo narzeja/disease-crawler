@@ -145,7 +145,7 @@ class ICD10tester(object):
                 # (no disease names should occur twice)
                 rev_name_hash = dict(zip(n_hash.values(),n_hash.keys()))
                 
-                rank=0
+                rank=0; disease_found=False;
                 for r in results:
                     rank+=1
                     
@@ -154,5 +154,6 @@ class ICD10tester(object):
                     
                     if doc_id == int(orpha_num): 
                         print rank,"\t",r[1],"\t",r[0]
-                        return None
-                print "Disease not found!",r[0]
+                        disease_found = True
+                if not disease_found: print "Disease not found!",r[0]
+                else: continue
