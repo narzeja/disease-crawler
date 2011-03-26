@@ -157,7 +157,7 @@ class ICD10tester(object):
                 
                 rows=[]
                 for code in codes:
-                    rows.extend(icd_featurevectors[code][1])
+                    rows.extend(icd_featurevectors_v2[code][1])
                 rows = list(set(rows))
                 sub_tfidf = tfidf[rows,:]
         #        sub_tfidf = miner.runTFIDF(tfidf[rows,:])
