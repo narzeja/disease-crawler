@@ -19,12 +19,18 @@ class ICD10tester(object):
         self.miner = TT.Textminer()
         
     
-    def getFeatures(self,TFIDF,TermDoc,t_hash,d_hash):
+    def getFeatures(self,TFIDF,TermDoc,t_hash,d_hash,sub_features):
         """
         
         """
         # ICD 10 category-codes
-        codes=["A","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","V","Z"]
+        if sub_features:
+            codes=[]
+            tmp = ["A","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","V","Z"]
+            for code in tmp:
+                codes.extend(map(lambda x: code+str(x),range(10)))
+        else:
+            codes = ["A","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","V","Z"]
         
         icd10 = db.c.execute("select patres,code from icd_10").fetchall()
         
@@ -100,15 +106,10 @@ class ICD10tester(object):
                 ranked_terms[term] = sorted(ranked_groups)
         
         # Get the icd 10 categories defining the reduced search-space
-#        numcat = 1
         potentials = []
-#        while len(potentials)<=3:
-#            numcat +=1
         for item in ranked_terms.items():
             potentials.extend([x[1] for x in item[1][:numcat]])
-            
         potentials = list(set(potentials))
-#            if numcat > 10: break
         
         return potentials
     
@@ -147,10 +148,30 @@ class ICD10tester(object):
                     dd_hash[rev_d_hash[row]] = c
                     c+=1
                 
-                
                 print "Submatrix size:",sub_tfidf.shape
                 
-                results = self.miner.queryTheMatrix(sub_tfidf,query,t_hash,dd_hash,n_hash)
+                ##############################
+                icd_featurevectors = self.getFeatures(sub_tfidf,_,t_hash,dd_hash,True)
+                codes = self.categorizeQuery(query,icd_featurevectors)
+                
+                rows=[]
+                for code in codes:
+                    rows.extend(icd_featurevectors[code][1])
+                rows = list(set(rows))
+                sub_tfidf = tfidf[rows,:]
+        #        sub_tfidf = miner.runTFIDF(tfidf[rows,:])
+                
+                
+                # create hashes to the new submatrix
+                ddd_hash={}; c=0;
+                rev_d_hash = dict(zip(d_hash.values(),dd_hash.keys()))
+                for row in rows:
+                    ddd_hash[rev_dd_hash[row]] = c
+                    c+=1
+                
+                ##############################
+                
+                results = self.miner.queryTheMatrix(sub_tfidf,query,t_hash,ddd_hash,n_hash)
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
