@@ -152,6 +152,10 @@ class ICD10tester(object):
                 print "Submatrix size:",sub_tfidf.shape
                 
                 ##############################
+                tmp = {}
+                for code,content in icd_featurevectors_v2.items():
+                    if code[0] in codes: 
+                        temp[code] = content
                 codes = self.categorizeQuery(query,icd_featurevectors_v2)
                 
                 rows=[]
