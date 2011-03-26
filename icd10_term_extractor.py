@@ -32,7 +32,7 @@ class ICD10tester(object):
         else:
             codes = ["A","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","V","Z"]
         
-        icd10 = db.c.execute("select patres,code from icd_10").fetchall()
+        icd10 = self.db.c.execute("select patres,code from icd_10").fetchall()
         
         # Get all the symptoms extracted by NLP
         symptoms = self.db.c.execute("select N.freq from nlp_nonweighted N").fetchall()
