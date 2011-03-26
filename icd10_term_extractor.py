@@ -152,4 +152,7 @@ class ICD10tester(object):
                     # get the doc-id by name lookup
                     doc_id = rev_name_hash[r[0]]
                     
-                    if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
+                    if doc_id == int(orpha_num): 
+                        print rank,"\t",r[1],"\t",r[0]
+                        return None
+                print "Disease not found!",r[0]
