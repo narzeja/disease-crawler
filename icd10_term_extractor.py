@@ -165,7 +165,7 @@ class ICD10tester(object):
                 
                 # create hashes to the new submatrix
                 ddd_hash={}; c=0;
-                rev_d_hash = dict(zip(d_hash.values(),dd_hash.keys()))
+                rev_dd_hash = dict(zip(dd_hash.values(),dd_hash.keys()))
                 for row in rows:
                     ddd_hash[rev_dd_hash[row]] = c
                     c+=1
