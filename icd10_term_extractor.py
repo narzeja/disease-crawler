@@ -39,6 +39,7 @@ class ICD10tester(object):
         symptoms = [x[0] for x in symptoms if x]
         symptom_list = list(itertools.chain(*[str(x).split() for x in symptoms]))
         symptom_list = [self.miner.stem(x) for x in symptom_list]
+        print symptom_list
         symptom_list = set(symptom_list)
         
         icd_featurevectors = {}
