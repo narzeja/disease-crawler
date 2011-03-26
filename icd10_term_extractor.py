@@ -88,6 +88,8 @@ class ICD10tester(object):
         """
         # Number of candidate categories to be included from each term
 #        numcat = 4
+        sanitizer=re.compile('[\W]')
+        query = sanitizer.sub(' ',query)
         
         # Calculate the sorted list of icd 10 categories of each term
         ranked_terms = {}
