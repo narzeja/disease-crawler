@@ -115,7 +115,7 @@ class ICD10tester(object):
         return potentials
     
     
-    def runTests(self,path,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
+    def runTests(self,path,icd_featurevectors,tfidf,t_hash,d_hash,n_hash,icd_featurevectors_v2):
         """
         
         """
@@ -153,7 +153,7 @@ class ICD10tester(object):
                 
                 ##############################
                 icd_featurevectors = self.getFeatures(sub_tfidf,None,t_hash,dd_hash,True)
-                codes = self.categorizeQuery(query,icd_featurevectors)
+                codes = self.categorizeQuery(query,icd_featurevectors_v2)
                 
                 rows=[]
                 for code in codes:
