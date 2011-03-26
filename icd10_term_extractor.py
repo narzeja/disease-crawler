@@ -101,7 +101,7 @@ class ICD10tester(object):
         # Get the icd 10 categories defining the reduced search-space
         numcat = 1
         potentials = []
-        while len(potentials)<=6:
+        while len(potentials)<=7:
             numcat +=1
             for item in ranked_terms.items():
                 potentials.extend([x[1] for x in item[1][:numcat]])
