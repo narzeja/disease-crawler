@@ -99,10 +99,18 @@ class ICD10tester(object):
                 ranked_terms[term] = sorted(ranked_groups)
         
         # Get the icd 10 categories defining the reduced search-space
-        for item in ranked_terms.items():
-            potentials.extend([x[1] for x in item[1][:numcat]])
+        numcat = 1
+        while len(potentials)<=3:
+            numcat +=1
+            print numcat
+            potentials = []
+            for item in ranked_terms.items():
+                potentials.extend([x[1] for x in item[1][:numcat]])
+                
+            potentials = list(set(potentials))
+            if numcat > 4: break
         
-        return list(set(potentials))
+        return potentials
     
     
     def runTests(self,path,icd_featurevectors,tfidf,t_hash,d_hash,n_hash):
