@@ -74,7 +74,6 @@ class ICD10tester(object):
             
             sorted_tfidf_terms = [rev_term_hash[x] for x in scores_tfidf]
             
-            sorted_tfidf_terms_cleaned = sorted_tfidf_terms
             # remove non-symptom candidates
             sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
             
@@ -82,14 +81,6 @@ class ICD10tester(object):
         
         return icd_featurevectors
     
-#    def locate_term_category(term,icd_featurevectors):
-#        
-#        ranked_groups=[]
-#        for code,feature_vec in icd_featurevectors.items():
-#            if term in feature_vec[0]:
-#                ranked_groups.append((feature_vec[0].index(term),code))
-#        
-#        return ranked_groups
     
     def categorizeQuery(self,query,icd_featurevectors):
         """
@@ -113,15 +104,6 @@ class ICD10tester(object):
         for item in ranked_terms.items():
             potentials.extend([x[1] for x in item[1][:numcat]])
         potentials = list(set(potentials))
-        
-        #########
-#        popcat = [x[0] for x in potentials]
-#        popcat = nltk.FreqDist(popcat)
-#        popcat = sorted(popcat.items(), key=lambda (k,v): (v,k), reverse=True)
-#        popcat = [x[0] for x in popcat]
-#        potentials = [x for x in potentials if x[0] in popcat[:5]]
-#        print "Guessed categories:",popcat[:5]
-        #########
         
         return potentials
     
