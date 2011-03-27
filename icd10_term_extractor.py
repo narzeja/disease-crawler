@@ -44,8 +44,9 @@ class ICD10tester(object):
         
         icd_featurevectors = {}
         missing_patreses=[]
+        print "Grouping..."
         for code in codes:
-            print "Grouping by",code
+#            print "Grouping by",code
             # Get diseases belonging to the icd 10 group
             relevant_patreses = [x[0] for x in icd10 if code in x[1]]
             
@@ -58,7 +59,7 @@ class ICD10tester(object):
                     missing_patreses.append(patres)
                     continue
             
-            print "Based on",len(rows),"diseases\n"
+#            print "Based on",len(rows),"diseases\n"
             
             # Get the indices (aka. the term hashes) sorted by summed-tfidf score
             submatrix_tfidf = TFIDF[rows,:]
