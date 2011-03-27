@@ -134,7 +134,6 @@ class ICD10tester(object):
 #                query = sanitizer.sub(' ',query)
                 
                 codes = self.categorizeQuery(self.miner.stem(query),icd_featurevectors)
-                print codes
                 
                 rows=[]
                 for code in codes:
