@@ -114,12 +114,12 @@ class ICD10tester(object):
         potentials = list(set(potentials))
         
         #########
-        popcat = [x[0] for x in potentials]
-        popcat = nltk.FreqDist(popcat)
-        popcat = sorted(popcat.items(), key=lambda (k,v): (v,k), reverse=True)
-        popcat = [x[0] for x in popcat]
-        potentials = [x for x in potentials if x[0] in popcat[:5]]
-        print "Guessed categories:",popcat[:5]
+#        popcat = [x[0] for x in potentials]
+#        popcat = nltk.FreqDist(popcat)
+#        popcat = sorted(popcat.items(), key=lambda (k,v): (v,k), reverse=True)
+#        popcat = [x[0] for x in popcat]
+#        potentials = [x for x in potentials if x[0] in popcat[:5]]
+#        print "Guessed categories:",popcat[:5]
         #########
         
         return potentials
