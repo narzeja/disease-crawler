@@ -87,7 +87,7 @@ class ICD10tester(object):
         
         """
         # Number of candidate categories to be included from each term
-        numcat = 3
+        numcat = 10
         
         # Calculate the sorted list of icd 10 categories of each term
         ranked_terms = {}
@@ -102,7 +102,7 @@ class ICD10tester(object):
         # Get the icd 10 categories defining the reduced search-space
         potentials = []
         for item in ranked_terms.items():
-            potentials.extend([x[1] for x in item[1][:]]) ####!!!! numcat]])
+            potentials.extend([x[1] for x in item[1][:numcat]])
         potentials = list(set(potentials))
         
         #########
@@ -134,6 +134,7 @@ class ICD10tester(object):
 #                query = sanitizer.sub(' ',query)
                 
                 codes = self.categorizeQuery(self.miner.stem(query),icd_featurevectors)
+                print codes
                 
                 rows=[]
                 for code in codes:
