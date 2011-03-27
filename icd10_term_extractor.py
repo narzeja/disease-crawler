@@ -121,8 +121,8 @@ class ICD10tester(object):
                 orpha_num = data[0]
                 query = data[2]
                 
-                sanitizer=re.compile('[\W]')
-                query = sanitizer.sub(' ',query)
+#                sanitizer=re.compile('[\W]')
+#                query = sanitizer.sub(' ',query)
                 
                 codes = self.categorizeQuery(self.miner.stem(query),icd_featurevectors)
                 print codes
