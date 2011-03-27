@@ -139,9 +139,9 @@ class ICD10tester(object):
                 for code in codes:
                     rows.extend(icd_featurevectors[code][1])
                 rows = list(set(rows))
-#                sub_tfidf = tfidf[rows,:]
+                sub_tfidf = tfidf[rows,:]
 #                sub_tfidf = miner.runTFIDF(tfidf[rows,:])
-                sub_tfidf = self.miner.runTFIDF(termDoc[rows,:])
+#                sub_tfidf = self.miner.runTFIDF(termDoc[rows,:])
                 
                 
                 # create hashes to the new submatrix
