@@ -141,7 +141,7 @@ class ICD10tester(object):
                 rows = list(set(rows))
 #                sub_tfidf = tfidf[rows,:]
 #                sub_tfidf = miner.runTFIDF(tfidf[rows,:])
-                sub_tfidf = miner.runTFIDF(termDoc[rows,:])
+                sub_tfidf = self.miner.runTFIDF(termDoc[rows,:])
                 
                 
                 # create hashes to the new submatrix
