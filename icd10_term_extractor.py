@@ -113,6 +113,16 @@ class ICD10tester(object):
             potentials.extend([x[1] for x in item[1][:numcat]])
         potentials = list(set(potentials))
         
+        #########
+        popcat = [x[0] for x in potentials]
+        popcat = nltk.FreqDist(popcat)
+        popcat = sorted(popcat.items(), key=lambda (k,v): (v,k), reverse=True)
+        print popcat
+        popcat = [x[0] for x in popcat]
+        potentials = [x for x in potentials if x[0] in popcat[:3]]
+        print "Guessed categories:",popcat[:3]
+        #########
+        
         return potentials
     
     
@@ -139,9 +149,9 @@ class ICD10tester(object):
                 for code in codes:
                     rows.extend(icd_featurevectors[code][1])
                 rows = list(set(rows))
-                sub_tfidf = tfidf[rows,:]
+#                sub_tfidf = tfidf[rows,:]
 #                sub_tfidf = miner.runTFIDF(tfidf[rows,:])
-#                sub_tfidf = self.miner.runTFIDF(termDoc[rows,:])
+                sub_tfidf = self.miner.runTFIDF(termDoc[rows,:])
                 
                 
                 # create hashes to the new submatrix
