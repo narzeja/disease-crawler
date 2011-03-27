@@ -74,6 +74,7 @@ class ICD10tester(object):
             
             sorted_tfidf_terms = [rev_term_hash[x] for x in scores_tfidf]
             
+            sorted_tfidf_terms_cleaned = sorted_tfidf_terms
             # remove non-symptom candidates
             sorted_tfidf_terms_cleaned = [x for x in sorted_tfidf_terms if x in symptom_list]
             
