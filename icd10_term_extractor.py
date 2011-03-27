@@ -116,7 +116,7 @@ class ICD10tester(object):
         return potentials
     
     
-    def runTests(self,path,icd_featurevectors,tfidf,t_hash,d_hash,n_hash,icd_featurevectors_v2):
+    def runTests(self,path,icd_featurevectors,tfidf,termDoc,t_hash,d_hash,n_hash,icd_featurevectors_v2):
         """
         
         """
@@ -139,8 +139,9 @@ class ICD10tester(object):
                 for code in codes:
                     rows.extend(icd_featurevectors[code][1])
                 rows = list(set(rows))
-                sub_tfidf = tfidf[rows,:]
-        #        sub_tfidf = miner.runTFIDF(tfidf[rows,:])
+#                sub_tfidf = tfidf[rows,:]
+#                sub_tfidf = miner.runTFIDF(tfidf[rows,:])
+                sub_tfidf = miner.runTFIDF(termDoc[rows,:])
                 
                 
                 # create hashes to the new submatrix
@@ -152,35 +153,37 @@ class ICD10tester(object):
                 
                 print "Submatrix size:",sub_tfidf.shape
                 
+                ddd_hash = dd_hash
+                
                 ##############################
-                
-                icd_featurevectors_v2 = self.getFeatures(sub_tfidf,None,t_hash,dd_hash,True)
-                
-#                tmp = {}
-#                for code,content in icd_featurevectors_v2.items():
-#                    if code[0] in codes: 
-#                        tmp[code] = content
-                
-                codes = self.categorizeQuery(query,icd_featurevectors_v2)
-                
-                print codes
-                
-                rows=[]
-                for code in codes:
-                    rows.extend(icd_featurevectors_v2[code][1])
-                rows = list(set(rows))
-                sub_tfidf = sub_tfidf[rows,:]
-        #        sub_tfidf = miner.runTFIDF(tfidf[rows,:])
-                
-                
-                # create hashes to the new submatrix
-                ddd_hash={}; c=0;
-                rev_dd_hash = dict(zip(dd_hash.values(),dd_hash.keys()))
-                for row in rows:
-                    ddd_hash[rev_dd_hash[row]] = c
-                    c+=1
-                
-                print "SubSUBmatrix size:",sub_tfidf.shape
+#                
+#                icd_featurevectors_v2 = self.getFeatures(sub_tfidf,None,t_hash,dd_hash,True)
+#                
+##                tmp = {}
+##                for code,content in icd_featurevectors_v2.items():
+##                    if code[0] in codes: 
+##                        tmp[code] = content
+#                
+#                codes = self.categorizeQuery(query,icd_featurevectors_v2)
+#                
+#                print codes
+#                
+#                rows=[]
+#                for code in codes:
+#                    rows.extend(icd_featurevectors_v2[code][1])
+#                rows = list(set(rows))
+#                sub_tfidf = sub_tfidf[rows,:]
+#        #        sub_tfidf = miner.runTFIDF(tfidf[rows,:])
+#                
+#                
+#                # create hashes to the new submatrix
+#                ddd_hash={}; c=0;
+#                rev_dd_hash = dict(zip(dd_hash.values(),dd_hash.keys()))
+#                for row in rows:
+#                    ddd_hash[rev_dd_hash[row]] = c
+#                    c+=1
+#                
+#                print "SubSUBmatrix size:",sub_tfidf.shape
                 
                 ##############################
                 
