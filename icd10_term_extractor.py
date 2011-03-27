@@ -137,7 +137,6 @@ class ICD10tester(object):
                 
                 rows=[]
                 for code in codes:
-                    print code
                     rows.extend(icd_featurevectors[code][1])
                 rows = list(set(rows))
 #                sub_tfidf = tfidf[rows,:]
