@@ -288,6 +288,7 @@ class Textminer:
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
+            tmp1=0;tmp2=0;
             for doc in docs:
                 score = termDoc[doc,n]
                 
@@ -297,6 +298,9 @@ class Textminer:
                     scores[doc_id] += score
                 except:
                     scores[doc_id] = score
+                tmp1+=score
+                tmp2+=1
+            print term,tmp1/float(tmp2)
         
         # Sort the scores (by value of course)
         scores = sorted(scores.items(), key=lambda (k,v): (v,k), reverse=True)
