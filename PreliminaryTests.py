@@ -54,6 +54,26 @@ class tester():
                     doc_id = rev_name_hash[r[0]]
                     if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
 
+    def getStats(self,path,term_hash,doc_hash,name_hash):
+        """
+        
+        """
+        
+        tests = re.split('\n',open(path).read())
+        
+        for test in tests:
+            if test:
+                # avoid empty rows
+                data = re.split('\t',test)
+                orpha_num = data[0]
+                query = data[2]
+                name = data[1]
+                
+                data = self.db.execute("select G.data from googled_info_cleansed G, query Q where G.query=Q.query and Q.patres=?",[orpha_num]).fetchall()
+                
+                print name
+                print "Based on",len(data),"websites"
+
 
 
 
