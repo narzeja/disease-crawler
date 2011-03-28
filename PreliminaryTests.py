@@ -73,6 +73,12 @@ class tester():
                 
                 print name
                 print "Based on",len(data),"websites"
+                sanitizer=re.compile('[\W]')
+                words_per_page=0
+                for page in data:
+                    words_per_page += len(sanitizer.sub(' ',page[0]).split())
+                words_per_page = words_per_page /float(len(data))
+                print "Words per page:",words_per_page
 
 
 
