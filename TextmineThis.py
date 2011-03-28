@@ -231,6 +231,7 @@ class Textminer:
         
         #######
         scores = {}
+        print queryx
         for terms in queryx:
             docs=[]
             for term in terms:
