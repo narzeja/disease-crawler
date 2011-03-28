@@ -299,7 +299,7 @@ class Textminer:
                 except:
                     scores[doc_id] = score
                 
-                if scores[doc_id]>0: scores[doc_id] = scores[doc_id]/flaot(len(docs))
+                if scores[doc_id]>0: scores[doc_id] = scores[doc_id]/float(len(docs))
                 tmp1+=score
 #            if tmp2: print term,tmp1/float(tmp2)
         
