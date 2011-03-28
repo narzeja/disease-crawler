@@ -241,16 +241,16 @@ class Textminer:
                     continue
                 docs.extend(termDoc[:,n].nonzero()[0].tolist()[0])
             
+            print orgiTermDoc[docs,:].shape
             ############################
             sub_tfidf = self.runTFIDF(orgiTermDoc[docs,:])
-            print sub_tfidf.shape
             # create hashes to the new submatrix
             dd_hash={}; c=0;
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
             for row in docs:
                 dd_hash[rev_doc_hash[row]] = c
                 c+=1
-            docs = range(len(dd_hash))
+            docs = range(c)
             termDoc = sub_tfidf
             ############################
             
