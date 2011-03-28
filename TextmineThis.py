@@ -204,8 +204,10 @@ class Textminer:
         """
         
         ####
+        queryx = [sanitizer.sub(' ',x) for x in queryx]##
+        
         queryx = [s.strip().lower() for s in query.split(',') if s!='']
-        queryx = [sanitizer.sub(' ',x) for x in queryx]
+#        queryx = [sanitizer.sub(' ',x) for x in queryx]
         queryx = [" ".join(self.stem(x)) for x in queryx if x]
         queryx = [self.removeStopwords(x.split(' ')) for x in queryx]
         print "Search terms:",queryx
@@ -242,7 +244,10 @@ class Textminer:
                 docs.extend(termDoc[:,n].nonzero()[0].tolist()[0])
             
             fq = nltk.FreqDist(docs)
-            docs = [x for x in docs if fq[x]==len(terms)]
+            #docs = [x for x in docs if fq[x]==len(terms)]
+            print "number of terms:",len(terms)
+            print "number of terms divided by two:",len(terms)/2
+            docs = [x for x in docs if fq[x]>len(terms)/2]
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
