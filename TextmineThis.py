@@ -300,7 +300,7 @@ class Textminer:
                     scores[doc_id] = score
                 tmp1+=score
                 tmp2+=1
-            print term,tmp1/float(tmp2)
+            if tmp2: print term,tmp1/float(tmp2)
         
         # Sort the scores (by value of course)
         scores = sorted(scores.items(), key=lambda (k,v): (v,k), reverse=True)
