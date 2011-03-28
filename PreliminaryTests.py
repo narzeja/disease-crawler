@@ -22,7 +22,7 @@ class tester():
 #        self.termDoc,self.term_hash,self.doc_hash,self.name_hash = self.miner.createTermDoc(self.data)
 #        self.termDoc = self.miner.runTFIDF(self.termDoc)
 
-    def runTest(self,path,termDoc,term_hash,doc_hash,name_hash):
+    def runTest(self,path,termDoc,origTermDoc,term_hash,doc_hash,name_hash):
         """
         
         """
@@ -40,7 +40,7 @@ class tester():
                 orpha_num = self.data[0]
                 query = self.data[2]
                 
-                results = self.miner.queryTheMatrix(self.termDoc,query,self.term_hash,self.doc_hash,self.name_hash)
+                results = self.miner.queryTheMatrix(self.termDoc,origTermDoc,query,self.term_hash,self.doc_hash,self.name_hash)
                 
                 # Hack: Reverse the hash for name-to-doc-id lookup 
                 # (no disease names should occur twice)
