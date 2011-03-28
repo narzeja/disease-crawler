@@ -177,7 +177,7 @@ class Textminer:
         
         return tfidf
     
-    def queryTheMatrix(self,termDoc,orgiTermDoc,query,term_hash,doc_hash, name_hash,
+    def queryTheMatrix(self,termDoc,query,term_hash,doc_hash, name_hash,
                         stemming=True,rm_stopwords=True, 
                         sanitizer=re.compile('[\W]')):
         """
@@ -283,8 +283,6 @@ class Textminer:
                 continue
             
             docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
-#            docs = termDoc[:,n].nonzero()[0].tolist()[0]
-#            print term,len(docs)
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
@@ -298,10 +296,6 @@ class Textminer:
                     scores[doc_id] += score
                 except:
                     scores[doc_id] = score
-                
-                if scores[doc_id]>0: scores[doc_id] = scores[doc_id]/float(len(docs))
-                tmp1+=score
-#            if tmp2: print term,tmp1/float(tmp2)
         
         # Sort the scores (by value of course)
         scores = sorted(scores.items(), key=lambda (k,v): (v,k), reverse=True)
