@@ -243,6 +243,7 @@ class Textminer:
             
             ############################
             sub_tfidf = self.runTFIDF(orgiTermDoc[docs,:])
+            print sub_tfidf.shape
             # create hashes to the new submatrix
             dd_hash={}; c=0;
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
