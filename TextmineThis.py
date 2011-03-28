@@ -177,7 +177,7 @@ class Textminer:
         
         return tfidf
     
-    def queryTheMatrix(self,termDoc,query,term_hash,doc_hash, name_hash,
+    def queryTheMatrix(self,termDoc,orgiTermDoc,query,term_hash,doc_hash, name_hash,
                         stemming=True,rm_stopwords=True, 
                         sanitizer=re.compile('[\W]')):
         """
@@ -204,10 +204,8 @@ class Textminer:
         """
         
         ####
-        query = sanitizer.sub(' ',query)
-        
         queryx = [s.strip().lower() for s in query.split(',') if s!='']
-#        queryx = [sanitizer.sub(' ',x) for x in queryx]
+        queryx = [sanitizer.sub(' ',x) for x in queryx]
         queryx = [" ".join(self.stem(x)) for x in queryx if x]
         queryx = [self.removeStopwords(x.split(' ')) for x in queryx]
         print "Search terms:",queryx
@@ -243,14 +241,22 @@ class Textminer:
                     continue
                 docs.extend(termDoc[:,n].nonzero()[0].tolist()[0])
             
-            fq = nltk.FreqDist(docs)
-            #docs = [x for x in docs if fq[x]==len(terms)]
-            print "number of terms:",len(terms)
-            print "number of terms divided by two:",len(terms)/2
-            docs = [x for x in docs if fq[x]>len(terms)/2]
+            ############################
+            sub_tfidf = self.runTFIDF(orgiTermDoc[docs,:])
+            # create hashes to the new submatrix
+            dd_hash={}; c=0;
+            rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
+            for row in docs:
+                dd_hash[rev_doc_hash[row]] = c
+                c+=1
+            ############################
+            
+#            fq = nltk.FreqDist(docs)
+#            docs = [x for x in docs if fq[x]==len(terms)]
             
             # Sum score measure:
-            rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
+#            rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
+            rev_doc_hash = dict(zip(dd_hash.values(),dd_hash.keys()))
             for doc in docs:
                 score = termDoc[doc,n]
                 
