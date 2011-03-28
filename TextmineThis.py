@@ -243,9 +243,6 @@ class Textminer:
             
             fq = nltk.FreqDist(docs)
             docs = [x for x in docs if fq[x]==len(terms)]
-            print len(docs)
-            docs = set(docs)
-            print len(docs)
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
