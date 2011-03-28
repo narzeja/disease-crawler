@@ -204,7 +204,7 @@ class Textminer:
         """
         
         ####
-        query = [sanitizer.sub(' ',x) for x in query]##
+        query = sanitizer.sub(' ',query)
         
         queryx = [s.strip().lower() for s in query.split(',') if s!='']
 #        queryx = [sanitizer.sub(' ',x) for x in queryx]
