@@ -250,6 +250,7 @@ class Textminer:
             for row in docs:
                 dd_hash[rev_doc_hash[row]] = c
                 c+=1
+            docs = range(len(dd_hash))
             ############################
             
 #            fq = nltk.FreqDist(docs)
