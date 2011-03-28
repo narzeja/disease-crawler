@@ -282,8 +282,9 @@ class Textminer:
                 print "Term not found: '"+term+"'"
                 continue
             
-#            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
-            docs = termDoc[:,n].nonzero()[0].tolist()[0]
+            docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
+#            docs = termDoc[:,n].nonzero()[0].tolist()[0]
+            print term,len(docs)
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
