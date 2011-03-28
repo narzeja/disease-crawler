@@ -69,7 +69,7 @@ class tester():
                 query = data[2]
                 name = data[1]
                 
-                data = self.db.execute("select G.data from googled_info_cleansed G, query Q where G.query=Q.query and Q.patres=?",[orpha_num]).fetchall()
+                data = self.db.c.execute("select G.data from googled_info_cleansed G, query Q where G.query=Q.query and Q.patres=?",[orpha_num]).fetchall()
                 
                 print name
                 print "Based on",len(data),"websites"
