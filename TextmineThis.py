@@ -284,11 +284,11 @@ class Textminer:
             
             docs = set(termDoc[:,n].nonzero()[0].tolist()[0])
 #            docs = termDoc[:,n].nonzero()[0].tolist()[0]
-            print term,len(docs)
+#            print term,len(docs)
             
             # Sum score measure:
             rev_doc_hash = dict(zip(doc_hash.values(),doc_hash.keys()))
-            tmp1=0;tmp2=0;
+            tmp1=0
             for doc in docs:
                 score = termDoc[doc,n]
                 
@@ -298,9 +298,10 @@ class Textminer:
                     scores[doc_id] += score
                 except:
                     scores[doc_id] = score
+                
+                if scores[doc_id]>0: scores[doc_id] = scores[doc_id]/flaot(len(docs))
                 tmp1+=score
-                tmp2+=1
-            if tmp2: print term,tmp1/float(tmp2)
+#            if tmp2: print term,tmp1/float(tmp2)
         
         # Sort the scores (by value of course)
         scores = sorted(scores.items(), key=lambda (k,v): (v,k), reverse=True)
