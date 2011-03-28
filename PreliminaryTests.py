@@ -12,7 +12,7 @@ class tester():
         pass
         
     def initialize(self):
-#        self.db = DB.db()
+        self.db = DB.db()
 #        self.data = self.db.c.execute("select patres,abstract,disease_name from disease_info")
 #        self.data = self.data.fetchall()
         
