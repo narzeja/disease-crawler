@@ -251,6 +251,7 @@ class Textminer:
                 dd_hash[rev_doc_hash[row]] = c
                 c+=1
             docs = range(len(dd_hash))
+            termDoc = sub_tfidf
             ############################
             
 #            fq = nltk.FreqDist(docs)
