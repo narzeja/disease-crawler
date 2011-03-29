@@ -67,9 +67,9 @@ In this paper we design and construct models for assisting physicians
 with the task of diagnosing rare diseases. Using a prior knowledge of
 rare diseases consisting of \textit{disease name, some symptoms} and
 \textit{synonyms}, we utilize the \textit{Google Search Engine} to build
-the model over several iterations. The model is constructed using
+the model over several iterations. The models are constructed using
 machine learning and natural language processing techniques by text
-mining symptoms and features from abstracts and other interesting
+mining symptoms and features from abstracts and other relevant
 paragraphs of text found in the search process.
 \todo[inline]{Tests and results}
 
@@ -78,17 +78,30 @@ paragraphs of text found in the search process.
 %\newpage
 
 \section{Preface}
+The source code, this report and the previous project by
+\cite{jensenandersen} is available at the repository:
+\url{http://code.google.com/p/disease-crawler/}
+%Installation and usage is exclusively the responsibility of the user.
+The system is developed in Python version 2.6.6 on Ubuntu 10.10,
+utilizing the following external modules:
+\begin{itemize}
+\item nltk \footnote{\url{http://nltk.org}}, Ubuntu repository module: \texttt{python-nltk}
+\item numpy \footnote{\url{http://numpy.scipy.org}}, Ubuntu repository module: \texttt{python-numpy}
+\item hcluster \footnote{\url{http://code.google.com/p/scipy-cluster/}}
+\item lxml \footnote{\url{http://lxml.de}}, Ubuntu repository module: \texttt{python-lxml}
+\item sqlite3, Ubuntu repository module: \texttt{python-sqlite}
+\end{itemize}
+
 \subsection{Expectations to the reader}
 The reader is expected to have knowledge in Computer Science at a
 Master's degree entry level.
 
 It is expected that the reader has read the project
-\cite{jensenandersen}, which explains the foundations needed for this
-project.
+\cite{jensenandersen}.
 
 We expect the reader to have knowledge of Natural Language Processing
 techniques, in particular POS-tagging and phrase chunking. It is also
-required to have knowledge of the foundations and overall purpose of
+required to have knowledge of the foundations and overall philosophy of
 Machine Learning.
 
 
@@ -105,23 +118,45 @@ on utilizing Google or other popular search engines
 %\url{http://www.wrongdiagnosis.com/},
 %\url{http://www.rarediseases.org/}, \url{http://www.orpha.net/}.
 
-In this project, we investigate methods for automating information
-collection of specific features from rare diseases, with focus on
-establishing a model with which a practising physician may query a case
-report for some patient and get a prediction of possible diseases based
-on the knowledge of the model.
-To increase the prediction precision, The model is expanded by
-harvesting information of some disease through a number of iterations on
-popular search engines. The harvested data is sanitised and irrelevant
-or low-information paragraphs are removed to reduce noise within the
-model. The prediction process is performed by, given a query, a number
-of diseases are returned that match the the query, in addition to
-ICD10\footnote{The International Statistical Classification of Diseases
-and Related Health Problems 10th iteration (ICD10) is a classification
-of diseases, signs and symptoms, classified by the World Health
-Organization (WHO).} code clusters and Natural Language Processing (NLP)
-based unique keyword suggestions. \todo[inline]{rewrite to make it
-crystal clear!}
+In this project, we investigate several methods for automating
+information collection of specific features from rare diseases. The
+project is mainly developing proof of concept models, on which a
+practising physician can query a case report or a number of search terms
+and get a list of disease predictions based on the knowledge of the
+model.
+
+The basic model is constructed given information of 3882 diseases, with
+corresponding abstract or disease group information. This information,
+together with the disease name and other relevant terms are used to
+harvest the Internet for related information to expand the knowledge of
+that particular disease.
+
+A number of post-processing techniques are now applied to the basic
+model to develop the final proof of concept models, based on different
+characteristics and processing strategies.
+
+
+% The models are sketched as
+%follows:
+%\begin{description}
+%\item[Unigram] This model is similar to the model developed in the proje
+%\item[Cleansed Model]
+%\item[Unigram+NLP]
+%\item[ICD10 model]
+%\end{description}
+
+
+%In order to increase the prediction precision, the model is expanded by
+%harvesting information of some disease through a number of iterations on
+%popular search engines. The harvested data is sanitised and irrelevant
+%or low-information paragraphs are removed to reduce noise within the
+%model. The prediction process is performed by, given a query, a number
+%of diseases are returned that match the the query, in addition to
+%ICD10\footnote{The International Statistical Classification of Diseases
+%and Related Health Problems 10th iteration (ICD10) is a classification
+%of diseases, signs and symptoms, classified by the World Health
+%Organization (WHO).} code clusters and Natural Language Processing (NLP)
+%based models. \todo[inline]{rewrite to make it crystal clear!}
 
 
 %We use Natural Language Processing (NLP)
@@ -135,31 +170,39 @@ crystal clear!}
 
 
 \subsection{Limitations}
-\todo[inline]{Blanks to be filled.}
+We have not developed a fully automatic system that with a simple
+interface is able to take a query and return a prediction. The system
+and models are developed as autonomous modules and have not yet been
+fine-tuned or assembled as a complete program.
 
 
 \subsection{Content outline of this document}
-%In section \ref{chap:previouswork} we will outline current and previous
-%work.
+In section \ref{chap:previouswork} we will outline current and previous
+work and briefly discuss the differences to this project.
 
-In section \ref{chap:method} we will present an overview of the method
+In section \ref{chap:method} we will present an overview of the methods
 used, and go into detail with the most important steps, by discussing
-information harvesting, extraction, modelling and prediction.
+information harvesting, feature extraction, modelling and prediction.
+
+% of each of
+%the developed models.
 
 In section \ref{chap:implementation} we will go into the implementation
-details in specific areas of interest, highlighting the overall
-architecture and pipeline of constructing the different models, while
-explaining the more important parts of the the architecture, with
-particular focus on NLP and model construction.
+details of the various models, highlighting the overall architecture and
+pipeline of constructing the models, and discuss which methods are used
+in each model.
+
+% while
+%explaining the more important parts of the architecture.
 
 In section \ref{chap:test} we present the results from our tests, here
 among blind tests, BMJ and Orphanet, further explained in section
 \ref{chap:test}, comparing our results with previous similar projects.
-We will discuss the tests with a strong focus on statistical analysis.
+We will discuss the results with a strong focus on statistical analysis.
 
 Finally, in chapter \ref{chap:conclusion} we will conclude the project,
-and discuss major implications and advantages of the system, method and
-tests. We will also propose a number of topics for future work.
+and discuss major implications and advantages of the system, methods and
+tests. We will finally propose a number of topics for future work.
 
 
 %In the following we will present and highlight current and previous work
@@ -175,24 +218,25 @@ tests. We will also propose a number of topics for future work.
 
 \section{Previous Work}
 \label{chap:previouswork}
-Our colleagues Radu Dragusin and Paula Petku from the department of
-Computer Science at Copenhagen University investigate a related way of
-automating information gathering to what we are presenting. However, as
-this is a work in progress we do not have access to further information
-at this point in time \cite{radupaula}.
+The article \cite{googlingdiagnosis} proves the viability of using
+Google as a diagnosis aid, despite the tests being done manually with
+little consideration with regard to automation or test reliability and
+validity.
 
 \cite{jensenandersen} proposed a system for diagnosing rare diseases
 using vector space models and text mining. They showed a potential in
 automating such a process, but their results were not statistically
 significant. Their system did not rely on prior knowledge of particular
 diseases, but still showed that around 60\% of the tests were
-satisfactory.
+satisfactory (correct disease located within the top 20 predictions).
+
+Our colleagues Radu Dragusin and Paula Petku from the department of
+Computer Science at Copenhagen University investigate a related way of
+automating information gathering to what we are presenting. However, as
+this is a work in progress we do not have access to further information
+at this point in time \cite{radupaula}.
 
 
-The article \cite{googlingdiagnosis} proves the viability of using
-Google as a diagnosis aid, despite the tests being done manually with
-little consideration with regard to automation or test reliability and
-validity.
 
 %Our system will move on to the next step and introduce intelligent
 %automation through a number of predefined criteria and utilizing several
@@ -270,9 +314,7 @@ save it for further processing given an acceptance threshold.
 %accepted paragraph we use NLP to identify candidates for relevant terms
 %and phrases that will then be used to expand the model. 
 
-The abstract
-flow model is available in figure \ref{fig:flow}.
-
+The abstract flow model is shown in figure \ref{fig:flow}.
 
 \begin{figure}[htp!]
 \begin{center}
@@ -282,16 +324,19 @@ flow model is available in figure \ref{fig:flow}.
 \end{center}
 \end{figure}
 
-Each step in the process will be described in greater detail in the
-following sections.
+As several individual models are being constructed, we will highlight
+the most important cornerstones of all the methods used independently
+across all the models.
+We initialise by explaining how the basic model is constructed and how
+we have refined it into a number of proof of concept models.
 
-\todo[inline]{Something N-gram machine learning here.}
+%\todo[inline]{Something N-gram machine learning here.}
 
-\subsection{Building the preliminary model}
-The preliminary model is built using the prior information available
+\subsection{Building the basic model}
+The basic model is built using the prior information available
 from Orphanet. The TF-IDF model is essentially identical to the model
-constructed in \cite{jensenandersen}, except the underlying information
-is not harvested and thus prone to be noisy, but consists of validated
+constructed in \cite{jensenandersen}, except our prior information is
+not harvested and thus prone to be noisy, but consists of validated
 abstracts and titles for each disease.
 
 %To perform the initial testing we mimicked the setup of
@@ -303,10 +348,10 @@ abstracts and titles for each disease.
 Each row in the matrix thus represents a feature vector of a disease
 with the features being a list of term frequencies \todo[inline]{quick mini-example}. Prior to the
 creation of the matrix, the terms were stemmed \todo[inline]{explain stemming}(using the Porter
-stemming algorithm \todo[inline]{explain algorithm}) and stopwords \footnote{The stopwords a defined by a
+stemming algorithm\todo[inline]{explain algorithm}) and stopwords \footnote{The stopwords a defined by a
 list of 127 English words provided by the Python NLTK library
 (\texttt{nltk.corpus.stopwords.words("english")}} are removed along
-with non-alphanumerical\footnote{Symbols not represented in the Danish
+with non-alphanumerical \footnote{Symbols not represented in the Danish
 Alphabet} symbols. The term-disease matrix is then processed using the
 TF-IDF model (as originally proposed by \cite{tfidf}) along with
 additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten
@@ -344,15 +389,16 @@ using customised queries. The results can be seen in appendix
 
 
 \subsection{Harvesting data}
-Harvesting additional data to expand the existing TF-IDF model is done
-using the Google search engine. For each site corresponding to our
-query, disease name and a number of keywords from disease abstract, we
-extract paragraphs and measure the relevance of that paragraph compared
-to the corresponding abstract from Orphanet. The comparison is measured
-using a cosine distance measure of two term vectors representing
-known information, $\textbf{s}$ and a harvested paragraph of information
-$\textbf{p}$ which is defined as \footnote{Definition extracted from the
-HCluster cosine source code definition.}:
+Harvesting additional data to expand the basic model is done using the
+Google search engine. For each site returned from the query, i.e.
+disease name and a number of keywords from disease abstract, paragraphs
+are extracted to measure the relevance of that paragraph compared to the
+corresponding abstract from Orphanet. The comparison is measured using a
+cosine distance measure of two term vectors representing known
+information, $\textbf{s}$ and a harvested paragraph of information
+$\textbf{p}$ which is defined as
+%\footnote{Definition extracted from the
+%HCluster cosine source code definition.}:
 \[
 similarity(\textbf{s}, \textbf{p}) = \frac{1 - sp^T}{||s||_2 ||p||_2}
 \]
@@ -380,8 +426,8 @@ that could be relevant for later symptom extraction, it has been decided
 that this entire term is considered noise, and can thus be filtered by
 investigating the occurrence of names in the first sentence.
 
-\todo[inline]{Write pseudocode for this harvesting and paragraph
-selection procedure}
+%\todo[inline]{Write pseudocode for this harvesting and paragraph
+%selection procedure}
 
 
 %The comparison consists of constructing a $2 x n$ matrix, for $n$ being
@@ -393,29 +439,29 @@ selection procedure}
 Feature extraction is used as a means to extract unique or otherwise
 relevant information from a document regarding a specific disease. The
 purpose is to built a phrase document matrix similar to the above
-mentioned TF-IDF matrix, i.e. a \texttt{Phrase Frequency - Inverse
+mentioned TF-IDF matrix, i.e. a \textit{Phrase Frequency - Inverse
 Document Frequency} matrix (PF-IDF). We hypothesise that extracting
 terms and phrases directly relevant to the essence of a particular
 disease may reduce noise of irrelevant but infrequent words, that would
 otherwise have a high score, compared to the old TF-IDF model. The
 challenge lies in the strictness of the grammar that produces symptom
-candidates. This will be explained in depth in the following.
+candidates.
 
-The process consists mainly of POS-tagging and subsequent chunking into
-phrases, involving a nested iteration through an array of POS-taggers
-and subsequent chunking by exploiting certain syntactic and semantic
-properties of sentences.
+The process of extracting features consists mainly of POS-tagging and
+subsequent chunking into phrases, involving a nested iteration through
+an array of POS-taggers and subsequent chunking by exploiting certain
+syntactic and semantic properties of sentences.
 
-
+\subsubsection{POS-tagging}
 The POS-tagging procedure, which is a variant of a braubt
 \footnote{Brill, Regexp, Affix, Unigram, Bigram, Trigram} tagger built
-using the following strategies, in decreasing order of complexity and
-context exploitation:
+using the following strategies, is listed here in decreasing order of
+complexity and context exploitation:
 \begin{description}
-\item[Brill tagging] The Brill\cite{Brill:1992:SRP:974499.974526} tagger
-starts by running an initial tagger, and then improves the result by
-applying a list of transformation rules. These rules are automatically
-learned from the training corpus.
+\item[Brill tagging] The Brill \cite{Brill:1992:SRP:974499.974526}
+tagger starts by running an initial tagger, and then improves the result
+by applying a list of transformation rules. These rules are
+automatically learned from the training corpus.
 \item[Affix tagging] The affix tagger is similar to the unigram tagger.
 It takes some fixed-size substring of a word and finds the most likely
 tag for that substring.
@@ -434,7 +480,8 @@ data collection.}.
 %\item[Regexp tagging] This tagger assigns tags to tokens based on regular
 %expessions.
 \end{description}
-Which we will refer to as a batbum tagger. Notice, that opposed to the
+%Which we will refer to as a batbum tagger. 
+Notice, that opposed to the
 braubt tagger we do not use a regular expression tagger but utilize a
 classifier based maxent treebank pos tagger. The goal of using this many
 taggers is to encode as much information about a sequence of words to
@@ -443,47 +490,51 @@ a context for a given sequence, a less complex tagger takes over and
 attempts to tag, and thereby runs through the list of taggers and
 finally ending with the maxent treebank pos tagger.
 
-The taggers are trained on the Brown Corpus \footnote{available through
+The taggers are trained on the Brown corpus \footnote{Available through
 the NLTK corpus collection.}. While the corpus is not directly
 applicable in a medical domain, and realising the importance of training
 on representative data, we have observed anecdotal increase in precision
-using a batbum tagger, as opposed to using much simpler strategies, such
-as regular expression or dictionary based taggers.
+using the above taggers in sequence, as opposed to using much simpler
+strategies, such as regular expression or dictionary based taggers.
 
-
+\subsubsection{Chunking}
 In order to iterate and collect information to expand the modelling of
 relevant terms and phrases we use NLP to identify symptoms and medical
 terms (here-on referred to as just symptom) from abstracts and
-paragraphs harvested. Identifying unique symptoms and correlate with
-other documents describing the same disease will increase the knowledge,
-or further substantiate pre-existing knowledge of that disease. The
-ultimate goal of this strategy is to expand the model and highlight
-unique keywords such that, given our assumption, it will increase the
-precision of the prediction.
+paragraphs harvested. 
+
+%Identifying unique symptoms to use in parallel
+%with the basic model will 
+
+%and correlate with
+%other documents describing the same disease will increase the knowledge,
+%or further substantiate pre-existing knowledge of that disease. The
+%ultimate goal of this strategy is to expand the basic model as a means
+%to focus on medically relevant information.
 
 Through a number of anecdotal observations it is experienced that
 symptoms are usually described as zero or more adjectives or verbs
-followed by one or more nouns\fxwarning{substantiate this claim
-somehow}. Thus we can build a regular grammar using the Python NLTK
-library\footnote{\url{http://nltk.org/}} as such:
+followed by one or more nouns. These phrases can be caught using a
+regular grammar defined through the Python NLTK library
+\footnote{\url{http://nltk.org/}} as such:
 \begin{lstlisting}
 grammar = """SYMPTOM: {(<JJ|VB(N|G|D)>*<N(P|N)>+)}"""
 \end{lstlisting}
 This will catch candidates such as \texttt{bleeding diathesis}, but will
 also match non relevant terms such as \texttt{addition}.
-
+ based
 %The premise for the construction of this grammar is substantiated
 %through anecdotal manual observations of a handful of abstracts from the
 %orphanet data set, and utilized under the assumption that it will
 %increase the amount of medically relevant terms as opposed to simply
 %catching all combinations matching the \texttt{SYMPTOM} grammar above.
 
-The grammar applied to the sentence \textit{``Hermansky-Pudlak syndrome
-type 2 is a type of Hermansky-Pudlak syndrome, a multi-system disorder
-characterized by oculocutaneous albinism, bleeding diathesis and
-neutropenia.''}\footnote{Excerpt from the
-Hermansky-Pudlak syndrome abstract from the Orphanet data set.} gives us
-the following POS-tagged syntax tree:
+As an example, the grammar applied to the sentence
+\textit{``Hermansky-Pudlak syndrome type 2 is a type of Hermansky-Pudlak
+syndrome, a multi-system disorder characterized by oculocutaneous
+albinism, bleeding diathesis and neutropenia.''} \footnote{Excerpt from
+the Hermansky-Pudlak syndrome abstract from the Orphanet data set.}
+yields the following POS-tagged syntax tree:
 \begin{lstlisting}
 (S
   (SYMPTOM Hermansky-Pudlak/JJ syndrome/NN type/NN)
@@ -507,92 +558,62 @@ the following POS-tagged syntax tree:
   ./.)
 \end{lstlisting}
 of which we are particularly interested in the \texttt{SYMPTOM}
-subtrees, selecting those to further evaluate the phrases against
-harvested symptom and medical term databases
-\footnote{\url{http://www.medicinenet.com/},
-\url{http://www.diseasesdatabase.com},
-\url{http://www.wrongdiagnosis.com/}}\footnote{Number of symptoms sum to
-a total of 29856 symptoms, with possible minor overlap, example:
-\textit{neck tingling} and \textit{neck tingling/paresthesias}.} and
-extract \textit{Hermansky-Pudlak syndrome type}.
+subtrees. For each existing paragraph or abstract for a given disease, a
+list of phrases and terms are returned for further processing.
 
 While the grammar does not explicitly collect symptoms or medical terms,
 we attempt to filter out noise by ruling out candidates that are not
-represented in the above mentioned harvested symptom database.
+represented in the above mentioned harvested symptom database of which
+a PF-IDF matrix can be built and used together with the basic model.
+Chapter \ref{chap:implementation} explains how these models are
+implemented and utilized.
 
-Additionally, while having collected a number of symptom candidates
-$\mathbb{S}$ from some document or paragraph, we calculate the number of
-unique terms and return the candidates $\mathbb{S'}$, that appear more
-than once or is a substring of other candidates. Consider the set of
-candidates already filtered against the before mentioned database,
-$\mathbb{S} = $ \texttt{\{bleeding diathesis, bleeding tendency,
-bleeding, sleep apnae\}}. The system will then count \texttt{bleeding}
-as well as \texttt{bleeding diathesis} and \texttt{bleeding tendency} as
-that is a substring of the other two. We will thus accept the symptoms
-$\mathbb{S'} = $ \texttt{\{bleeding diathesis, bleeding tendency,
-bleeding\}}.
-
-
-% \todo[inline]{rewrite}
-%Using the rule:
-%\begin{equation}
-% s_{j}, s_{i} \in \mathbb{S'} ||s_{j}|| > 1 \wedge||s_{i}|| \wedge s_{j} \subset s_{i}, \texttt{for } s_{i}, s_{j} \in \mathbb{S}
-%\end{equation}
-%\todo[inline]{valider formel}
-Anecdotal observations during the development phase of this module
-showed that returning terms and substrings of terms using this strategy
-increased the amount of relevant symptoms, and seemed to decrease the
-amount of noise generated in the symptom harvesting process.
-
-\subsection{Building the NLP based model}
-\todo[inline]{place holder}
+%Additionally, while having collected a number of symptom candidates
+%$\mathbb{S}$ from some document or paragraph, we calculate the number of
+%unique terms and return the candidates $\mathbb{S'}$, that appear more
+%than once or is a substring of other candidates. Consider the set of
+%candidates already filtered against the before mentioned database,
+%$\mathbb{S} = $ \texttt{\{bleeding diathesis, bleeding tendency,
+%bleeding, sleep apnae\}}. The system will then count \texttt{bleeding}
+%as well as \texttt{bleeding diathesis} and \texttt{bleeding tendency} as
+%that is a substring of the other two. We will thus accept the symptoms
+%$\mathbb{S'} = $ \texttt{\{bleeding diathesis, bleeding tendency,
+%bleeding\}}.
 
 
-%E.g., consider the candidates $\mathbb{S} = $
-%\texttt{\{bleeding diathesis, bleeding tendency, bleeding, sleep
-%apnae\}} we will accept the symptoms $\mathbb{S'} = $ \texttt{\{bleeding
-%diathesis, bleeding tendency, bleeding\}}.
+%% \todo[inline]{rewrite}
+%%Using the rule:
+%%\begin{equation}
+%% s_{j}, s_{i} \in \mathbb{S'} ||s_{j}|| > 1 \wedge||s_{i}|| \wedge s_{j} \subset s_{i}, \texttt{for } s_{i}, s_{j} \in \mathbb{S}
+%%\end{equation}
+%%\todo[inline]{valider formel}
+%Anecdotal observations during the development phase of this module
+%showed that returning terms and substrings of terms using this strategy
+%increased the amount of relevant symptoms, and seemed to decrease the
+%amount of noise generated in the symptom harvesting process.
 
-%\subsubsection{Feature Extraction using NLP}
-%We will use NLP techniques to extract candidates for this
-%classification, using Part-of-Speech (POS)
-%tagging\todo[inline]{Brief explanation here}, and semantic
-%recognition of terms and phrases.
+\subsection{Utilizing ICD10 Codes}
+For approximately 50\% of the diseases in our existing models, an ICD10
+label is attached. This label is a categorization
 
 
 
-%After considerable consideration, we have decided to limit the scope of
-%our information harvesting to sites, guaranteed to be within the domain
-%of disease and/or rare diseases. As such, we methodically crawl each
-%known site of interest and extract phrases, paragraphs and documents
-%which are suitable candidates to contain information according to the
-%query of features.
-
-%While we may potentially lose critical information by limiting our
-%searches to specific sites, we also gain precision in our models by only
-%harvesting information within our domain. As such, we do not risk
-%running into documents that are not necessarily important for the
-%purpose of our model, but still show up as a result, caused by more or
-%less vague references to the given query. In order to widen the scope of
-%the searches, one would have to not only define modular ways of
-%extracting valuable information within any site available on the
-%Internet, but also look into document classification \cite{Jimmy}, to
-%decrease the level of noise. The implementation of such a classification
-%model is relatively simple, and only require a substantial amount of
-%corpora of documents for training and testing the model, but we did not
-%see it as important in this project and will leave the discussion as is.
-
-
-%For each \texttt{SearchGoogle} instance, we define which domain it
-%should retrieve results from, as well as an extractor function that
-%reads the results and returns information to be processed further, by
-%our feature extraction algorithm. All of these results are thus passed
-%into a mathematical model and used to increase disease prediction
-%precision or widen the amount of known diseases. I.e. expand the model.
 
 \section{Implementation}
 \label{chap:implementation}
-\todo[inline]{place holder}
+As mentioned previously, a number of different models are constructed to
+give a better foundation for comparison between the models. In
+particular, a \textit{basic} model - cleansed from some noise, an
+\textit{NLP+basic} model and finally an \textit{ICD10 code} based model
+is constructed and ultimately used for testing and comparison.
+
+\subsection{Basic}
+
+
+\subsection{NLP+Basic}
+
+
+\subsection{ICD10 code}
 
 
 \section{Tests}
