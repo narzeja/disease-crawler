@@ -1055,6 +1055,97 @@ with no further processing.
 \end{small}
 \end{center}
 
+
+
+
+\newpage
+\section{Tests using both a TFIDF unigram and TFIDF NLP model}
+
+\subsection{Orphanet}
+
+\begin{center}
+\begin{small}
+	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
+	\hline
+	\textbf{Disease}  & \textbf{Rank (unigram and nlp concensus)} & \textbf{Terms varified by NLP}  & \textbf{Terms not found by NLP} \\
+	\hline\hline
+Apparent mineralocorticoid excess & 28 & sever hypertens, earli onset & hypoaldosteron, low renin level, associ \\ \hline
+Rubinstein-Taybi syndrome & 226 & intellectu deficit & behaviour characterist, congenit anomali \\ \hline
+Cholestasis - lymphedema & 1 & sever neonat cholestasi &  childhood, chronic sever lymphoedema \\ \hline
+Aase-Smith syndrome & 12 &   & joint contractur, sever, cleft palat, congenit malformations: hydrocephalu \\ \hline
+Achondroplasia & 21 & short hand, macrocephali & saddl nose, high forehead, hyperlordosi, short limb \\ \hline
+Acalvaria & 4 & cranial vault &  flat bone, miss scalp \\ \hline
+Acrodysostosis & 32 & abnorm short, mental retard, hand & nasal hypoplasia, peripher dysostosi, feet, malform feet, malform hand, malform bone \\ \hline
+Acromegaly & 79 &  & system manifest, extrem, face, progress somat disfigur \\ \hline
+Biliary atresia & 1 & biliari obstruct &  neonat period, unknown origin \\ \hline
+Bronchiolitis obliterans with obstructive pulmonary disease & 4 &  &  airflow obstruct, bronchiolar wall, thicken of bronchiolar wall, fibros, inflammatori \\ \hline
+Cholera & 2 & sever diarrhea &  vomit, diarrhea  \\ \hline
+Choroideremia & 1 &  &  neural retina, rpe, retin pigment epithelium, progress degener of the choroid \\ \hline
+Coats disease & 1 & retin vessel, telangiectasia, subretin exud &  intraretin exud, progress deposit of intraretin exud, abnorm develop of retin vessel \\ \hline
+Omphalocele-cleft palate syndrome, lethal & 1 &  &  cleft palat, omphalocel \\ \hline
+Darier disease & 1 &  &  nail anomali, specif nail anomali, keratot papul in seborrh area, keratot papul \\ \hline
+Ichthyosis - hepatosplenomegaly - cerebellar degeneration & 29 & hepatosplenomegali & ataxia, late-onset cerebellar ataxia, ichthyosi \\ \hline
+Emery-Dreifuss muscular dystrophy & 2 & muscular weak &  cardiomyopathi, contractur, earli contractur of the tendon, atrophi \\ \hline
+Costello syndrome & 85 & intellectu deficit, cardiac abnorm &  skin anomali, coars faci, growth retard, postnat growth retard \\ \hline
+Fibrodysplasia ossificans progressiva & 2 & anatom pattern  & predict anatom pattern, heterotop osteogenesi, disabl heterotop osteogenesi, progress, congenit malform of great toe  \\ \hline
+Acropectorovertebral dysplasia & 7 &  & toe, finger, complex anomali, tarsal bone, fusion of the carpal \\ \hline
+Osteogenesis imperfecta & 12 & low bone mass & bone fragil, increas bone fragil \\ \hline
+Primary biliary cirrhosis & 10  &  & intrahepat bile duct, injuri of the intrahepat bile duct \\ \hline
+Hennekam syndrome & 99 & intellectu deficit, facial dysmorph & intestin lymphangiectasia, lymphoedema \\ \hline
+Hyperlysinemia & 26  & cerebrospin fluid & elev level of lysin in the cerebrospin fluid, blood, elev level of lysin \\ \hline
+Jackson-Weiss syndrome & 2 &  & normal hand, broad halluc, facial anomali, variabl craniosynostosi, metatars coalit,tarsal \\ \hline
+Jalili syndrome & 4 & cone-rod retin dystrophi, retin dystrophi  & amelogenesi imperfecta \\ \hline
+Jeune syndrome & 12 & narrow thorax &  short limb \\ \hline
+Myeloma, multiple & 4 & abnorm plasma cell, bone pain & abnorm immunoglobulin, bone pain, skelet destruct, bone marrow, overproduct of abnorm plasma cell \\ \hline
+Trichodental syndrome & 17 & dri hair, fine hair & dental anomali, short hair  \\ \hline
+	\end{longtable}
+%\label{tab:}
+\end{small}
+\end{center}
+
+\subsection{BMJ ('Googling for a Diagnosis') tests }
+
+\begin{center}
+\begin{small}
+	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
+	\hline
+	\textbf{Disease}  & \textbf{Rank (unigram and nlp concensus)} & \textbf{Terms varified by NLP}  & \textbf{Terms not found by NLP} \\
+	\hline\hline
+Cushing syndrome & 4 &  & hypertension, adrenal mass \\ \hline
+Hereditary pheochromocytoma-paraganglioma syndrome & 4 & cafe au lait & renal mass, headach, papilledema, hypertens \\ \hline
+Creutzfeldt-Jakob disease & 6 & insomnia & death, confus, ataxia \\ \hline
+Churg-Strauss syndrome & 4 & haematuria &  haemoptysi, anca, wheez weight loss \\ \hline
+Dermatomyositis & 13 & dysphagia, neoplasia & periorbit swell, rash, myopathi \\ \hline
+Cat-scratch disease & 5 & renal transplant & lymphadenopathi, cat, fever \\ \hline
+Toxic epidermal necrolysis & 1 &  & carbamazepin, respiratori failur, bullou skin condit \\ \hline
+MELAS syndrome & 8 & dysphasia & t2 lesion, confus, seizur \\ \hline
+Brugada syndrome & 16 & cardiac arrest & sleep \\ \hline
+	\end{longtable}
+%\label{tab:}
+\end{small}
+\end{center}
+
+\subsection{Blind Tests}
+
+\begin{center}
+\begin{small}
+	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
+	\hline
+	\textbf{Disease}  & \textbf{Rank (unigram and nlp concensus)} & \textbf{Terms varified by NLP}  & \textbf{Terms not found by NLP} \\
+	\hline\hline
+Fibrodysplasia ossificans progressiva & 5 & normal birth & osteogenesis., spine, bone tumor, quick develop of bone tumor, miss joint, deform of big toe, boy \\ \hline
+Adrenoleukodystrophy, X-linked & 6 & adren insuffici, normal develop & auditori function, visual, degener, ataxia, seizur, talk difficulti, progess develop, age 5, boy \\ \hline
+Papillon-Lefevre syndrome & 2 &  & affected., feet, dorsal side, sole, palm, skin, keratot plaqu, yellow, Hennekam syndrome, age 14, boy \\ \hline
+Kleine-Levin syndrome & 1 &  & hunger, increas sexual appetit, highli, irrit, aggress, sleep defici, monthli seizur, age 16, boy, jewish \\ \hline
+Midface retraction syndrome, Schinzel-Giedion type & 23 & short nose, low nasal bridg, wide mouth, short neck, bilater inguin hernia & cryptorchid, megameatu, hypospadia, redund skin, cutan angioma, median frontal, bright reddish hair, hypertrichosi, retrognathia, larg ear, larg low-set ear, hypertelor, the eye, deep groov, midfaci retract, malform at birth, child, male \\ \hline
+	\end{longtable}
+%\label{tab:}
+\end{small}
+\end{center}
+
+
+
+
 \newpage
 \section{Tests using ICD10 grouping}
 
