@@ -1,0 +1,354 @@
+BLINDTESTS
+['A', 'C', 'E', 'D', 'G', 'F', 'H', 'K', 'M', 'L', 'O', 'Q', 'P', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1796, 79863)
+Search terms:  ['boy', 'normal', 'birth', 'deform', 'big', 'toe', 'miss', 'joint', 'quick', 'develop', 'bone', 'tumor', 'near', 'spine', 'osteogenesi', 'biopsi']
+4       0.311261303682  Fibrodysplasia ossificans progressiva 
+
+['C', 'E', 'D', 'G', 'F', 'H', 'M', 'O', 'N', 'Q', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1718, 79863)
+Search terms:  ['normal', 'develop', 'boy', 'age', '5', 'progess', 'develop', 'talk', 'difficulti', 'seizur', 'ataxia', 'adren', 'insuffici', 'degener', 'visual', 'auditori', 'function']
+1       0.480887660313  Adrenoleukodystrophy, X-linked 
+
+['A', 'G', 'F', 'H', 'K', 'J', 'M', 'L', 'O', 'Q', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1167, 79863)
+Search terms:  ['boy', 'age', '14', 'yellow', 'keratot', 'plaqu', 'skin', 'palm', 'sole', 'go', 'onto', 'dorsal', 'side', 'hand', 'feet', 'affect']
+1       1.03905881222   Papillon-Lefevre syndrome 
+
+['A', 'C', 'E', 'D', 'G', 'F', 'I', 'K', 'M', 'L', 'O', 'N', 'Q', 'P', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1822, 79863)
+Search terms:  ['jewish', 'boy', 'age', '16', 'monthli', 'seizur', 'sleep', 'defici', 'aggress', 'irrit', 'woken', 'highli', 'increas', 'sexual', 'appetit', 'hunger']
+1       0.831222162746  Kleine-Levin syndrome 
+
+['C', 'E', 'D', 'G', 'F', 'H', 'K', 'J', 'M', 'L', 'O', 'N', 'Q', 'P', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1806, 79863)
+Search terms:  ['male', 'child', 'malform', 'birth', 'midfaci', 'retract', 'deep', 'groov', 'eye', 'hypertelor', 'short', 'nose', 'low', 'nasal', 'bridg', 'larg', 'low', 'set', 'ear', 'wide', 'mouth', 'retrognathia', 'hypertrichosi', 'bright', 'reddish', 'hair', 'median', 'frontal', 'cutan', 'angioma', 'short', 'neck', 'redund', 'skin', 'bilater', 'inguin', 'hernia', 'hypospadia', 'megameatu', 'cryptorchid']
+Term not found: 'megameatu'
+49      0.227480604506  Midface retraction syndrome, Schinzel-Giedion type 
+
+
+
+ORPHANET
+In [615]: it.runTests("testdata1/orphanet.txt",s,M,TD,t1,d1,n1,s2)
+['E', 'D', 'G', 'I', 'H', 'O', 'N', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (996, 79863)
+Search terms:  ['earli', 'onset', 'sever', 'hypertens', 'associ', 'low', 'renin', 'level', 'hypoaldosteron']
+3       2.77656718808   Apparent mineralocorticoid excess 
+
+['G', 'F', 'H', 'O', 'Q', 'P', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1011, 79863)
+Search terms:  ['congenit', 'anomali', 'intellectu', 'deficit', 'behaviour', 'characterist']
+167     0.201105224219  Rubinstein-Taybi syndrome 
+
+['E', 'D', 'G', 'I', 'H', 'K', 'M', 'L', 'O', 'N', 'Q', 'P', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1739, 79863)
+Search terms:  ['chronic', 'sever', 'lymphoedema', 'sever', 'neonat', 'cholestasi', 'lessen', 'earli', 'childhood', 'becom', 'episod']
+1       0.803704235691  Cholestasis - lymphedema 
+
+['A', 'G', 'F', 'H', 'J', 'M', 'L', 'O', 'Q', 'P', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1150, 79863)
+Search terms:  ['congenit', 'malform', 'hydrocephalu', 'cleft', 'palat', 'sever', 'joint', 'contractur']
+3       0.574133661677  Aase-Smith syndrome 
+
+['E', 'D', 'G', 'F', 'M', 'L', 'O', 'Q', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1622, 79863)
+Search terms:  ['short', 'limb', 'hyperlordosi', 'short', 'hand', 'macrocephali', 'high', 'forehead', 'saddl', 'nose']
+13      0.469282617249  Achondroplasia 
+
+['A', 'C', 'G', 'F', 'H', 'M', 'L', 'O', 'Q', 'S']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1199, 79863)
+Search terms:  ['miss', 'scalp', 'flat', 'bone', 'area', 'cranial', 'vault']
+1       1.30922402975   Acalvaria 
+
+['C', 'E', 'G', 'F', 'H', 'J', 'M', 'L', 'O', 'Q', 'P', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1582, 79863)
+Search terms:  ['abnorm', 'short', 'malform', 'bone', 'hand', 'feet', 'peripher', 'dysostosi', 'nasal', 'hypoplasia', 'mental', 'retard']
+1       0.443236524223  Acrodysostosis 
+
+['E', 'D', 'G', 'H', 'K', 'M', 'L', 'Q', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1661, 79863)
+Search terms:  ['progress', 'somat', 'disfigur', 'face', 'extrem', 'system', 'manifest']
+61      0.327082577221  Acromegaly 
+
+['A', 'C', 'E', 'I', 'K', 'M', 'L', 'O', 'N', 'Q', 'P', 'S', 'R']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1351, 79863)
+Search terms:  ['biliari', 'obstruct', 'unknown', 'origin', 'neonat', 'period']
+3       0.68235432725   Biliary atresia 
+
+['I', 'K', 'J', 'M', 'L', 'N']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (201, 79863)
+Search terms:  ['inflammatori', 'fibros', 'thicken', 'bronchiolar', 'wall', 'airflow', 'obstruct']
+Disease not found! Bronchiolitis obliterans with obstructive pulmonary disease 
+
+['A', 'K', 'O', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (85, 79863)
+Search terms:  ['sever', 'diarrhea', 'vomit']
+1       4.05755594973   Cholera 
+
+['E', 'G', 'H', 'L', 'N', 'Q', 'P', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1443, 79863)
+Search terms:  ['progress', 'degener', 'choroid', 'retin', 'pigment', 'epithelium', 'rpe', 'neural', 'retina']
+1       1.42654715671   Choroideremia 
+
+['A', 'E', 'G', 'I', 'H', 'J', 'M', 'L', 'O', 'N', 'Q', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1564, 79863)
+Search terms:  ['abnorm', 'develop', 'retin', 'vessel', 'telangiectasia', 'progress', 'deposit', 'intraretin', 'subretin', 'exud']
+1       2.8556970551    Coats disease 
+
+['Q', 'A', 'S', 'J', 'F']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (703, 79863)
+Search terms:  ['omphalocel', 'cleft', 'palat']
+1       1.57841189288   Omphalocele-cleft palate syndrome, lethal 
+
+['A', 'D', 'G', 'H', 'M', 'L', 'N', 'Q', 'P', 'S']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1304, 79863)
+Search terms:  ['keratot', 'papul', 'seborrh', 'area', 'specif', 'nail', 'anomali']
+1       2.52392509327   Darier disease 
+
+['E', 'G', 'H', 'L', 'N', 'Q', 'P', 'R']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1434, 79863)
+Search terms:  ['ichthyosi', 'hepatosplenomegali', 'late', 'onset', 'cerebellar', 'ataxia']
+1       0.880399102146  Ichthyosis - hepatosplenomegaly - cerebellar degeneration 
+
+['E', 'G', 'F', 'I', 'H', 'M', 'O', 'Q', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1492, 79863)
+Search terms:  ['muscular', 'weak', 'atrophi', 'earli', 'contractur', 'tendon', 'cardiomyopathi']
+2       0.573850947294  Emery-Dreifuss muscular dystrophy 
+
+['E', 'G', 'F', 'I', 'H', 'M', 'L', 'O', 'Q', 'P', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1529, 79863)
+Search terms:  ['postnat', 'growth', 'retard', 'coars', 'faci', 'intellectu', 'deficit', 'skin', 'anomali', 'cardiac', 'abnorm']
+2       0.439021746375  Costello syndrome 
+
+['C', 'E', 'G', 'F', 'I', 'H', 'K', 'M', 'O', 'Q', 'P', 'S']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1602, 79863)
+Search terms:  ['congenit', 'malform', 'great', 'toe', 'progress', 'disabl', 'heterotop', 'osteogenesi', 'predict', 'anatom', 'pattern']
+1       0.738192000805  Fibrodysplasia ossificans progressiva 
+
+['C', 'D', 'G', 'I', 'H', 'M', 'L', 'Q', 'P', 'S']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1374, 79863)
+Search terms:  ['fusion', 'carpal', 'tarsal', 'bone', 'complex', 'anomali', 'finger', 'toe']
+1       0.848802580949  Acropectorovertebral dysplasia 
+
+['C', 'E', 'D', 'F', 'M', 'O', 'N', 'Q', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1401, 79863)
+Search terms:  ['increas', 'bone', 'fragil', 'low', 'bone', 'mass']
+8       0.428818553138  Osteogenesis imperfecta 
+
+['D', 'I', 'K', 'J', 'N', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (302, 79863)
+Search terms:  ['injuri', 'intrahepat', 'bile', 'duct']
+3       4.15418933919   Primary biliary cirrhosis 
+
+['A', 'C', 'E', 'D', 'G', 'F', 'H', 'K', 'L', 'N', 'Q', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1756, 79863)
+Search terms:  ['lymphoedema', 'intestin', 'lymphangiectasia', 'intellectu', 'deficit', 'facial', 'dysmorph']
+Disease not found! Hennekam syndrome 
+
+['A', 'E', 'D', 'G', 'K', 'J', 'P', 'S', 'R']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (968, 79863)
+Search terms:  ['elev', 'level', 'lysin', 'cerebrospin', 'fluid', 'blood']
+1       1.22778243972   Hyperlysinemia 
+
+['C', 'G', 'F', 'I', 'H', 'M', 'L', 'O', 'N', 'Q', 'P', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1254, 79863)
+Search terms:  ['tarsal', 'metatars', 'coalit', 'variabl', 'craniosynostosi', 'accompani', 'facial', 'anomali', 'broad', 'halluc', 'normal', 'hand']
+3       0.924605056674  Jackson-Weiss syndrome 
+
+['A', 'G', 'H', 'K', 'M', 'Q', 'S', 'R']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1095, 79863)
+Search terms:  ['amelogenesi', 'imperfecta', 'cone', 'rod', 'retin', 'dystrophi']
+Disease not found! Jalili syndrome 
+
+['E', 'G', 'I', 'K', 'O', 'Q', 'S', 'R']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1400, 79863)
+Search terms:  ['narrow', 'thorax', 'short', 'limb']
+13      0.718160419649  Jeune syndrome 
+
+['C', 'E', 'D', 'G', 'K', 'M', 'L', 'O', 'N', 'Q', 'P', 'S', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1736, 79863)
+Search terms:  ['overproduct', 'abnorm', 'plasma', 'cell', 'bone', 'marrow', 'manifest', 'skelet', 'destruct', 'bone', 'pain', 'presenc', 'abnorm', 'immunoglobulin']
+4       0.450715876153  Myeloma, multiple 
+
+['A', 'C', 'E', 'D', 'H', 'K', 'J', 'L', 'O', 'Q', 'P']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1458, 79863)
+Search terms:  ['fine', 'dri', 'short', 'hair', 'dental', 'anomali']
+Disease not found! Trichodental syndrome 
+
+
+
+
+BMJ
+In [619]: it.runTests("testdata1/bmj.txt",s,M,TD,t1,d1,n1,s2)
+['C', 'E', 'D', 'I', 'O', 'N', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (732, 79863)
+Search terms:  ['hypertens', 'adren', 'mass']
+6       1.00421601637   Cushing syndrome 
+
+['A', 'C', 'E', 'D', 'I', 'L', 'O', 'N', 'Q', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (1432, 79863)
+Search terms:  ['hypertens', 'papilledema', 'headach', 'renal', 'mass', 'cafe', 'au', 'lait']
+3       1.12710792627   Hereditary pheochromocytoma-paraganglioma syndrome 
+
+['A', 'E', 'G', 'F', 'I', 'H', 'P']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (840, 79863)
+Search terms:  ['ataxia', 'confus', 'insomnia', 'death']
+4       1.4579883234    Creutzfeldt-Jakob disease 
+
+['G', 'H', 'K', 'J', 'M', 'N', 'P', 'S', 'R']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (484, 79863)
+Search terms:  ['wheez', 'weight', 'loss', 'anca', 'haemoptysi', 'haematuria']
+2       5.77098737005   Churg-Strauss syndrome 
+
+['C', 'D', 'G', 'H', 'K', 'M', 'L', 'O', 'P', 'R', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (751, 79863)
+Search terms:  ['myopathi', 'neoplasia', 'dysphagia', 'rash', 'periorbit', 'swell']
+1       1.5002978133    Dermatomyositis 
+
+['A', 'K', 'L', 'O', 'N', 'Q', 'P', 'R']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (781, 79863)
+Search terms:  ['renal', 'transplant', 'fever', 'cat', 'lymphadenopathi']
+1       1.80919692021   Cat-scratch disease 
+
+['G', 'F', 'J', 'M', 'L', 'O', 'N', 'P', 'S', 'Z']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (462, 79863)
+Search terms:  ['bullou', 'skin', 'condit', 'respiratori', 'failur', 'carbamazepin']
+1       3.35330959788   Toxic epidermal necrolysis 
+
+['A', 'C', 'E', 'G', 'F', 'H', 'L', 'S']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (914, 79863)
+Search terms:  ['seizur', 'confus', 'dysphasia', 't2', 'lesion']
+4       1.05423860774   MELAS syndrome 
+
+['G', 'F', 'I', 'O', 'N', 'S']
+Converting to lil matrix format...
+Converting to csr and counting terms/doc occurences.
+Running TF-IDF...
+Submatrix size: (377, 79863)
+Search terms:  ['cardiac', 'arrest', 'sleep']
+2       1.86806163454   Brugada syndrome 
