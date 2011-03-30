@@ -129,7 +129,7 @@ class EatTheRedPill(object):
                     except:
                         doc_id = rev_name_hash2[r[0]]
                     
-                    if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0]
+                    if doc_id == int(orpha_num): print rank,"\t",r[1],"\t",r[0].encode("utf-8")
     
     
     def _merge_scores(self,r1,r2):
