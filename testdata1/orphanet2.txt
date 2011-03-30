@@ -1,7 +1,7 @@
 320	Apparent mineralocorticoid excess	early onset, severe hypertension, associated, low renin levels, hypoaldosteronism
 783	Rubinstein-Taybi syndrome	congenital anomalies, intellectual deficit, behavioural characteristics
 1414	Aagenaes syndrome	chronic severe lymphoedema, severe neonatal cholestasis, childhood
-916	Aase Smith syndrome	congenital malformations: hydrocephalus, cleft palate, severe, joint contractures
+916	Aase Smith syndrome	congenital malformations, hydrocephalus, cleft palate, severe, joint contractures
 15	Achondroplasia	short limbs, hyperlordosis, short hands, macrocephaly, high forehead, saddle nose 
 945	Acalvaria 	 missing scalp, flat bones, cranial vault   
 950	Acrodysostosis 	 abnormally short, malformed bones, malformed hands, malformed feet, hands, feet, peripheral dysostosis, nasal hypoplasia, mental retardation   
