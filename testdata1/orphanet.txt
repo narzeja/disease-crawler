@@ -1,0 +1,29 @@
+320	Apparent mineralocorticoid excess	early-onset, severe hypertension, associated, low renin levels, hypoaldosteronism
+783	Rubinstein-Taybi syndrome	congenital anomalies, intellectual deficit, behavioural characteristics
+1414	Aagenaes syndrome	chronic severe lymphoedema, severe neonatal cholestasis, lessens during early childhood and becomes episodic
+916	Aase Smith syndrome	congenital malformations: hydrocephalus, cleft palate, severe joint contractures
+15	Achondroplasia	short limbs, hyperlordosis, short hands, macrocephaly, high forehead and saddle nose 
+945	Acalvaria 	 missing scalp and flat bones over an area of the cranial vault   
+950	Acrodysostosis 	 abnormally short and malformed bones of the hands and feet (peripheral dysostosis), nasal hypoplasia and mental retardation   
+963	Acromegaly 	 progressive somatic disfigurement (face and extremities) and systemic manifestations   
+30391	Biliary atresia	 biliary obstruction of unknown origin, neonatal period   
+1303	Bronchiolitis obliterans with obstructive pulmonary disease 	 inflammatory and fibrosing thickening of bronchiolar walls, airflow obstruction   
+173	Cholera 	 severe diarrhea and vomiting   
+180	Choroideremia 	 progressive degeneration of the choroid, retinal pigment epithelium (RPE), and neural retina   
+190	Coats disease 	 abnormal development of retinal vessels (telangiectasia) with a progressive deposition of intraretinal or subretinal exudates   
+2736	Omphalocele cleft palate syndrome lethal 	 omphalocele and cleft palate   
+218	Darier disease	 keratotic papules in seborrheic areas and specific nail anomalies   
+2274	Ichthyosis hepatosplenomegaly cerebellar degeneration 	 ichthyosis, hepatosplenomegaly and late-onset cerebellar ataxia   
+261	Emery-Dreifuss muscular dystrophy 	 muscular weakness and atrophy, with early contractures of the tendons and cardiomyopathy   
+3071	Costello syndrome 	 postnatal growth retardation, coarse facies, intellectual deficit, skin anomalies and cardiac abnormalities   
+337	Fibrodysplasia ossificans progressiva 	 congenital malformation of great toes, progressive, disabling heterotopic osteogenesis in predictable anatomical patterns   
+957	Acropectorovertebral dysplasia 	 fusion of the carpal and tarsal bones, with complex anomalies of the fingers and toes   
+666	Osteogenesis imperfecta 	 increased bone fragility and low bone mass   
+186	Primary biliary cirrhosis 	 injury of the intrahepatic bile ducts   
+2136	Hennekam syndrome 	 lymphoedema, intestinal lymphangiectasia, intellectual deficit and facial dysmorphism   
+2203	Hyperlysinemia 	 elevated levels of lysine in the cerebrospinal fluid and blood   
+1540	Jackson-Weiss syndrome 	 tarsal and/or metatarsal coalitions and variable craniosynostosis, accompanied by facial anomalies, broad halluces and normal hands   
+1873	Jalili syndrome 	 amelogenesis imperfecta and cone-rod retinal dystrophy   
+474	Jeune syndrome 	 narrow thorax and short limbs   
+29073	Multiple myeloma 	 overproduction of abnormal plasma cells in the bone marrow and manifested by skeletal destruction, bone pain, and presence of abnormous immunoglobulins   
+3351	Trichodental syndrome 	 fine, dry and short hair with dental anomalies
