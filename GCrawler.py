@@ -116,7 +116,7 @@ class GCrawler():
                 # If this has happened 6 times then blacklist the site
                     if whitelisted[url_base] == 5: 
                         try:
-                            self.db_cursor.execute("INSERT INTO blacklisted_urls"
+                            self.db_cursor.execute("INSERT INTO blacklisted_urls "
                                                 + "VALUES (?)",[url_base])
                             blacklisted.append(url_base)
                         except: pass # if it is already blacklisted, do nothing

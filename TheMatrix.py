@@ -33,13 +33,14 @@ class EatTheRedPill(object):
         ready_data=[]
         patreses = self.db.c.execute("SELECT patres FROM disease_info").fetchall()
         for patres in patreses:
-            data = self.db.c.execute("SELECT Q.patres, G.data, D.disease_name "\
+            data = self.db.c.execute("SELECT Q.patres, G.data, D.disease_name, D.abstract "\
                                 "FROM query Q, googled_info_cleansed G, disease_info D "\
                                 "WHERE Q.query = G.query AND Q.patres = D.patres "\
                                                         "AND Q.patres=?",[patres[0]])
             data = data.fetchall()
             if data:
                 paragraphs = " ".join([x[1] for x in data])
+                paragraphs = paragraphs + " " + data[3]
                 ready_data.append((data[0][0],paragraphs,data[0][2]))
             else: 
                 diseases_missing.append(patres[0])
