@@ -1,7 +1,7 @@
 import re
 import TextmineThis as TT
-#import TextmineThis_symptoms as TTs
-import TextmineThis_backup as TTb
+import TextmineThis_symptoms as TTs
+#import TextmineThis_backup as TTb
 import db as DB
 
 #Orphanet: path = "testdata1/orphanet.txt"
@@ -33,7 +33,6 @@ class tester():
         self.name_hash = name_hash
         
         tests = re.split('\n',open(path).read())
-        print "random"
         
         for test in tests:
             if test: # avoid empty rows
