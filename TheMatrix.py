@@ -40,6 +40,7 @@ class EatTheRedPill(object):
             data = data.fetchall()
             if data:
                 paragraphs = " ".join([x[1] for x in data])
+                print data[3]
                 paragraphs = paragraphs + " " + data[3]
                 ready_data.append((data[0][0],paragraphs,data[0][2]))
             else: 
