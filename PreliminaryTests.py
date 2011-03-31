@@ -33,6 +33,7 @@ class tester():
         self.name_hash = name_hash
         
         tests = re.split('\n',open(path).read())
+        print "random"
         
         for test in tests:
             if test: # avoid empty rows
