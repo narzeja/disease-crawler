@@ -103,11 +103,10 @@ class tester():
         
         average=[]
         for patres in patreses:
-            data = self.db.c.execute("select G.data, D.disease_name from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()[0]
+            data = self.db.c.execute("select G.data, D.disease_name from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
             if data:
-                print len(data[0])
+                print len(data)
                 average.append(len(data[0]))
-                if len(data[0])>2: print "yes"
         print numpy.mean(average),"websites contained accepted information"
 
 
