@@ -103,7 +103,7 @@ class tester():
         
         average=[]
         for patres in patreses:
-            data = self.db.c.execute("select G.data,D.disease_name from googled_info G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
+            data = self.db.c.execute("select G.data,D.disease_name, Q.query from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
             if data:
                 print data[0]
                 average.append(len(data[0]))
