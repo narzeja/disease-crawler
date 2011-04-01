@@ -95,6 +95,7 @@ class tester():
         for patres in patreses:
             data = self.db.c.execute("select D.disease_name,D.abstract from disease_info D where D.patres=?",[patres[0]]).fetchall()
             if data:
+                print data
                 if disqualifier in data[1]: disqualified.append(data[0])
         print len(disqualified),"diseases characterized a group of diseases and had no orphanet abstract."
 
