@@ -90,15 +90,16 @@ class tester():
         for patres in patreses:
             data = self.db.c.execute("select G.data,D.disease_name from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
             if data:
-                if len(data[0])==0: missing.append(data[1])
+                if len(data)==0: missing.append(data[1])
         print len(missing),"diseases was not expanded by the googling."
         
         disqualifier="does not characterize a disease but a group"
         disqualified = []
         for patres in patreses:
-            data = self.db.c.execute("select D.disease_name,D.abstract from disease_info D where D.patres=?",[patres[0]]).fetchall()[0]
+            data = self.db.c.execute("select D.disease_name,D.abstract from disease_info D where D.patres=?",[patres[0]]).fetchall()
             if data:
-                if disqualifier in data[1]: disqualified.append(data[0])
+                for d in data:
+                    if disqualifier in d[1]: disqualified.append(d[0])
         print len(disqualified),"diseases characterized a group of diseases and had no orphanet abstract."
         
         average=[]
@@ -106,7 +107,7 @@ class tester():
             data = self.db.c.execute("select G.data, D.disease_name from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
             if data:
                 print len(data)
-                average.append(len(data[0]))
+                average.append(len(data))
         print numpy.mean(average),"websites contained accepted information"
 
 
