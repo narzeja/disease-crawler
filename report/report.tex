@@ -703,33 +703,35 @@ considered a rare disease if it is listed in
 
 \subsection{Kruskal Wallis Test Statistics}
 The tests are compared using the prediction ranking of the correct
-diseases in the various models. As we are unsure whether the data
-samples are normally distributed, which is an assumption in the commonly
-used Student's T test, we will use the Kruskal Wallis
-\footnote{\url{http://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/kruskwal.htm}}
-test for multiple groups (models) to determine the statistical
-significance as this does not rely on that assumption. It does, however,
-assume the observations come from distributions of the same shape, i.e.
-if one distribution is skewed left($<0$) and the other is skewed right
-($>0$), the test will be likely to yield inaccurate results.
+diseases in the various models. There is no evidence that the data
+samples are normally distributed, which is a prerequisite in the
+commonly used Student's T test, we will use the one-way Kruskal-Wallis
+\cite{kruskalwallis} test for multiple groups (models) to determine the
+statistical significance as this does not rely on that assumption. It
+does, however, assume the observations come from distributions of the
+same shape, e.g. if one distribution is skewed left($<0$) and the other
+is skewed right ($>0$), the test will be likely to yield inaccurate
+results.
 
-We will calculate the Kruskal Wallis test statistic
+We will calculate the Kruskal-Wallis test statistic
 \[
 H_{stat} = \frac{12}{n(n+1)}\sum\limits_{i = 1}^{k} \frac{R^{2}_{i}}{n_{i}} - 3(n+1)
 \]
 where $n_{i} (i = 1, 2, ..., k)$ represent the samples for each of
 the k groups. $R_{i}$ is the sum of ranks for group $i$. The ranks are
-acquired by sorting the sample values and ranking in ascending order.
+acquired by sorting the sample values in ascending order and ranking
+from $1$ to $\sum n_{i}$, giving identical sample values the mean of the
+ranks tied for.
 
 $H_{stat}$ approximates a chi-square ($\chi^2$) distribution with k-1
 degrees of freedom if the null hypothesis of equal populations is true,
-when the number of samples is at least 5. The benefit of estimating a
-chi-square distribution is that it only assumes randomly selected
-samples and a large enough sample size ($>5$).
+when the number of samples is at least 5.
 
-To assess whether the null hypothesis can be rejected or not the P-value
-is estimated by chi-square with 1 degree of freedom ($k-1$) with an
-acceptance threshold of $\alpha = 0.05$:
+To assess whether the null hypothesis can be rejected, we use table
+values of chi-square
+\footnote{\url{http://www.ma.utexas.edu/users/davis/375/popecol/tables/chisq.html}}
+with 1 degree of freedom ($k-1$) with an acceptance threshold of $\alpha
+= 0.05$:
 \[
 \chi^2_{0.05}(df=1) = 3.84
 \]
@@ -741,8 +743,16 @@ acceptance threshold of $\alpha = 0.05$:
 %Office 3.2} for $\alpha = 0.05$. \todo[inline]{find a proper formula for
 %CHIINV: \url{http://en.wikipedia.org/wiki/Inverse-chi-square_distribution}}
 
-Therefore, we can conclude a statistical significance, if $H_{stat} >
-\chi^2$, that there is a difference between the groups.
+For our purpose, we will be looking at a right-tail test, yielding the
+hypotheses:
+\begin{itemize}
+\item $H_{0}$ the samples come from the same distribution, i.e. the models yield identical results ($u = a$)
+\item $H_{1}$ the new model yield significantly better results than the old ($u > a$)
+\end{itemize}
+\todo[inline]{reconsider using this hypothesis explanation gibberish}
+
+Therefore, we can reject the null hypothesis, if $H_{stat} > \chi^2$,
+and accept that there is a difference between the groups.
 
 The results of the significance tests are presented in the following.
 
@@ -807,18 +817,26 @@ in contrary to \cite{jensenandersen} and this project.
 
 \section{Conclusion}
 \label{chap:conclusion}
-We have introduced a method to automate harvesting and 
+We have investigated the possibility of using the Google search engine,
+as a means to gather additional information in order to expand knowledge
+of a range of diseases. We have shown that the information gathered
+along with prior information supplied through Orphanet abstracts yields
+significantly better results compared to previous work \ref{tablet1}
+\ref{tablet2} \ref{tablet3}.
 
-Questions to answer: How do we introduce new diseases to the system?
+By using NLP techniques we have refined the data harvested using the
+Google search engine and shown significant improvements over using the
+non-refined data \ref{tablesomething}. We have also constructed models
+by using NLP feature extraction, but these have shown to yield worse
+results, even in combination with the cleansed unigram model. The major
+problem with the NLP model was the fact that the symptom extraction
+failed to extract representative phrases and terms from documents and
+abstracts and suggests a poor choice of or too strict chunking
+procedure.
+
+\todo[inline]{further discussion}
 
 
-
-We used assumptions of
-symptoms relative position in a paragraph to narrow the search, and used
-voting and correlation of individual terms and substrings of terms to
-determine whether a phrase was accepted as a symptom or simply
-discarded, this process is relatively weak and only relies on
-anecdotally supported assumptions.
 
 
 \subsection{Future Work}
@@ -907,7 +925,7 @@ with no further processing.
     Hennekam syndrome & lymphoedema, intestinal lymphangiectasia, intellectual deficit and facial dysmorphism & 1 & 4\\    \hline
     Hyperlysinemia & elevated levels of lysine in the cerebrospinal fluid and blood & 1 & 85\\    \hline
     Jackson-Weiss syndrome & tarsal and/or metatarsal coalitions and variable craniosynostosis, accompanied by facial anomalies, broad halluces and normal hands & 1 & 40\\    \hline
-    Jalili syndrome & amelogenesis imperfecta and cone-rod retinal dystrophy &  & \\    \hline
+    Jalili syndrome & amelogenesis imperfecta and cone-rod retinal dystrophy & 5 & 39 \\    \hline
     Jeune syndrome & narrow thorax and short limbs & 1 & 2\\    \hline
     Myeloma, multiple & overproduction of abnormal plasma cells in the bone marrow and manifested by skeletal destruction, bone pain, and presence of abnormous immunoglobulins & 1 & 3\\    \hline
     Trichodental syndrome & fine, dry and short hair with dental anomalies & 1 & 60\\    \hline
@@ -959,16 +977,40 @@ with no further processing.
 \end{small}
 \end{center}
 
-\newpage
-\section{Tests}
-
-\label{app:tests}
-%\vspace*{-3cm}
-\subsection{Orphanet tests}
-%\vspace*{-6cm}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet &	28 &	8	 &	29 &	96.55 &	27.59 \\
+BMJ	& 2 &	5	 &	9	 & 22.22 &	55.56 \\
+Blind test	& 2 &	1	 &	5 &	40	 &20 \\ \hline \hline
+all	& 32 &	14	 &	43 &	74.41 &	32.56 \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
+
+\begin{center}
+\begin{small}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet &	29 &	17	 &	29 &	100	 & 58.62 \\
+BMJ &	6 &	7 &		9 &	66.67 &	77.78 \\
+Blind test &	4	 &3	 &	5 &	80	 &60 \\  \hline \hline
+all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
+\end{tabular}
+\end{small}
+\end{center}
+
+\newpage
+\section{Testing raw googled and noise reduced googled data}
+\label{app:tests}
+
+\subsection{Orphanet tests}
+\begin{center}
+\begin{small}
+	\begin{longtable}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\
     \hline\hline
@@ -988,17 +1030,6 @@ with no further processing.
     Omphalocele-cleft palate syndrome, lethal  & 3 & 1\\    \hline
     Darier disease  & 3 & 1\\    \hline
     Ichthyosis - hepatosplenomegaly - cerebellar degeneration  & 11 & 2\\    \hline
-    \end{tabular}
-\label{tab:results_orphanet}
-\end{small}
-\end{center}
-
-\begin{center}
-\begin{small}
-\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
-	\hline
-	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\
-	\hline\hline
     Emery-Dreifuss muscular dystrophy  & 7 & 4\\    \hline
     Costello syndrome  & 11 & 2\\    \hline
     Fibrodysplasia ossificans progressiva  & 4 & 1\\    \hline
@@ -1012,7 +1043,8 @@ with no further processing.
     Jeune syndrome & 11 & 12\\    \hline
     Myeloma, multiple  & 6 & 4\\    \hline
     Trichodental syndrome  & 7 & 4\\    \hline
-    \end{tabular}
+    \end{longtable}
+    \label{tab:results_orphanet}
 \end{small}
 \end{center}
 
@@ -1056,6 +1088,31 @@ with no further processing.
 \end{center}
 
 
+\begin{center}
+\begin{small}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet    &    21   &  12    & 29      & 72.41     & 41.38 \\
+BMJ	        &    7   &   4   &    9   &  77.78    & 44.44 \\
+Blind test	&   1    &   1   &    5   &   20   & 20 \\ \hline \hline
+all	        &   29    &   17   &   43    &  67.44    & 39.53 \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
+
+\begin{center}
+\begin{small}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet    &    27   &   25   &  29     &  93.10    & 86.27\\
+BMJ	        &     9  &   9   &    9   &    100  & 100 \\
+Blind test	&     4  &   2   &    5   &    80  & 40 \\ \hline \hline
+all	        &    40   & 17     &   43    &   93.02   &  83.72 \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
 
 
 \newpage
@@ -1144,6 +1201,31 @@ Midface retraction syndrome, Schinzel-Giedion type & 23 & short nose, low nasal 
 \end{center}
 
 
+\begin{center}
+\begin{small}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet    &       &      &       &      & \\
+BMJ	        &       &      &       &      & \\
+Blind test	&       &      &       &      & \\ \hline \hline
+all	        &       &      &       &      & \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
+
+\begin{center}
+\begin{small}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet    &       &      &       &      & \\
+BMJ	        &       &      &       &      & \\
+Blind test	&       &      &       &      & \\ \hline \hline
+all	        &       &      &       &      & \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
 
 
 \newpage
@@ -1228,5 +1310,31 @@ Midface retraction syndrome, Schinzel-Giedion type & 49 & 199\\    \hline
 \end{small}
 \end{center}
 
+
+\begin{center}
+\begin{small}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet    &       &      &       &      & \\
+BMJ	        &       &      &       &      & \\
+Blind test	&       &      &       &      & \\ \hline \hline
+all	        &       &      &       &      & \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
+
+\begin{center}
+\begin{small}
+\begin{tabular}{l|cc||ccc}
+	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
+\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+orphanet    &       &      &       &      & \\
+BMJ	        &       &      &       &      & \\
+Blind test	&       &      &       &      & \\ \hline \hline
+all	        &       &      &       &      & \\ \hline
+\end{tabular}
+\end{small}
+\end{center}
 
 \end{document}
