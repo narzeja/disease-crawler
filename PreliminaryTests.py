@@ -86,8 +86,8 @@ class tester():
         missing=[]
         for patres in patreses:
             data = self.db.c.execute("select G.data,D.disease_name from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
-            print data
-            if len(data[0])==0: missing.append(data[1])
+            if data:
+                if len(data[0])==0: missing.append(data[1])
         print len(missing),"diseases was not expanded by the googling."
         
         disqualifier="does not characterize a disease but a group"
