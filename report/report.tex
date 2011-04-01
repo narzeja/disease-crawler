@@ -11,6 +11,7 @@
 \usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{pifont}
+\usepackage{caption}
 
 %% FONT
 %\usepackage[T1]{fontenc}
@@ -418,19 +419,12 @@ given as
 Thus the bottom entry with a score of $1.75$ is the model's prediction
 of the correct disease/diagnosis. \ding{111}\newline
 
-
 Though the model used in \cite{jensenandersen} was based on large
 amounts of information gathered from PubMed, our tests showed that we
 could obtain close to the same precision solely based on the abstracts
 from Orphanet.
 
-(This may indicate a large amount of noise being present
-in the data set used in the previous project where the information (or
-model) of each disease was based on non-validated abstracts from PubMed
-using customised queries.)\fxwarning{rewrite}
-
-The results can be seen in appendix
-\ref{app:preliminary_results}.
+%The results can be seen in appendix \ref{app:preliminary_results}.
 
 
 \subsection{Harvesting data}
@@ -717,11 +711,11 @@ We will calculate the Kruskal-Wallis test statistic
 \[
 H_{stat} = \frac{12}{n(n+1)}\sum\limits_{i = 1}^{k} \frac{R^{2}_{i}}{n_{i}} - 3(n+1)
 \]
-where $n_{i} (i = 1, 2, ..., k)$ represent the samples for each of
-the k groups. $R_{i}$ is the sum of ranks for group $i$. The ranks are
+where $n_{i} (i = 1, 2, ..., k)$ represent the samples for each of the k
+groups. $R_{i}$ is the sum of ranks for group $i$. The ranks are
 acquired by sorting the sample values in ascending order and ranking
 from $1$ to $\sum n_{i}$, giving identical sample values the mean of the
-ranks tied for.
+ranks tied for, with no correction for ties.
 
 $H_{stat}$ approximates a chi-square ($\chi^2$) distribution with k-1
 degrees of freedom if the null hypothesis of equal populations is true,
@@ -764,9 +758,9 @@ The results of the significance tests are presented in the following.
 
 \subsection{Significance testing results}
 In this section, we will highlight our most important results from the
-previously described models and test scenarios.
+previously described models and test scenarios. See table \ref{tab:orpha_old_new}
 
-\begin{table}[here]
+%\begin{table}[here]
 \begin{center}
 \begin{tabular}{lll}
     \textbf{Data set} & & \textbf{Orphanet} \\ \hline\hline
@@ -781,12 +775,12 @@ previously described models and test scenarios.
     \textbf{Result} & & \\\hline
     $H_{stat}$ & & 35.38 \\
     $H_{crit}$ & & 3.84 \\
-    \label{tab:orpha_old_new}
 \end{tabular}
-    \caption{Results from the Kruskal Wallis significance test of the
-    Orphanet tests on the old and new model.}
+    \captionof{table}{Results from the Kruskal Wallis
+    significance test of the Orphanet tests on the old and new model.}
+    \label{tab:orpha_old_new}
 \end{center}
-\end{table}
+%\end{table}
 
 %using the dependent variable \texttt{prediction},
 %that describes the position of the correct disease. I.e. 
@@ -930,12 +924,10 @@ with no further processing.
     Myeloma, multiple & overproduction of abnormal plasma cells in the bone marrow and manifested by skeletal destruction, bone pain, and presence of abnormous immunoglobulins & 1 & 3\\    \hline
     Trichodental syndrome & fine, dry and short hair with dental anomalies & 1 & 60\\    \hline
     \end{longtable}
-    %\label{tab:results_orphanet_pre}
 \end{small}
 \end{center}
 
 \subsection{BMJ ('Googling for a Diagnosis') tests }
-
 \begin{center}
 \begin{small}
 	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
@@ -955,12 +947,10 @@ with no further processing.
     MELAS syndrome & seizure, confusion, dysphasia, T2, lesions & 2 & 27\\    \hline
     Brugada syndrome & cardiac arrest sleep & 3 & 7\\    \hline
 	\end{tabular}
-\label{tab:results_bmj_pre}
 \end{small}
 \end{center}
 
 \subsection{Blind tests}
-
 \begin{center}
 \begin{small}
 	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
@@ -973,7 +963,6 @@ with no further processing.
     Kleine-Levin syndrome & Jewish boy age 16, monthly seizures, sleep deficiency, aggressive and irritable when woken, highly increased sexual appetite and hunger. & 5 & 2\\    \hline
     Midface retraction syndrome, Schinzel-Giedion type & Male child, malformations at birth, midfacial retraction with a deep groove under the eyes, and hypertelorism, short nose with a low nasal bridge and large low-set ears, wide mouth and retrognathia. Hypertrichosis with bright reddish hair and a median frontal cutaneous angioma, short neck with redundant skin, Bilateral inguinal hernias, hypospadias with a megameatus, and cryptorchidism  & 14 & 164\\    \hline
 	\end{tabular}
-\label{tab:results_blindtest_pre}
 \end{small}
 \end{center}
 
@@ -1044,7 +1033,6 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
     Myeloma, multiple  & 6 & 4\\    \hline
     Trichodental syndrome  & 7 & 4\\    \hline
     \end{longtable}
-    \label{tab:results_orphanet}
 \end{small}
 \end{center}
 
@@ -1065,7 +1053,6 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
     MELAS syndrome  & 10 & 8\\    \hline
     Brugada syndrome  & 5 & 3\\    \hline
 	\end{tabular}
-\label{tab:results_bmj}
 \end{small}
 \end{center}
 
@@ -1083,7 +1070,6 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
     Kleine-Levin syndrome  & 3 & 1\\    \hline
     Midface retraction syndrome, Schinzel-Giedion type  & 329 & 274\\    \hline
 	\end{tabular}
-\label{tab:results_blindtest}
 \end{small}
 \end{center}
 
@@ -1156,7 +1142,6 @@ Jeune syndrome & 12 & narrow thorax &  short limb \\ \hline
 Myeloma, multiple & 4 & abnorm plasma cell, bone pain & abnorm immunoglobulin, bone pain, skelet destruct, bone marrow, overproduct of abnorm plasma cell \\ \hline
 Trichodental syndrome & 17 & dri hair, fine hair & dental anomali, short hair  \\ \hline
 	\end{longtable}
-%\label{tab:}
 \end{small}
 \end{center}
 
@@ -1178,7 +1163,6 @@ Toxic epidermal necrolysis & 1 &  & carbamazepin, respiratori failur, bullou ski
 MELAS syndrome & 8 & dysphasia & t2 lesion, confus, seizur \\ \hline
 Brugada syndrome & 16 & cardiac arrest & sleep \\ \hline
 	\end{longtable}
-%\label{tab:}
 \end{small}
 \end{center}
 
@@ -1196,7 +1180,6 @@ Papillon-Lefevre syndrome & 2 &  & affected., feet, dorsal side, sole, palm, ski
 Kleine-Levin syndrome & 1 &  & hunger, increas sexual appetit, highli, irrit, aggress, sleep defici, monthli seizur, age 16, boy, jewish \\ \hline
 Midface retraction syndrome, Schinzel-Giedion type & 23 & short nose, low nasal bridg, wide mouth, short neck, bilater inguin hernia & cryptorchid, megameatu, hypospadia, redund skin, cutan angioma, median frontal, bright reddish hair, hypertrichosi, retrognathia, larg ear, larg low-set ear, hypertelor, the eye, deep groov, midfaci retract, malform at birth, child, male \\ \hline
 	\end{longtable}
-%\label{tab:}
 \end{small}
 \end{center}
 
@@ -1268,7 +1251,6 @@ Jeune syndrome & 13 & 10\\    \hline
 Myeloma, multiple & 4 & 4\\    \hline
 Trichodental syndrome & Disease not found!  & Disease not found!\\    \hline
 	\end{longtable}
-%\label{tab:}
 \end{small}
 \end{center}
 
@@ -1289,7 +1271,6 @@ Toxic epidermal necrolysis & 1 & 1\\    \hline
 MELAS syndrome & 4 & 4\\    \hline
 Brugada syndrome & 2 & 2\\    \hline
 	\end{tabular}
-%\label{tab:}
 \end{small}
 \end{center}
 
@@ -1306,7 +1287,6 @@ Papillon-Lefevre syndrome & 1 & 1\\    \hline
 Kleine-Levin syndrome & 1 & 1\\    \hline
 Midface retraction syndrome, Schinzel-Giedion type & 49 & 199\\    \hline
 	\end{tabular}
-%\label{tab:}
 \end{small}
 \end{center}
 
