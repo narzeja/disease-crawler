@@ -1,4 +1,5 @@
 import re
+import numpy
 import TextmineThis as TT
 import TextmineThis_symptoms as TTs
 #import TextmineThis_backup as TTb
@@ -80,14 +81,16 @@ class tester():
                 words_per_page = words_per_page /float(len(data))
                 print "Words per page:",words_per_page
         
-        print "BONUS stats:"
+        print
+        
+        print "BONUS stats (on all diseases!):\n~~~~~~~~~~~"
         patreses = self.db.c.execute("select D.patres from disease_info D").fetchall()
         
         missing=[]
         for patres in patreses:
             data = self.db.c.execute("select G.data,D.disease_name from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
             if data:
-                if len(data[0])<2: missing.append(data[1])
+                if len(data[0])==0: missing.append(data[1])
         print len(missing),"diseases was not expanded by the googling."
         
         disqualifier="does not characterize a disease but a group"
@@ -97,8 +100,13 @@ class tester():
             if data:
                 if disqualifier in data[1]: disqualified.append(data[0])
         print len(disqualified),"diseases characterized a group of diseases and had no orphanet abstract."
-
-
+        
+        average=[]
+        for patres in patreses:
+            data = self.db.c.execute("select G.data,D.disease_name from googled_info_cleansed G, query Q, disease_info D where G.query=Q.query and Q.patres=D.patres and D.patres=?",[patres[0]]).fetchall()
+            if data:
+                average.append(len(data[0]))
+        print numpy.mean(average),"websites contained accepted information"
 
 
 
