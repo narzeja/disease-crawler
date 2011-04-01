@@ -15,4 +15,4 @@
 64	Alstrom syndrome	27 year old, woman, blindness, obesity, type 2 diabetes, renal dysfunction, chronic pyelonephritis, hypertension, hirsutism, retinitis pigmentosa, cataract
 747	Pulmonary alveolar proteinosis	17 year old, boy, lysinuric protein intolerance, mild restrictive functional impairment, digital clubbing, atypical abdominal, thoracic pain, ground glass attenuation, interlobular septa thickening, moderate restrictive ventilatory defect, mild anemia, thrombocytopenia, increase in lactate dehydrogenase
 570	Moebius syndrome	boy, congenital malformations, malformations of hands, feet, bilateral strabismus, small tongue, impaired coordination, expressionless face, prominent forehead, depressed nasal bridge, hypoplastic thumbs, bilateral adactyly of the feet, short stature, severe myopia
-1454	Congenital hepatic fibrosis	10 year old, girl, thrombocytopenia, splenomegaly, headache, itching rubeoliform rash
+79118	Congenital hepatic fibrosis	10 year old, girl, thrombocytopenia, splenomegaly, headache, itching rubeoliform rash
