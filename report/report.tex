@@ -655,8 +655,11 @@ list of phrases and terms are returned for further processing.
 %amount of noise generated in the symptom harvesting process.
 
 \subsection{Utilizing ICD10 Codes}
-For approximately 50\% \todo[inline]{exact numbers} of the diseases in our existing models, an ICD10
-label is attached. This label is a categorization
+ICD10\footnote{"International Statistical Classification of Diseases and Related Health Problems"-10th revision.} codes from Orphanet represents a hirachical structured coding of the category of the disease. As an example, Cholera falls within \textit{A00 $\rightarrow$ 'Certain infectious and parasitic diseases' $\rightarrow$ 'Intestinal infectious diseases' $\rightarrow$ 'Cholera' }. Codes can thus be used to locate groups or clusters of diseases and has the potential being used for training models to be used for classifying un-coded diseases. In theory limiting a diagnostic query to one or a few categories should improve the precision of the current model and --- using the TFIDF-model --- important terms of each category can be located (main symptoms). If these main terms are found in the symptomatic query of the physician, potential categories can be found. Having limited the query to a subspace, the model can be fine-tuned to locate subtle features or symptoms in the symptomatic query of the reduced set of diseases. Intuitively, reusing the TFIDF scheme on the recued space should, reduce the importance of main features or symptoms and enhance the more subtle parts. 
+
+BLABLABLA
+
+ Though 3335 ICD10 codes were received from Orphanet (in total representing 3137 unique rare diseases) only 50.05\% of these were also represented in the used data set (diseases containing Orphanet abstracts). 
 
 
 \todo[inline]{Explain this method!}
