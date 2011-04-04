@@ -69,8 +69,7 @@
 \begin{abstract}
 In this paper we design and construct models for assisting physicians
 with the task of diagnosing rare diseases. Using a prior knowledge of
-rare diseases consisting of \textit{disease name, some symptoms} and
-\textit{synonyms}, we utilize the \textit{Google Search Engine} to
+rare diseases consisting of \textit{disease name} and\textit{abstract}, we utilize the \textit{Google Search Engine} to
 harvest additional knowledge to expand the model. [The models are
 constructed using machine learning and natural language processing
 techniques by text mining symptoms and features from abstracts and other
@@ -137,7 +136,7 @@ practising physician can query a case report or a number of search terms
 and get a list of disease predictions based on the knowledge of the
 model.
 
-The basic model is constructed given information of 3882 diseases, with
+The basic model is constructed given information of 3882 diseases\footnote{We have chosen not to discriminate between diseases groups of diseases.}, with
 corresponding abstract or disease group information. This information,
 together with the disease name and other relevant terms are used to
 harvest the Internet for related information to expand the knowledge of
@@ -184,7 +183,7 @@ characteristics and processing strategies.
 
 
 \subsection{Limitations}
-We have not developed a fully automatic system that with a simple
+We have not developed a fully automated system that with a simple
 interface is able to take a query and return a prediction. The system
 and models are developed as autonomous modules and have not yet been
 fine-tuned or assembled as a complete program.
@@ -250,7 +249,7 @@ within the top 20 predictions.}.
 Our colleagues Radu Dragusin and Paula Petku from the department of
 Computer Science at Copenhagen University investigate a related way of
 automating information gathering to what we are presenting. However, as
-this is a work in progress we do not have access to further information
+this is a work in progress, we do not have access to further information
 at this point in time \cite{radupaula}.
 
 
@@ -321,14 +320,14 @@ harvest additional information from the Internet.
 %data set.\todo[inline]{Rewrite this nonsense.}
 
 
-The data is processes similar to what is described in
+The data is processed similar to what is described in
 \cite{jensenandersen}, and will thus be used to bootstrap the knowledge
 of each disease, allowing us to iterate and harvest additional
 information using various harvesting techniques roughly covering the use
 of the \textit{Google} search engine to collect an array of websites
 given a query relevant to the disease (disease name and a possibly a
-number of keywords). For each website, we will collect paragraphs and
-save it for further processing given some acceptance threshold.
+number of keywords). For each website, we will collect paragraphs given some acceptance threshold and
+save it for further processing.
 
 %For each
 %accepted paragraph we use NLP to identify candidates for relevant terms
@@ -376,8 +375,8 @@ creation of the matrix, the terms are stemmed (using the Porter stemming
 algorithm \cite{porterstemming}) and stopwords \footnote{The stopwords
 are defined by a list of 127 English words provided by the Python NLTK
 library (\texttt{nltk.corpus.stopwords.words("english")}} along with
-non-alphanumerical \footnote{Symbols not represented in the Danish
-Alphabet} symbols are removed .
+non-alphanumerical\footnote{Characters that do not contain the value of a number or a letter.} Symbols not represented in the Danish
+Alphabet} symbols are removed.
 
 Stemming a word involves reducing it to its most basic form or root,
 removing morphological and inflectional endings from the words. E.g.
@@ -390,7 +389,7 @@ TF-IDF model (as originally proposed by \cite{tfidf}) along with
 additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten
 term-burstiness (\cite{burstiness}) \todo[inline]{Why is this smoothing good?}.
 
-The TF-IDF model is thus constructed as such:
+The TF-IDF model is thus constructed as following:
 \[
 w_{t,d} = log(tf_{t,d}+1)\cdot log\frac{|D|}{|\{d'\in D|t\in d'\}|}
 \]
@@ -465,13 +464,17 @@ $\textbf{p}$ which is defined as
 similarity(\textbf{s}, \textbf{p}) = \frac{1 - sp^T}{||s||_2 ||p||_2}
 \]
 Which, using algorithms provided by the HCluster
-\footnote{\url{http://code.google.com/p/scipy-cluster/}} library returns
-a score between $0$ and $1$, where 0 is complete correlation and 1 is
+\footnote{\url{http://code.google.com/p/scipy-cluster/}} library, returns
+a score between $0$ and $1$ where 0 is complete correlation and 1 is
 no correlation. The acceptance threshold for paragraphs collected for
 further processing is set to $0.8$. This number is used based on a
 number of anecdotal tests showing a reasonable amount of relevant
 information, where $0.9$ would introduce too much noise, and $0.7$ being
-too strict.
+too strict. However, not all relevant paragraphs are found using this threshold
+(e.g. a short list of symptoms) and proved useful to added secondary threshold of
+acceptance which includes three rules: 1) If the paragraph does a threshold below
+$0.8$, it must have a threshold below $0.9$ (loosely similar), 2) contain one of the
+the phrases \{"characterized by", "characteristic", "symptom", "may include"\}\footnote{Common phrases in clinical descriptions} and 3) at least contain the main title of the disease or a synonym hereof\footnote{A lot of websites returned by Google contains lists of descriptions of similar diseases that we are not interested in.}
 
 It is observed that many of the harvested paragraphs are literature
 references and should be considered noise, due to it's low information
@@ -681,18 +684,9 @@ subspace, the model can be fine-tuned to locate subtle features or
 symptoms in the symptomatic query of the reduced set of diseases.
 Intuitively, reusing the TFIDF scheme on the reduced space should
 reduce the importance of main features or symptoms and enhance the more
-subtle parts that separate runner-up candidate predictions.
-
-BLABLABLA
-
- Though 3335 ICD10 codes were received from Orphanet (in total
- representing 3137 unique rare diseases) only 50.05\% of these were also
- represented in the used data set (diseases containing Orphanet
- abstracts). 
-
-
-\todo[inline]{Explain this method!}
-
+subtle parts that separate runner-up candidate predictions. However, though 3335 ICD10 codes were received from Orphanet (in total
+ representing 3137 unique rare diseases), only 50.05\% of the ICD10-coded diseases were also
+ represented in the used data set (diseases containing Orphanet abstracts). Improved results achieved through the use of a ICD10-scheme would thus be invalidated (in a comparative sense) by an overall reduction of the data set. Nonetheless, tests are made to indicate the possibilities of such a model.
 
 
 \section{Implementation}
@@ -731,7 +725,8 @@ paragraphs.
 phrases using NLP methods.
 \end{description}
 
-The test sets are described as such:
+\noindent The test sets are described as such:
+
 \begin{description}
 \item[Blind tests] These tests are originally blind tests from
 \cite{jensenandersen} provided by a practising physician only as a list
@@ -923,8 +918,8 @@ ways of constructing a model that is able to predict whether a phrase
 is medically relevant to use in the model or not.
 
 A method that may improve symptom extraction is to utilize clustering
-algorithms, but will, in turn of allowing us to directly measure the
-performance of the system (training and testing), require a substantial
+algorithms. However, this will --- in turn of allowing us to directly measure the
+performance of the system (training and testing) --- require a substantial
 amount of preparation by annotating a large corpus of documents for
 constructing a reasonable amount of data.
 % In this project we have only
