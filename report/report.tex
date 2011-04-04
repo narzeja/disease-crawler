@@ -560,19 +560,11 @@ finally ending with the maxent treebank pos tagger.
 %strategies, such as regular expression or dictionary based taggers.
 
 \subsubsection{Chunking}
-In order to iterate and collect information to expand the modelling of
-relevant terms and phrases we use NLP to identify symptoms and medical
-terms (here-on referred to as just symptom) from abstracts and
-paragraphs harvested. 
-
-%Identifying unique symptoms to use in parallel
-%with the basic model will 
-
-%and correlate with
-%other documents describing the same disease will increase the knowledge,
-%or further substantiate pre-existing knowledge of that disease. The
-%ultimate goal of this strategy is to expand the basic model as a means
-%to focus on medically relevant information.
+Based on the syntax trees provided by the POS-tagging procedure,
+chunking can now be done to extract phrases that may be relevant.
+Particularly symptoms and synonyms are relevant to extract, and as such
+the chunking procedure is designed to capture structures that resemble
+symptoms, in the following referred to as symptom candidates.
 
 Through a number of anecdotal observations it is experienced that
 symptoms are usually described as zero or more adjectives or verbs
@@ -583,7 +575,7 @@ regular grammar defined through the Python NLTK library
 grammar = """SYMPTOM: {(<JJ|VB(N|G|D)>*<N(P|N)>+)}"""
 \end{lstlisting}
 This will catch candidates such as \texttt{bleeding diathesis}, but will
-also match non relevant terms such as \texttt{addition}.
+also match non-relevant terms such as \texttt{addition}.
 %The premise for the construction of this grammar is substantiated
 %through anecdotal manual observations of a handful of abstracts from the
 %orphanet data set, and utilized under the assumption that it will
@@ -622,6 +614,23 @@ of which we are particularly interested in the \texttt{SYMPTOM}
 subtrees. For each existing paragraph or abstract for a given disease, a
 list of phrases and terms are returned for further processing.
 
+
+
+%In order to iterate and collect information to expand the modelling of
+%relevant terms and phrases we use NLP to identify symptoms and medical
+%terms (here-on referred to as just symptom) from abstracts and
+%paragraphs harvested.
+%\todo[inline]{Some more abstractiness!}
+
+%Identifying unique symptoms to use in parallel
+%with the basic model will 
+
+%and correlate with
+%other documents describing the same disease will increase the knowledge,
+%or further substantiate pre-existing knowledge of that disease. The
+%ultimate goal of this strategy is to expand the basic model as a means
+%to focus on medically relevant information.
+
 %While the grammar does not explicitly collect symptoms or medical terms,
 %we attempt to filter out noise by ruling out candidates that are not
 %represented in the above mentioned harvested symptom database of which
@@ -655,11 +664,31 @@ list of phrases and terms are returned for further processing.
 %amount of noise generated in the symptom harvesting process.
 
 \subsection{Utilizing ICD10 Codes}
-ICD10\footnote{"International Statistical Classification of Diseases and Related Health Problems"-10th revision.} codes from Orphanet represents a hirachical structured coding of the category of the disease. As an example, Cholera falls within \textit{A00 $\rightarrow$ 'Certain infectious and parasitic diseases' $\rightarrow$ 'Intestinal infectious diseases' $\rightarrow$ 'Cholera' }. Codes can thus be used to locate groups or clusters of diseases and has the potential being used for training models to be used for classifying un-coded diseases. In theory limiting a diagnostic query to one or a few categories should improve the precision of the current model and --- using the TFIDF-model --- important terms of each category can be located (main symptoms). If these main terms are found in the symptomatic query of the physician, potential categories can be found. Having limited the query to a subspace, the model can be fine-tuned to locate subtle features or symptoms in the symptomatic query of the reduced set of diseases. Intuitively, reusing the TFIDF scheme on the recued space should, reduce the importance of main features or symptoms and enhance the more subtle parts. 
+ICD10\footnote{"International Statistical Classification of Diseases and
+Related Health Problems"-10th revision.} codes from Orphanet represents
+a hierarchical structured coding of the category of the disease. As an
+example, Cholera falls within \textit{A00 $\rightarrow$ 'Certain
+infectious and parasitic diseases' $\rightarrow$ 'Intestinal infectious
+diseases' $\rightarrow$ 'Cholera' }. Codes can thus be used to locate
+groups or clusters of diseases and has the potential of being used for
+training models to be used for classifying un-coded diseases. In theory
+limiting a diagnostic query to one or a few categories should improve
+the precision of the current model and --- using the TFIDF-model ---
+important terms of each category can be located (main symptoms). If
+these main terms are found in the symptomatic query of the physician,
+potential categories can be found. Having limited the query to a
+subspace, the model can be fine-tuned to locate subtle features or
+symptoms in the symptomatic query of the reduced set of diseases.
+Intuitively, reusing the TFIDF scheme on the reduced space should
+reduce the importance of main features or symptoms and enhance the more
+subtle parts that separate runner-up candidate predictions.
 
 BLABLABLA
 
- Though 3335 ICD10 codes were received from Orphanet (in total representing 3137 unique rare diseases) only 50.05\% of these were also represented in the used data set (diseases containing Orphanet abstracts). 
+ Though 3335 ICD10 codes were received from Orphanet (in total
+ representing 3137 unique rare diseases) only 50.05\% of these were also
+ represented in the used data set (diseases containing Orphanet
+ abstracts). 
 
 
 \todo[inline]{Explain this method!}
@@ -680,6 +709,7 @@ constructed and ultimately used for testing and comparison.
 
 
 \subsection{NLP+Unigram}
+\subsubsection{NLP}
 
 
 \subsection{ICD10 code}
@@ -745,7 +775,13 @@ where $n_{i} (i = 1, 2, ..., k)$ represent the samples for each of the k
 groups. $R_{i}$ is the sum of ranks for group $i$. The ranks are
 acquired by sorting the sample values in ascending order and ranking
 from $1$ to $\sum n_{i}$, giving identical sample values the mean of the
-ranks tied for, with no correction for ties.
+ranks tied for. Ties are adjusted by dividing $H_{stat}$ by
+\[
+1 - \frac{\sum T}{N^3-N}
+\]
+where $N = \sum n_{i}$ and the summation is over all groups of ties and
+$T = t^3-t$, for each group of ties, $t$ being the number of tied
+observations in that group.
 
 $H_{stat}$ approximates a chi-square ($\chi^2$) distribution with k-1
 degrees of freedom when the number of samples is at least 5.
@@ -766,18 +802,17 @@ with 1 degree of freedom ($k-1$) with an acceptance p-value of $\alpha
 %Office 3.2} for $\alpha = 0.05$. \todo[inline]{find a proper formula for
 %CHIINV: \url{http://en.wikipedia.org/wiki/Inverse-chi-square_distribution}}
 
-For our purpose, we will be looking at a right-tail test, yielding the
-hypotheses:
-\begin{itemize}
-\item $H_{0}$ the samples come from the same distribution, i.e. the models yield identical results ($u = a$)
-\item $H_{1}$ the new model yield significantly better results than the old ($u > a$)
-\end{itemize}
-\todo[inline]{reconsider using this hypothesis explanation gibberish}
+%For our purpose, we will be looking at a right-tail test, yielding the
+%hypotheses:
+%\begin{itemize}
+%\item $H_{0}$ the samples come from the same distribution, i.e. the models yield identical results ($u = a$)
+%\item $H_{1}$ the new model yield significantly better results than the old ($u > a$)
+%\end{itemize}
+%\todo[inline]{reconsider using this hypothesis explanation gibberish}
 
 Therefore, we can reject the null hypothesis, if $H_{stat} > \chi^2$,
 and accept that there is a difference between the groups.
 
-The results of the significance tests are presented in the following.
 
 % We will measure statistical significance
 %across the models using the Mann-Whitney U test. Alternatively, we will
@@ -786,54 +821,72 @@ The results of the significance tests are presented in the following.
 %appropriate, as this test assumes normally distributed samples.
 
 \subsection{Significance testing results}
-In this section, we will highlight our most important results from the
+In this section, we highlight the most important results from the
 previously described models and test scenarios.
 
-%\begin{table}[here]
+Initially, the most basic model used is the \textit{old unigram} model,
+originally proposed by \cite{jensenandersen}. This model was
+subsequently re-made with data provided by Orphanet, which is described
+as \textit{new unigram}. The results in table \ref{tab:orpha_old_new_stat},
+suggests a significant improvement by simply using the Orphanet data to
+train the model, as opposed to automatically harvesting them from
+PubMed. However, the tests are essentially diseases extracted from the
+training data and can as such better be explained as the model's ability
+to train, and not its ability to predict.
+
+In the tables in section \ref{app:summary_old_new} we also notice a
+significant increase in disease found in the top 20 rankings, from 62\%
+in the old model, up to 90\% with the model trained on the Orphanet data
+set across all test sets, while achieving 74\% with the new model
+compared to 33\% in the top 5.
+
+\begin{table}[here]
 \begin{center}
 \begin{tabular}{lll}
     \textbf{Data set} & & \textbf{Orphanet} \\ \hline\hline
-    \textbf{Parameter} & \textbf{Old model} & \textbf{New model} \\ \hline
-    Skew & 2.66 & 5.35 \\
-    $R_{i}$ &  &  \\
-    $n_{i}$ & 28 & 28 \\ \hline\hline
-    \textbf{Test Parameter} & & \textbf{Value} \\ \hline
-    $n$ && 56  \\
-    k && 2  \\
-    df && 1  \\ \hline \hline
-    \textbf{Result} & & \\\hline
-    $H_{stat}$ & & 35.38 \\
-    $H_{crit}$ & & 3.84 \\
+ &	\textbf{new unigram} &	\textbf{old unigram} \\ \hline
+$R_{i}$ &	462 &	1249 \\
+$\frac{R_{i}^2}{n}$ &	7360.14	& 53793.14 \\
+$n_{i}$	29	& 29 \\ \hline \hline
+\textbf{Test parameter}	&	&\textbf{Value} \\ \hline
+$n$	 &  &  58 \\
+$k$  &  &  2 \\
+$df$ &  &  1 \\ \hline \hline
+$H_{stat}$  &  &  37.47 \\
+Adjusted $H_{stat}$ & &  40.41 \\
 \end{tabular}
-    \captionof{table}{Results from the Kruskal Wallis
-    significance test of the Orphanet tests on the old and new model.}
-    \label{tab:orpha_old_new}
+    \caption{Results from the Kruskal-Wallis significance test of the Orphanet tests on the old and new model.}
+    \label{tab:orpha_old_new_stat}
 \end{center}
-%\end{table}
+\end{table}
 
-%using the dependent variable \texttt{prediction},
-%that describes the position of the correct disease. I.e. 
-%the best result is 1 and worst result is $n$ where $n$ is the number of
-%known diseases in the models.
 
-%The results are described in table \ref{tab:results1} below.
-%\begin{center}
-%	\begin{tabular}{llll}
-%		Case number & Old model & New model(cleansed) & New model(NLP) \\ \hline
-%		1 &  &  &  \\
-%		2 &  &  &  \\
-%		3 &  &  &  \\
-%		4 &  &  &  \\
-%		5 &  &  &  \\
-%	\end{tabular}
-%	\label{tab:results1}
-%\end{center}
+\begin{table}[here]
+\begin{center}
+\begin{tabular}{lll}
+    \textbf{Data set} & & \textbf{BMJ} \\ \hline\hline
+ &	\textbf{new unigram} &	\textbf{old unigram} \\ \hline
+$R_{i}$ &	 &	 \\
+$\frac{R_{i}^2}{n}$ &  &  \\
+$n_{i}$		&  \\ \hline \hline
+\textbf{Test parameter}	&	&\textbf{Value} \\ \hline
+$n$	 &  &   \\
+$k$  &  &   \\
+$df$ &  &   \\ \hline \hline
+$H_{stat}$  &  &   \\
+Adjusted $H_{stat}$ & &  \\
+\end{tabular}
+    \caption{}
+    \label{tab:bmj_old_new_stat}
+\end{center}
+\end{table}
 
-Note that, for the manual googling method, the results presented in
-\cite{googlingdiagnosis} only considered binary results depicted as
-'Yes' if they predicted the diseases and 'No' otherwise. There is no
-ranking of where the correct was found from a number of possibilities,
-in contrary to \cite{jensenandersen} and this project.
+
+%Note that, for the manual googling method, the results presented in
+%\cite{googlingdiagnosis} only considered binary results depicted as
+%'Yes' if they predicted the diseases and 'No' otherwise. There is no
+%ranking of where the correct was found from a number of possibilities,
+%in contrary to \cite{jensenandersen} and this project.
 
 
 
@@ -919,96 +972,160 @@ with no further processing.
 
 %\vspace*{-3cm}
 \subsection{Orphanet tests}
+\label{app:orphanet_old_new}
 (The following tests can be interpreted as training data tests, training
 the ability to train the model, rather the ability to predict.)
 \todo[inline]{explain better}
 %\vspace*{-6cm}
+
 \begin{center}
 \begin{small}
-	\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}	\hline
-	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+%	\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}	\hline
+%	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+%    \hline\hline
+%    Apparent mineralocorticoid excess & early-onset, severe hypertension, associated, low renin levels, hypoaldosteronism & 1 & 10\\    \hline
+%    Rubinstein-Taybi syndrome  & congenital anomalies, intellectual deficit, behavioural characteristics & 1 & 91\\    \hline
+%    Cholestasis - lymphedema  (Aagenaes syndrome) & chronic severe lymphoedema, severe neonatal cholestasis, lessens during early childhood and becomes episodic & 1 & 18\\    \hline
+%    Aase-Smith syndrome  & congenital malformations: hydrocephalus, cleft palate, severe joint contractures & 2 & 10\\    \hline
+%    Achondroplasia  & short limbs, hyperlordosis, short hands, macrocephaly, high forehead and saddle nose  & 1 & 5\\    \hline
+%    Acalvaria  & missing scalp and flat bones over an area of the cranial vault  & 1 & 87\\    \hline
+%    Acrodysostosis & abnormally short and malformed bones of the hands and feet (peripheral dysostosis), nasal hypoplasia and mental retardation & 1 & 80\\    \hline
+%    Acromegaly & progressive somatic disfigurement (face and extremities) and systemic manifestations & 1 & 106\\    \hline
+%    Biliary atresia & biliary obstruction of unknown origin, neonatal period & 1 & 3\\    \hline
+%    Bronchiolitis obliterans with obstructive pulmonary disease & inflammatory and fibrosing thickening of bronchiolar walls, airflow obstruction & 1 & 8\\    \hline
+%    Cholera & severe diarrhea and vomiting & 1 & 65\\    \hline
+%    Choroideremia & progressive degeneration of the choroid, retinal pigment epithelium (RPE), and neural retina & 1 & 17\\    \hline
+%    Coats disease & abnormal development of retinal vessels (telangiectasia) with a progressive deposition of intraretinal or subretinal exudates & 1 & 1\\    \hline
+%    Omphalocele-cleft palate syndrome, lethal & omphalocele and cleft palate & 2 & 3\\    \hline
+%    Darier disease & keratotic papules in seborrheic areas and specific nail anomalies & 1 & 2\\    \hline
+%    Ichthyosis - hepatosplenomegaly - cerebellar degeneration & ichthyosis, hepatosplenomegaly and late-onset cerebellar ataxia & 5 & 7\\    \hline
+%    Emery-Dreifuss muscular dystrophy & muscular weakness and atrophy, with early contractures of the tendons and cardiomyopathy & 1 & 1\\    \hline
+%    Costello syndrome & postnatal growth retardation, coarse facies, intellectual deficit, skin anomalies and cardiac abnormalities & 1 & 2\\    \hline
+%    Fibrodysplasia ossificans progressiva & congenital malformation of great toes, progressive, disabling heterotopic osteogenesis in predictable anatomical patterns & 1 & 1\\    \hline
+%    Acropectorovertebral dysplasia & fusion of the carpal and tarsal bones, with complex anomalies of the fingers and toes & 1 & 3001\\    \hline
+%    Osteogenesis imperfecta & increased bone fragility and low bone mass & 1 & 2\\    \hline
+%    Primary biliary cirrhosis & injury of the intrahepatic bile ducts & 6 & 10\\    \hline
+%    Hennekam syndrome & lymphoedema, intestinal lymphangiectasia, intellectual deficit and facial dysmorphism & 1 & 4\\    \hline
+%    Hyperlysinemia & elevated levels of lysine in the cerebrospinal fluid and blood & 1 & 85\\    \hline
+%    Jackson-Weiss syndrome & tarsal and/or metatarsal coalitions and variable craniosynostosis, accompanied by facial anomalies, broad halluces and normal hands & 1 & 40\\    \hline
+%    Jalili syndrome & amelogenesis imperfecta and cone-rod retinal dystrophy & 5 & 39 \\    \hline
+%    Jeune syndrome & narrow thorax and short limbs & 1 & 2\\    \hline
+%    Myeloma, multiple & overproduction of abnormal plasma cells in the bone marrow and manifested by skeletal destruction, bone pain, and presence of abnormous immunoglobulins & 1 & 3\\    \hline
+%    Trichodental syndrome & fine, dry and short hair with dental anomalies & 1 & 60\\    \hline
+	\begin{longtable}{|p{6cm}|p{1.8cm}|p{1.8cm}|}	\hline
+	\textbf{Disease}  & \textbf{Rank (new unigram} & \textbf{Rank (old unigram)} \\
     \hline\hline
-    Apparent mineralocorticoid excess & early-onset, severe hypertension, associated, low renin levels, hypoaldosteronism & 1 & 10\\    \hline
-    Rubinstein-Taybi syndrome  & congenital anomalies, intellectual deficit, behavioural characteristics & 1 & 91\\    \hline
-    Cholestasis - lymphedema  (Aagenaes syndrome) & chronic severe lymphoedema, severe neonatal cholestasis, lessens during early childhood and becomes episodic & 1 & 18\\    \hline
-    Aase-Smith syndrome  & congenital malformations: hydrocephalus, cleft palate, severe joint contractures & 2 & 10\\    \hline
-    Achondroplasia  & short limbs, hyperlordosis, short hands, macrocephaly, high forehead and saddle nose  & 1 & 5\\    \hline
-    Acalvaria  & missing scalp and flat bones over an area of the cranial vault  & 1 & 87\\    \hline
-    Acrodysostosis & abnormally short and malformed bones of the hands and feet (peripheral dysostosis), nasal hypoplasia and mental retardation & 1 & 80\\    \hline
-    Acromegaly & progressive somatic disfigurement (face and extremities) and systemic manifestations & 1 & 106\\    \hline
-    Biliary atresia & biliary obstruction of unknown origin, neonatal period & 1 & 3\\    \hline
-    Bronchiolitis obliterans with obstructive pulmonary disease & inflammatory and fibrosing thickening of bronchiolar walls, airflow obstruction & 1 & 8\\    \hline
-    Cholera & severe diarrhea and vomiting & 1 & 65\\    \hline
-    Choroideremia & progressive degeneration of the choroid, retinal pigment epithelium (RPE), and neural retina & 1 & 17\\    \hline
-    Coats disease & abnormal development of retinal vessels (telangiectasia) with a progressive deposition of intraretinal or subretinal exudates & 1 & 1\\    \hline
-    Omphalocele-cleft palate syndrome, lethal & omphalocele and cleft palate & 2 & 3\\    \hline
-    Darier disease & keratotic papules in seborrheic areas and specific nail anomalies & 1 & 2\\    \hline
-    Ichthyosis - hepatosplenomegaly - cerebellar degeneration & ichthyosis, hepatosplenomegaly and late-onset cerebellar ataxia & 5 & 7\\    \hline
-    Emery-Dreifuss muscular dystrophy & muscular weakness and atrophy, with early contractures of the tendons and cardiomyopathy & 1 & 1\\    \hline
-    Costello syndrome & postnatal growth retardation, coarse facies, intellectual deficit, skin anomalies and cardiac abnormalities & 1 & 2\\    \hline
-    Fibrodysplasia ossificans progressiva & congenital malformation of great toes, progressive, disabling heterotopic osteogenesis in predictable anatomical patterns & 1 & 1\\    \hline
-    Acropectorovertebral dysplasia & fusion of the carpal and tarsal bones, with complex anomalies of the fingers and toes & 1 & 3001\\    \hline
-    Osteogenesis imperfecta & increased bone fragility and low bone mass & 1 & 2\\    \hline
-    Primary biliary cirrhosis & injury of the intrahepatic bile ducts & 6 & 10\\    \hline
-    Hennekam syndrome & lymphoedema, intestinal lymphangiectasia, intellectual deficit and facial dysmorphism & 1 & 4\\    \hline
-    Hyperlysinemia & elevated levels of lysine in the cerebrospinal fluid and blood & 1 & 85\\    \hline
-    Jackson-Weiss syndrome & tarsal and/or metatarsal coalitions and variable craniosynostosis, accompanied by facial anomalies, broad halluces and normal hands & 1 & 40\\    \hline
-    Jalili syndrome & amelogenesis imperfecta and cone-rod retinal dystrophy & 5 & 39 \\    \hline
-    Jeune syndrome & narrow thorax and short limbs & 1 & 2\\    \hline
-    Myeloma, multiple & overproduction of abnormal plasma cells in the bone marrow and manifested by skeletal destruction, bone pain, and presence of abnormous immunoglobulins & 1 & 3\\    \hline
-    Trichodental syndrome & fine, dry and short hair with dental anomalies & 1 & 60\\    \hline
+    Apparent mineralocorticoid excess &1 & 10\\    \hline
+    Rubinstein-Taybi syndrome  & 1 & 91\\    \hline
+    Cholestasis - lymphedema  (Aagenaes syndrome) 1 & 18\\    \hline
+    Aase-Smith syndrome  & 2 & 10\\    \hline
+    Achondroplasia  & 1 & 5\\    \hline
+    Acalvaria  &  1 & 87\\    \hline
+    Acrodysostosis & 1 & 80\\    \hline
+    Acromegaly & 1 & 106\\    \hline
+    Biliary atresia  & 1 & 3\\    \hline
+    Bronchiolitis obliterans with obstructive pulmonary disease  & 1 & 8\\    \hline
+    Cholera &  1 & 65\\    \hline
+    Choroideremia & 1 & 17\\    \hline
+    Coats disease & 1 & 1\\    \hline
+    Omphalocele-cleft palate syndrome, lethal & 2 & 3\\    \hline
+    Darier disease & 1 & 2\\    \hline
+    Ichthyosis - hepatosplenomegaly - cerebellar degeneration & 5 & 7\\    \hline
+    Emery-Dreifuss muscular dystrophy & 1 & 1\\    \hline
+    Costello syndrome & 1 & 2\\    \hline
+    Fibrodysplasia ossificans progressiva & 1 & 1\\    \hline
+    Acropectorovertebral dysplasia & 1 & 3001\\    \hline
+    Osteogenesis imperfecta & 1 & 2\\    \hline
+    Primary biliary cirrhosis & 6 & 10\\    \hline
+    Hennekam syndrome  & 1 & 4\\    \hline
+    Hyperlysinemia& 1 & 85\\    \hline
+    Jackson-Weiss syndrome & 1 & 40\\    \hline
+    Jalili syndrome &  5 & 39 \\    \hline
+    Jeune syndrome & 1 & 2\\    \hline
+    Myeloma, multiple & 1 & 3\\    \hline
+    Trichodental syndrome & 1 & 60\\    \hline
     \end{longtable}
 \end{small}
 \end{center}
 
 \subsection{BMJ ('Googling for a Diagnosis') tests }
+\label{app:bmj_old_new}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
+%	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
+%	\hline
+%	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+%    \hline\hline
+%    Cushing syndrome & hypertension, adrenal, mass & 3 & 2 \\    \hline
+%    Eosinophilic granuloma & Hip, lesion, older, child & \textit{Not in the model} & 598 \\    \hline
+%    Ehrlichiosis & fever, bilateral, thigh, pain, weakness & \textit{Not in the model} & 512 \\    \hline
+%    Neurofibromatosis type 1 & multiple, spinal, tumours, skin, tumours & \textit{Not in the model} & 30 \\    \hline
+%    Hereditary pheochromocytoma-paraganglioma syndrome & hypertension, papilledema, headache, renal, mass, cafe, au, lait & 10 & 414\\    \hline
+%    Creutzfeldt-Jakob disease & ataxia, confusion, insomnia, death & 196 & 7\\    \hline
+%    Churg-Strauss syndrome & Wheeze, weight, loss, ANCA, haemoptysis, haematuria & 3 & 2\\    \hline
+%    Dermatomyositis & myopathy, neoplasia, dysphagia, rash, periorbital, swelling & 63 & 4\\    \hline
+%    Cat-scratch disease & renal, transplant, fever, cat, lymphadenopathy & 1 & 1\\    \hline
+%    Toxic epidermal necrolysis (TEN) & bullous, skin, conditions, respiratory, failure, carbamazepine & 1 & 4\\    \hline
+%    MELAS syndrome & seizure, confusion, dysphasia, T2, lesions & 2 & 27\\    \hline
+%    Brugada syndrome & cardiac arrest sleep & 3 & 7\\    \hline
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+	\textbf{Disease} & \textbf{Rank (new unigrma)} & \textbf{Rank (old unigram)} \\
     \hline\hline
-    Cushing syndrome & hypertension, adrenal, mass & 3 & 2 \\    \hline
-    Eosinophilic granuloma & Hip, lesion, older, child & \textit{Not in the model} & 598 \\    \hline
-    Ehrlichiosis & fever, bilateral, thigh, pain, weakness & \textit{Not in the model} & 512 \\    \hline
-    Neurofibromatosis type 1 & multiple, spinal, tumours, skin, tumours & \textit{Not in the model} & 30 \\    \hline
-    Hereditary pheochromocytoma-paraganglioma syndrome & hypertension, papilledema, headache, renal, mass, cafe, au, lait & 10 & 414\\    \hline
-    Creutzfeldt-Jakob disease & ataxia, confusion, insomnia, death & 196 & 7\\    \hline
-    Churg-Strauss syndrome & Wheeze, weight, loss, ANCA, haemoptysis, haematuria & 3 & 2\\    \hline
-    Dermatomyositis & myopathy, neoplasia, dysphagia, rash, periorbital, swelling & 63 & 4\\    \hline
-    Cat-scratch disease & renal, transplant, fever, cat, lymphadenopathy & 1 & 1\\    \hline
-    Toxic epidermal necrolysis (TEN) & bullous, skin, conditions, respiratory, failure, carbamazepine & 1 & 4\\    \hline
-    MELAS syndrome & seizure, confusion, dysphasia, T2, lesions & 2 & 27\\    \hline
-    Brugada syndrome & cardiac arrest sleep & 3 & 7\\    \hline
+    Cushing syndrome & 3 & 2 \\    \hline
+    Eosinophilic granuloma & \textit{Not in the model} & 598 \\    \hline
+    Ehrlichiosis & \textit{Not in the model} & 512 \\    \hline
+    Neurofibromatosis type 1 & \textit{Not in the model} & 30 \\    \hline
+    Hereditary pheochromocytoma-paraganglioma syndrome & 10 & 414\\    \hline
+    Creutzfeldt-Jakob disease & 196 & 7\\    \hline
+    Churg-Strauss syndrome & 3 & 2\\    \hline
+    Dermatomyositis & 63 & 4\\    \hline
+    Cat-scratch disease & 1 & 1\\    \hline
+    Toxic epidermal necrolysis (TEN) & 1 & 4\\    \hline
+    MELAS syndrome & 2 & 27\\    \hline
+    Brugada syndrome & 3 & 7\\    \hline
 	\end{tabular}
 \end{small}
 \end{center}
 
 \subsection{Blind tests}
+\label{app:blind_old_new}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
+%	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
+%	\hline
+%	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
+%	\hline\hline
+%    Fibrodysplasia ossificans progressiva & Boy, normal birth, deformity of both big toes (missing joint), quick development of bone tumor near spine and osteogenesis at biopsy. & 92 & 20\\    \hline
+%    Adrenoleukodystrophy, X-linked & Normally developed boy age 5, progessive development of talking difficulties, seizures, ataxia, adrenal insufficiency and  degeneration of visual and auditory functions & 1 & 1718\\    \hline
+%    Papillon-Lefevre syndrome & Boy age 14, yellow, keratotic plaques on the skin of palms and soles going up onto the dorsal side. Both hands and feet are affected. & 2 & 6\\    \hline
+%    Kleine-Levin syndrome & Jewish boy age 16, monthly seizures, sleep deficiency, aggressive and irritable when woken, highly increased sexual appetite and hunger. & 5 & 2\\    \hline
+%    Midface retraction syndrome, Schinzel-Giedion type & Male child, malformations at birth, midfacial retraction with a deep groove under the eyes, and hypertelorism, short nose with a low nasal bridge and large low-set ears, wide mouth and retrognathia. Hypertrichosis with bright reddish hair and a median frontal cutaneous angioma, short neck with redundant skin, Bilateral inguinal hernias, hypospadias with a megameatus, and cryptorchidism  & 14 & 164\\    \hline
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{query} & \textbf{Rank (new model)} & \textbf{Rank (old model)} \\
-	\hline\hline
-    Fibrodysplasia ossificans progressiva & Boy, normal birth, deformity of both big toes (missing joint), quick development of bone tumor near spine and osteogenesis at biopsy. & 92 & 20\\    \hline
-    Adrenoleukodystrophy, X-linked & Normally developed boy age 5, progessive development of talking difficulties, seizures, ataxia, adrenal insufficiency and  degeneration of visual and auditory functions & 1 & 1718\\    \hline
-    Papillon-Lefevre syndrome & Boy age 14, yellow, keratotic plaques on the skin of palms and soles going up onto the dorsal side. Both hands and feet are affected. & 2 & 6\\    \hline
-    Kleine-Levin syndrome & Jewish boy age 16, monthly seizures, sleep deficiency, aggressive and irritable when woken, highly increased sexual appetite and hunger. & 5 & 2\\    \hline
-    Midface retraction syndrome, Schinzel-Giedion type & Male child, malformations at birth, midfacial retraction with a deep groove under the eyes, and hypertelorism, short nose with a low nasal bridge and large low-set ears, wide mouth and retrognathia. Hypertrichosis with bright reddish hair and a median frontal cutaneous angioma, short neck with redundant skin, Bilateral inguinal hernias, hypospadias with a megameatus, and cryptorchidism  & 14 & 164\\    \hline
+	\textbf{Disease} & \textbf{Rank (new unigram)} & \textbf{Rank (old unigram)} \\
+    \hline\hline
+    Fibrodysplasia ossificans progressiva & 92 & 20\\    \hline
+    Adrenoleukodystrophy, X-linked & 1 & 1718\\    \hline
+    Papillon-Lefevre syndrome & 2 & 6\\    \hline
+    Kleine-Levin syndrome & 5 & 2\\    \hline
+    Midface retraction syndrome, Schinzel-Giedion type  & 14 & 164\\    \hline
 	\end{tabular}
 \end{small}
 \end{center}
+
+\subsection{Summary}
+\label{app:summary_old_new}
 
 \begin{center}
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+\textbf{Test set} & \textbf{unigram} &	\textbf{old unigram}	 &	\textbf{total diseases} &	\% unigram	 &\% old unigram \\ \hline
 orphanet &	28 &	8	 &	29 &	96.55 &	27.59 \\
 BMJ	& 2 &	5	 &	9	 & 22.22 &	55.56 \\
 Blind test	& 2 &	1	 &	5 &	40	 &20 \\ \hline \hline
-all	& 32 &	14	 &	43 &	74.41 &	32.56 \\ \hline
+all	& 32 &	14	 &	43 &	74.42 &	32.56 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1017,7 +1134,7 @@ all	& 32 &	14	 &	43 &	74.41 &	32.56 \\ \hline
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+\textbf{Test set} & \textbf{unigram} &	\textbf{old unigram}	 &	\textbf{total diseases} &	\% unigram	 &\% old unigram \\ \hline
 orphanet &	29 &	17	 &	29 &	100	 & 58.62 \\
 BMJ &	6 &	7 &		9 &	66.67 &	77.78 \\
 Blind test &	4	 &3	 &	5 &	80	 &60 \\  \hline \hline
@@ -1028,12 +1145,13 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 
 \newpage
 \section{Testing raw googled and noise reduced googled data}
-\label{app:tests}
+\label{app:tests_raw_reduced}
 
 \subsection{Orphanet tests}
+\label{app:orphanet_raw_reduced}
 \begin{center}
 \begin{small}
-	\begin{longtable}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{longtable}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\
     \hline\hline
@@ -1071,10 +1189,10 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 \end{center}
 
 \subsection{BMJ ('Googling for a Diagnosis') tests }
-
+\label{app:bmj_raw_reduced}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\    \hline\hline
     Cushing syndrome  & 7 &  4\\    \hline
@@ -1091,10 +1209,10 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 \end{center}
 
 \subsection{Blind tests}
-
+\label{app:blind_raw_reduced}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\
 	\hline\hline
@@ -1107,12 +1225,14 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 \end{small}
 \end{center}
 
+\subsection{Summary}
+\label{app:summary_raw_reduced}
 
 \begin{center}
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+\textbf{Test set} & \textbf{noise reduced} &	\textbf{raw googled}	 &	\textbf{total diseases} &	\% noise reduced	 &\% raw googled \\ \hline
 orphanet    &    21   &  12    & 29      & 72.41     & 41.38 \\
 BMJ	        &    7   &   4   &    9   &  77.78    & 44.44 \\
 Blind test	&   1    &   1   &    5   &   20   & 20 \\ \hline \hline
@@ -1125,7 +1245,7 @@ all	        &   29    &   17   &   43    &  67.44    & 39.53 \\ \hline
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
+\textbf{Test set} & \textbf{noise reduced} &	\textbf{raw googled}	 &	\textbf{total diseases} &	\% noise reduced	 &\% raw googled \\ \hline
 orphanet    &    27   &   25   &  29     &  93.10    & 86.27\\
 BMJ	        &     9  &   9   &    9   &    100  & 100 \\
 Blind test	&     4  &   2   &    5   &    80  & 40 \\ \hline \hline
@@ -1137,9 +1257,11 @@ all	        &    40   & 17     &   43    &   93.02   &  83.72 \\ \hline
 
 \newpage
 \section{Tests using both a TFIDF unigram and TFIDF NLP model}
+The TFIDF NLP (unigram and nlp consensus) model is compared with the new
+unigram model results listed in section \ref{app:preliminary_results}.
 
 \subsection{Orphanet}
-
+\label{app:orphanet_tfidf_tfidfrecalc}
 \begin{center}
 \begin{small}
 	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
@@ -1180,7 +1302,7 @@ Trichodental syndrome & 17 & dri hair, fine hair & dental anomali, short hair  \
 \end{center}
 
 \subsection{BMJ ('Googling for a Diagnosis') tests }
-
+\label{app:bmj_tfidf_tfidfrecalc}
 \begin{center}
 \begin{small}
 	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
@@ -1201,7 +1323,7 @@ Brugada syndrome & 16 & cardiac arrest & sleep \\ \hline
 \end{center}
 
 \subsection{Blind Tests}
-
+\label{app:blind_tfidf_tfidfrecalc}
 \begin{center}
 \begin{small}
 	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
@@ -1217,16 +1339,18 @@ Midface retraction syndrome, Schinzel-Giedion type & 23 & short nose, low nasal 
 \end{small}
 \end{center}
 
+\subsection{Summary}
+\label{app:summary_tfidf_tfidfrecalc}
 
 \begin{center}
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
-orphanet    &       &      &       &      & \\
-BMJ	        &       &      &       &      & \\
-Blind test	&       &      &       &      & \\ \hline \hline
-all	        &       &      &       &      & \\ \hline
+\textbf{Test set} & \textbf{TFIDF NLP} &	\textbf{Unigram}	 &	\textbf{total diseases} &	\% TFIDF NLP	 &\% Unigram \\ \hline
+orphanet    &   14    &  28    &    29   & 48.28     & 96.55\\
+BMJ	        &    5   &    2  &     9  &   55.56   & 22.22\\
+Blind test	&    3   &    2  &     5  &   60   & 40 \\ \hline \hline
+all	        &    22   &   32   &    43   &  51.16    & 74.42\\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1235,11 +1359,11 @@ all	        &       &      &       &      & \\ \hline
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
-orphanet    &       &      &       &      & \\
-BMJ	        &       &      &       &      & \\
-Blind test	&       &      &       &      & \\ \hline \hline
-all	        &       &      &       &      & \\ \hline
+\textbf{Test set} & \textbf{TFIDF NLP} &	\textbf{Unigram}	 &	\textbf{total diseases} &	\% TFIDF NLP	 &\% Unigram \\ \hline
+orphanet    &    20   & 29     & 29      &   68.97   & 100\\
+BMJ	        &    9   &   6   &    9   &  100    & 66.67\\
+Blind test	&    4   &   4   &    5   & 80     & 80 \\ \hline \hline
+all	        &    33   &  39    &   43    & 76.74     & 90.70 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1247,11 +1371,11 @@ all	        &       &      &       &      & \\ \hline
 
 \newpage
 \section{Tests using ICD10 grouping}
-
+\label{app:orphanet_icd10_icd10recalc}
 \subsection{Orphanet}
 \begin{center}
 \begin{small}
-	\begin{longtable}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{longtable}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (ICD10 grouping)} & \textbf{Rank (ICD10 grouping recalc. TF-IDF)} \\
 	\hline\hline
@@ -1285,13 +1409,15 @@ Jeune syndrome & 13 & 10\\    \hline
 Myeloma, multiple & 4 & 4\\    \hline
 Trichodental syndrome & Disease not found!  & Disease not found!\\    \hline
 	\end{longtable}
+	\label{tab:orphanet_icd10_icd10recalc}
 \end{small}
 \end{center}
 
 \subsection{BMJ ('Googling for a Diagnosis') tests }
+\label{app:bmj_icd10_icd10recalc}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (ICD10 grouping)} & \textbf{Rank (ICD10 grouping recalc. TF-IDF)} \\
 	\hline\hline
@@ -1309,9 +1435,10 @@ Brugada syndrome & 2 & 2\\    \hline
 \end{center}
 
 \subsection{Blind Tests}
+\label{app:blind_icd10_icd10recalc}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (ICD10 grouping)} & \textbf{Rank (ICD10 grouping recalc. TF-IDF)} \\
 	\hline\hline
@@ -1324,16 +1451,18 @@ Midface retraction syndrome, Schinzel-Giedion type & 49 & 199\\    \hline
 \end{small}
 \end{center}
 
+\subsection{Summary}
+\label{app:summary_icd10_icd10recalc}
 
 \begin{center}
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
-orphanet    &       &      &       &      & \\
-BMJ	        &       &      &       &      & \\
-Blind test	&       &      &       &      & \\ \hline \hline
-all	        &       &      &       &      & \\ \hline
+\textbf{Test set} & \textbf{ICD10} &	\textbf{ICD10 recalc.}	 &	\textbf{total diseases} &	\% ICD10 &\% ICD10 recalc. \\ \hline
+orphanet    &     20  &  19    &     25  &   80   & 76 \\
+BMJ	        &   8    &    9  &    9   &    88.89  & 100 \\
+Blind test	&   4    &    4  &    5   &    80  & 80 \\ \hline \hline
+all	        &   32    &   32   &   39    &   82.05   & 85.05 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1342,11 +1471,11 @@ all	        &       &      &       &      & \\ \hline
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
-orphanet    &       &      &       &      & \\
-BMJ	        &       &      &       &      & \\
-Blind test	&       &      &       &      & \\ \hline \hline
-all	        &       &      &       &      & \\ \hline
+\textbf{Test set} & \textbf{ICD10} &	\textbf{ICD10 recalc.}	 &	\textbf{total diseases} &	\% ICD10 &\% ICD10 recalc. \\ \hline
+orphanet    &   23    &  23    &   25    &   92   & 92 \\
+BMJ	        &    9   &   9   &     9  &   100   & 100 \\
+Blind test	&    4   &   4   &    5   &   80   & 80 \\ \hline \hline
+all	        &    36   &  36    &   39    &  92.31  & 92.31 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1357,9 +1486,10 @@ all	        &       &      &       &      & \\ \hline
 \section{Comparision of tests performed without and with an abstract from Orphanet}
 
 \subsection{Orphanet}
+\label{app:orphanet_with_without}
 \begin{center}
 \begin{small}
-	\begin{longtable}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{longtable}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (noise reduced googled data)} & \textbf{Rank (orphanet abstract + noise reduced googled data)} \\
 	\hline\hline
@@ -1393,14 +1523,14 @@ Jeune syndrome                          &  12 & 8 \\ \hline
 Myeloma, multiple                       &  4 & 2 \\ \hline
 Trichodental syndrome                   &  4 & 3 \\ \hline
 	\end{longtable}
-%\label{tab:}
 \end{small}
 \end{center}
 
 \subsection{BMJ ('Googling for a Diagnosis') tests }
+\label{app:bmj_with_without}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (noise reduced googled data)} & \textbf{Rank (orphanet abstract + noise reduced googled data)} \\
 	\hline\hline
@@ -1414,14 +1544,14 @@ Toxic epidermal necrolysis              &  1 & 1 \\ \hline
 MELAS syndrome                          &  8 & 4 \\ \hline
 Brugada syndrome                        &  3 & 3 \\ \hline
 	\end{tabular}
-%\label{tab:}
 \end{small}
 \end{center}
 
 \subsection{Blind Tests}
+\label{app:blind_with_without}
 \begin{center}
 \begin{small}
-	\begin{tabular}{|p{3.5cm}|p{1.8cm}|p{1.8cm}|}
+	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
 	\textbf{Disease}  & \textbf{Rank (noise reduced googled data)} & \textbf{Rank (orphanet abstract + noise reduced googled data)} \\
 	\hline\hline
@@ -1431,22 +1561,22 @@ Papillon-Lefevre syndrome               &  1 & 1 \\ \hline
 Kleine-Levin syndrome                   &  1 & 1 \\ \hline
 Midface retraction syndrome, Schinzel-Giedion type  & 274  & 145 \\ \hline
 	\end{tabular}
-%\label{tab:}
 \end{small}
 \end{center}
 
 
-
+\subsection{Summary}
+\label{app:summary_with_without}
 
 \begin{center}
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
-orphanet    &       &      &       &      & \\
-BMJ	        &       &      &       &      & \\
-Blind test	&       &      &       &      & \\ \hline \hline
-all	        &       &      &       &      & \\ \hline
+\textbf{Test set} & \textbf{With abstracts} &	\textbf{Without abstracts}	 &	\textbf{total diseases} &	\% With &\% Without \\ \hline
+orphanet    &   24    &  21    &  29     & 82.76     & 72.41 \\
+BMJ	        &    9   &   8   &     9  &    100  & 88.89 \\
+Blind test	&    4   &   4   &     5  &    80  & 80 \\ \hline \hline
+all	        &    37   & 33     &   43    &  86.05    & 76.74 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1455,11 +1585,11 @@ all	        &       &      &       &      & \\ \hline
 \begin{small}
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{new model} &	\textbf{old model}	 &	\textbf{total diseases} &	\% new	 &\% old \\ \hline
-orphanet    &       &      &       &      & \\
-BMJ	        &       &      &       &      & \\
-Blind test	&       &      &       &      & \\ \hline \hline
-all	        &       &      &       &      & \\ \hline
+\textbf{Test set} & \textbf{With abstracts} &	\textbf{Without abstracts}	 &	\textbf{total diseases} &	\% With &\% Without \\ \hline
+orphanet    &    28   &   27   & 29      & 96.55     & 93.10 \\
+BMJ	        &    9   &    9  &    9   &   100   & 100 \\
+Blind test	&    4   &    4  &    5   &    80  & 80 \\ \hline \hline
+all	        &    41   &  40    &   43    &   95.35   & 93.02 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
