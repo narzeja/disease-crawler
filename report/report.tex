@@ -354,6 +354,7 @@ we have refined it into a number of proof of concept models.]
 %\todo[inline]{Something N-gram machine learning here.}
 
 \subsection{Building the basic model}
+\label{chap:basicmodel}
 The basic model is built using the prior information available
 from Orphanet. The TF-IDF model is essentially identical to the model
 constructed in \cite{jensenandersen}. While \cite{jensenandersen} used
@@ -501,7 +502,8 @@ noise, and will thus be filtered.
 %similarity measure is calculated and accepted paragraphs pushed onto
 %further processing.
 
-\subsection{Feature Extraction}
+\subsection{NLP Feature Extraction}
+\label{chap:nlpmodel}
 Feature extraction is used as a means to extract unique or otherwise
 relevant information from a document regarding a specific disease. The
 purpose is to built a phrase document matrix similar to the above
@@ -596,7 +598,7 @@ yields the following POS-tagged syntax tree:
   (SYMPTOM Hermansky-Pudlak/JJ syndrome/NN type/NN)
   2/CDmatrix
   is/BEZ
-  a/AT
+  a/ATcleansed 
   (SYMPTOM type/NN)
   of/IN
   (SYMPTOM Hermansky-Pudlak/JJ syndrome/NN)
@@ -617,54 +619,13 @@ of which we are particularly interested in the \texttt{SYMPTOM}
 subtrees. For each existing paragraph or abstract for a given disease, a
 list of phrases and terms are returned for further processing.
 
+The extracted phrases can now be used to built a model equivalent to the
+TF-IDF described in section \ref{chap:basicmodel}.
 
 
-%In order to iterate and collect information to expand the modelling of
-%relevant terms and phrases we use NLP to identify symptoms and medical
-%terms (here-on referred to as just symptom) from abstracts and
-%paragraphs harvested.
-%\todo[inline]{Some more abstractiness!}
+%It is now easy to construct the PF-IDF model equivalent to the TF-IDF
+%described in section \ref{chap:basicmodel}.
 
-%Identifying unique symptoms to use in parallel
-%with the basic model will 
-
-%and correlate with
-%other documents describing the same disease will increase the knowledge,
-%or further substantiate pre-existing knowledge of that disease. The
-%ultimate goal of this strategy is to expand the basic model as a means
-%to focus on medically relevant information.
-
-%While the grammar does not explicitly collect symptoms or medical terms,
-%we attempt to filter out noise by ruling out candidates that are not
-%represented in the above mentioned harvested symptom database of which
-%a PF-IDF matrix can be built and used together with the basic model.
-
-%Chapter \ref{chap:implementation} explains how this technique are
-%implemented and utilized.
-
-%Additionally, while having collected a number of symptom candidates
-%$\mathbb{S}$ from some document or paragraph, we calculate the number of
-%unique terms and return the candidates $\mathbb{S'}$, that appear more
-%than once or is a substring of other candidates. Consider the set of
-%candidates already filtered against the before mentioned database,
-%$\mathbb{S} = $ \texttt{\{bleeding diathesis, bleeding tendency,
-%bleeding, sleep apnae\}}. The system will then count \texttt{bleeding}
-%as well as \texttt{bleeding diathesis} and \texttt{bleeding tendency} as
-%that is a substring of the other two. We will thus accept the symptoms
-%$\mathbb{S'} = $ \texttt{\{bleeding diathesis, bleeding tendency,
-%bleeding\}}.
-
-
-%% \todo[inline]{rewrite}
-%%Using the rule:
-%%\begin{equation}
-%% s_{j}, s_{i} \in \mathbb{S'} ||s_{j}|| > 1 \wedge||s_{i}|| \wedge s_{j} \subset s_{i}, \texttt{for } s_{i}, s_{j} \in \mathbb{S}
-%%\end{equation}
-%%\todo[inline]{valider formel}
-%Anecdotal observations during the development phase of this module
-%showed that returning terms and substrings of terms using this strategy
-%increased the amount of relevant symptoms, and seemed to decrease the
-%amount of noise generated in the symptom harvesting process.
 
 \subsection{Utilizing ICD10 Codes}
 ICD10\footnote{"International Statistical Classification of Diseases and
@@ -692,21 +653,74 @@ subtle parts that separate runner-up candidate predictions. However, though 3335
 \section{Implementation}
 \label{chap:implementation}
 As mentioned previously, a number of different models are constructed to
-give a better foundation for comparison between the models. In
-particular, a basic \textit{unigram} model - noise reduced, an
-\textit{NLP+unigram} model utilizing a consensus ranking scheme across
-two TF-IDF matrices and finally an \textit{ICD10 code} based model is
-constructed and ultimately used for testing and comparison.
+give a better foundation for comparison between the models. Initially,
+we have constructed a large array of various models, both in terms of
+training data, but also model searching and prediction. In the following
+we will highlight the most successful models and describe important
+implementation details and how they differ from one another.
+
+Basic \textit{unigram} models, an \textit{NLP+unigram} model utilizing a
+consensus ranking scheme across two TF-IDF matrices and finally an
+\textit{ICD10} code based model is constructed and ultimately used for
+testing and comparison.
 
 
 \subsection{Unigram}
+The unigram model is initially equivalent to the model used in
+\cite{jensenandersen}, but we built additional models on top of this
+approach. As the construction and usage of these models are essentially
+the same as what is presented in \cite{jensenandersen}, we will not go
+into much detail with specifics in the implementation for each model,
+but rather present an overview of the differences between the models,
+i.e. discuss the differences in the training data, and the improvements
+these made with reference to the results in the appendices.
+
+% We
+%will however, briefly give an overview of how we implemented the model
+%and discuss the differences in the chosen training data, as well as
+%highlight the most significant improvements, with reference to the
+%summaries and results presented in the appendices.
+In essense, the following models are produced using the basic TF-IDF
+method:
+
+\begin{description}
+\item[Unigram] The basic model trained on the Orphanet data set.
+\item[Googled unigram] Model trained on information harvested from
+Google. The Orphanet data set is not part of the training set.
+\item[Googled unigram cleansed] Model cleansed for some noise, in
+particular since we experienced a number of literature references, it
+was important to filter these.
+\item[Googled cleansed/Orphanet unigram] Model using the cleansed
+googled data set in combination with the original Orphanet data set.
+\end{description}
+
+\todo[inline]{discuss differences}
 
 
 \subsection{NLP+Unigram}
-\subsubsection{NLP}
+In order to apply more advanced techniques to the reasonably simple
+models as described in the previous section, we look into consensus
+ranking by using the NLP based model, described in \ref{chap:nlpmodel}.
+The strategy applied in an attempt to utilize N-grams in the search
+queries, without resorting to splitting them to unigrams. As such, we
+turn to the NLP Feature Extraction procedure to build the NLP model over
+all phrases and terms found. The extraction procedure is applied to
+all harvested data for all diseases.
+
+Then we have the models two models $w, w'$, where $w$ is the googled
+cleansed unigram model and $w'$ is the NLP model.
+
+\todo[inline]{Flow model, pseudocode or something to make it more concrete}
+
+%Unfortunately, the results were far from satisfactory, and as
+%illustrated in appendix \ref{app:tfidf_tfidfrecalc} and
+%\ref{app:orphanet_old_new}, where the model is compared to the simply
+%unigram model based on the Orphanet abstracts.
 
 
-\subsection{ICD10 code}
+
+\subsection{ICD10}
+
 
 
 \section{Tests}
@@ -1252,6 +1266,7 @@ all	        &    40   & 17     &   43    &   93.02   &  83.72 \\ \hline
 
 \newpage
 \section{Tests using both a TFIDF unigram and TFIDF NLP model}
+\label{app:tfidf_tfidfrecalc}
 The TFIDF NLP (unigram and nlp consensus) model is compared with the new
 unigram model results listed in section \ref{app:preliminary_results}.
 
@@ -1366,8 +1381,10 @@ all	        &    33   &  39    &   43    & 76.74     & 90.70 \\ \hline
 
 \newpage
 \section{Tests using ICD10 grouping}
-\label{app:orphanet_icd10_icd10recalc}
+\label{app:icd10_icd10recalc}
+
 \subsection{Orphanet}
+\label{app:orphanet_icd10_icd10recalc}
 \begin{center}
 \begin{small}
 	\begin{longtable}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
