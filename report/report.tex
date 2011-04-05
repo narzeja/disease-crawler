@@ -69,11 +69,12 @@
 \begin{abstract}
 In this paper we design and construct models for assisting physicians
 with the task of diagnosing rare diseases. Using a prior knowledge of
-rare diseases consisting of \textit{disease name} and\textit{abstract}, we utilize the \textit{Google Search Engine} to
-harvest additional knowledge to expand the model. [The models are
-constructed using machine learning and natural language processing
-techniques by text mining symptoms and features from abstracts and other
-relevant paragraphs of text found in the search process.]
+rare diseases consisting of \textit{disease name} and \textit{abstract},
+we utilize the \textit{Google Search Engine} to harvest additional
+knowledge to expand the model. [The models are constructed using machine
+learning and natural language processing techniques by text mining
+symptoms and features from abstracts and other relevant paragraphs of
+text found in the search process.]
 \todo[inline]{Tests and results}
 
 \end{abstract}
@@ -304,13 +305,39 @@ at this point in time \cite{radupaula}.
 
 \section{Method}
 \label{chap:method}
-\todo[inline]{Give a proper introduction to chapter}
+In the following, the methods used to compute the various models will be
+explained at a high abstraction level. We will highlight the basic model
+used to compute unigram models, similar to that presented in
+\cite{jensenandersen}, present the use of Natural Language Processing
+techniques to allow extracting specific knowledge to built an NLP based
+model or tailored N-gram model. Finally we will highlight the use of
+ICD10 codes to categorise related diseases.
+
+The application of and concrete implementation specific details of the
+final models will be explained in section \ref{chap:implementation}.
 
 
-Data received from Orphanet, an online database of information
-specialised on rare diseases, is initially used as prior knowledge to
-harvest additional information from the Internet.
+\subsection{General Procedure}
+To get an overview of how to build any model, the general procedure will
+be explained in this section.
+Ultimately, the needed tools for building the model is
+\begin{description}
+\item[data set] for much of our purpose, we utilize data acquired from
+Orphanet.
+\item[mathematical model] We will use the TF-IDF model as a basis, and
+from this offset develop specific methods to improve the results.
+\end{description}
 
+Additionally, we look into using an information gatherer to expand the
+knowledge of the given data set. Using the Google Search engine allows
+us to harvest information from a large range of websites with reasonable
+ease.
+
+
+%To establish a foundation for expanding the knowledge of rare diseases
+%the data received from Orphanet, an online database of information
+%specialised on rare diseases, is initially used as prior knowledge to
+%harvest additional information from the Internet.
 
 %As one of the premises of the project was to introduce prior knowledge
 %of the disease model, we needed to process our available data. We were
@@ -318,7 +345,6 @@ harvest additional information from the Internet.
 %consisting of \texttt{\{orphanum, disease name, disease
 %description/abstract, maybe author and date\}} for each disease in the
 %data set.\todo[inline]{Rewrite this nonsense.}
-
 
 The data is processed similar to what is described in
 \cite{jensenandersen}, and will thus be used to bootstrap the knowledge
@@ -344,24 +370,26 @@ The abstract flow model is shown in figure \ref{fig:flow}.
 \end{center}
 \end{figure}
 
-[As several individual models are being constructed, we will highlight
-the most important cornerstones of all the methods used independently
-across all the models.
-We initialise by explaining how the basic model is constructed and how
-we have refined it into a number of proof of concept models.]
-\todo[inline]{rewrite previous to make sense and put it in context}
+%[As several individual models are being constructed, we will highlight
+%the most important cornerstones of all the methods used independently
+%across all the models.
+%We initialise by explaining how the basic model is constructed and how
+%we have refined it into a number of proof of concept models.]
+%\todo[inline]{rewrite previous to make sense and put it in context}
 
 %\todo[inline]{Something N-gram machine learning here.}
 
-\subsection{Building the basic model}
+\subsection{Building the TF-IDF model}
 \label{chap:basicmodel}
-The basic model is built using the prior information available
-from Orphanet. The TF-IDF model is essentially identical to the model
-constructed in \cite{jensenandersen}. While \cite{jensenandersen} used
-information gathered by automatically searching the Pubmed online
-database \footnote{\url{http://www.ncbi.nlm.nih.gov/pubmed/}}, prone to
-contain irrelevant information, we use validated abstracts provided by
-Orphanet.
+The TF-IDF model is built using the prior information available
+from Orphanet. The models in this project are at an abstract level
+identical to the model constructed in \cite{jensenandersen}. While
+\cite{jensenandersen} used information gathered by automatically
+searching the Pubmed online database
+\footnote{\url{http://www.ncbi.nlm.nih.gov/pubmed/}}, prone to contain
+irrelevant information, we use validated abstracts provided by Orphanet,
+data gathered by using Google and subsequently filtered with various
+NLP techniques.
 
 
 %To perform the initial testing we mimicked the setup of
@@ -369,15 +397,15 @@ Orphanet.
 %(abstracts,titles, keywords) gathered form Pubmed.
 
 %A sparse term-disease matrix (similar to the well-known term-document
-%model) is built over the abstracts received from Orphanet. 
-Each row in the matrix thus represents a feature vector of a disease
-with the features being a list of term frequencies. Prior to the
+%model) is built over the abstracts received from Orphanet.
+Each row in the matrix, representing the model, is a feature vector of a
+disease with the features being a list of term frequencies. Prior to the
 creation of the matrix, the terms are stemmed (using the Porter stemming
 algorithm \cite{porterstemming}) and stopwords \footnote{The stopwords
 are defined by a list of 127 English words provided by the Python NLTK
 library (\texttt{nltk.corpus.stopwords.words("english")}} along with
-non-alphanumerical\footnote{Characters that do not contain the value of a number or a letter.} Symbols not represented in the Danish
-Alphabet} symbols are removed.
+non-alphanumerical\footnote{Characters that do not contain the value of
+a number or a letter.} symbols are removed.
 
 Stemming a word involves reducing it to its most basic form or root,
 removing morphological and inflectional endings from the words. E.g.
@@ -707,8 +735,8 @@ turn to the NLP Feature Extraction procedure to build the NLP model over
 all phrases and terms found. The extraction procedure is applied to
 all harvested data for all diseases.
 
-Then we have the models two models $w, w'$, where $w$ is the googled
-cleansed unigram model and $w'$ is the NLP model.
+Then we have the two models $w, w'$, where $w$ is the googled cleansed
+unigram model and $w'$ is the NLP model.
 
 \todo[inline]{Flow model, pseudocode or something to make it more concrete}
 
