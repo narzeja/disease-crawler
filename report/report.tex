@@ -5,7 +5,7 @@
 \usepackage[british]{babel}
 \usepackage{hyperref}
 \setcounter{tocdepth}{3}
-\usepackage[draft]{fixme}
+%\usepackage[draft]{fixme}
 \usepackage{abstract}
 \usepackage{todonotes}
 \usepackage{longtable}
@@ -75,7 +75,13 @@ knowledge to expand the model. [The models are constructed using machine
 learning and natural language processing techniques by text mining
 symptoms and features from abstracts and other relevant paragraphs of
 text found in the search process.]
-\todo[inline]{Tests and results}
+
+Our models can place up to 86\% of the diseases within the top 5
+predicted results and 95\% in top 20 by using data gathered using Google
+as well as using prior information, based on 43 test cases.
+
+By using ICD10 code categorisation we can get 85\% in top 5 and 92\% in
+top 20, by only using data gathered using Google based on 39 test cases.
 
 \end{abstract}
 %%-----------------------------
@@ -109,10 +115,14 @@ utilizing the following external modules:
 \item sqlite3, Ubuntu repository module: \texttt{python-sqlite}
 \end{itemize}
 
+The full test descriptions along with search queries are likewise
+available at the above mentioned repository. The results for the tests
+are available in the appendices.
+
 \subsection{How-to}
 \paragraph{Building a model: }
 
-\paragraph{Querying the model: }
+\paragraph{Querying a model: }
 
 \paragraph{Interpreting the result: }
 
@@ -1054,7 +1064,7 @@ the ability to train the model, rather the ability to predict.)
     \hline\hline
     Apparent mineralocorticoid excess &1 & 10\\    \hline
     Rubinstein-Taybi syndrome  & 1 & 91\\    \hline
-    Cholestasis - lymphedema  (Aagenaes syndrome) 1 & 18\\    \hline
+    Cholestasis - lymphedema  (Aagenaes syndrome) & 1 & 18\\    \hline
     Aase-Smith syndrome  & 2 & 10\\    \hline
     Achondroplasia  & 1 & 5\\    \hline
     Acalvaria  &  1 & 87\\    \hline
@@ -1110,9 +1120,9 @@ the ability to train the model, rather the ability to predict.)
 	\textbf{Disease} & \textbf{Rank (new unigrma)} & \textbf{Rank (old unigram)} \\
     \hline\hline
     Cushing syndrome & 3 & 2 \\    \hline
-    Eosinophilic granuloma & \textit{Not in the model} & 598 \\    \hline
-    Ehrlichiosis & \textit{Not in the model} & 512 \\    \hline
-    Neurofibromatosis type 1 & \textit{Not in the model} & 30 \\    \hline
+%    Eosinophilic granuloma & \textit{Not in the model} & 598 \\    \hline
+%    Ehrlichiosis & \textit{Not in the model} & 512 \\    \hline
+%    Neurofibromatosis type 1 & \textit{Not in the model} & 30 \\    \hline
     Hereditary pheochromocytoma-paraganglioma syndrome & 10 & 414\\    \hline
     Creutzfeldt-Jakob disease & 196 & 7\\    \hline
     Churg-Strauss syndrome & 3 & 2\\    \hline
