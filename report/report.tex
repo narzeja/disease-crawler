@@ -736,7 +736,7 @@ googled data set in combination with the original Orphanet data set.
 \end{description}
 
 Results in the appendices suggests an increased precision as the models
-are expanded with additional and cleansed for noise. As such, models 3
+are expanded with additional information and cleansed for noise. As such, models 3
 and 4 will be used in combination with the NLP model and ICD10 grouping,
 explained in the following sections.
 
@@ -745,18 +745,15 @@ explained in the following sections.
 \subsection{NLP+Unigram}
 In order to apply more advanced techniques to the reasonably simple
 models as described in the previous section, we look into consensus
-ranking by using the NLP based model, described in \ref{chap:nlpmodel}.
+ranking by using the NLP based model (described in \ref{chap:nlpmodel}) and the Unigram model.
 The strategy applied in an attempt to utilize N-grams in the search
 queries, without resorting to splitting them to unigrams. As such, we
 turn to the NLP Feature Extraction procedure to build the NLP model over
 all phrases and terms found. The extraction procedure is applied to
 all harvested data for all diseases.
 
-Then we have the two models $w, w'$, where $w$ is the googled cleansed
-unigram model and $w'$ is the NLP model.
-
-
-Algorithm \ref{alg:nlpunigram} provides pseudo code of the NLP+Unigram
+We thus have the two models $w, w'$, where $w$ is the googled cleansed
+unigram model and $w'$ is the NLP model. Algorithm \ref{alg:nlpunigram} provides pseudo code of the NLP+Unigram
 model.
 
 \begin{algorithm}
@@ -803,15 +800,17 @@ using the N-gram model. \ding{111}\newline
 %unigram model based on the Orphanet abstracts.
 
 \subsection{ICD10 subspaces}
-As presented in \ref{chap:icd10method}, we want to test the possibility of clustering
+As presented in \ref{chap:icd10method}, we want to test the posibility of clustering
 the data using the ICD10 codes provided by Orphanet. 
+
+% Forklar ""2 en eller ingen ICD10 koder...""
 
 The first step is choose the depth of the clustering and how many groups that should
 be included in the reduced search-space. Since we only have a couple of thousand 
 diseases and only one, two or none diseases for each full ICD10 code, we choose the
-highest level (e.i. the broadest disease categories) possible - namely the first letter
+highest level (i.e. the broadest disease categories) possible - namely the first letter
 of the code. Diseases are thus divided into \textit{categories} such as \textit{'G: Diseases of the nervous system'}
-and \textit{'I: Diseases of the circulatory system'} and so forth. To represent a
+and \textit{'I: Diseases of the circulatory system'} and so forth\footnote{For a complete list of ICD10 codes, see http://www.icd10data.com/ICD10CM/Codes}. To represent a
 category a single feature vector is created by a summation of all the feature vectors of 
 the given category. This will flatten the entire TF-IDF matrix to a matrix consisting
 of 23 categorized feature vectors\footnote{The number of overall categories in the ICD10 hierarchy.}. 
@@ -827,7 +826,7 @@ the reduced search-space are found by
 \end{enumerate}
 The reason for picking as many as three categories for each term is that a term or symptom will often fall into several categories. To increase the precision high fragmentation of the clusters should be made, so that the category 'A' would be split into 'A0','A1',etc. (or even 'A00.1'). This, however, requries more knowlegde of the ICD10 domains than our system currently support. 
 
-Though we in general end up selecting nearly half of all categories, we still reduce the search-space to some effect. 
+Though we in general end up selecting nearly half of all categories, we still reduce the search-space to some extend and thereby limit ourselves to a more refined search (roughly speaking we want to look neoplasms (cancer) if we locate a tumor, and not cardiac diseases).
 
 Finally, the best results are obtained by running the TF-IDF algorithm (same version as in \ref{chap:unigrammethod}) on the reduced search-space to enhance the more
 subtle parts of each disease-candidate.
