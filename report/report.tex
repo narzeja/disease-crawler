@@ -781,16 +781,21 @@ model.
 \end{algorithm}
 
 Using this consensus method allows us to exploit confirmed n-gram
-symptoms as opposed to simply using unigrams. Consider the phrase
-\textit{something very long}, using only the unigram model will prohibit
-us from exploiting the context and composition of the particular
-symptom, and may skewer the result, as the subterms \textit{something},
-\textit{very} and \textit{long} would be a misrepresentation of the
-overall symptom or search query... more to come...
+symptoms as opposed to simply using unigrams.
 
-%\paragraph{Example} Consider the query $Q = \{thickened blood, neutropenia\}$
-
-%\ding{111}\newline
+\paragraph{Example} Consider the phrase \textit{chronic back pain}.
+Using only the unigram model will prohibit us from exploiting the
+context and composition of the particular symptom, and may skewer the
+result, as the subterms \textit{chronic}, \textit{back} and
+\textit{pain} would be a misrepresentation of the overall symptom or
+search query. Utilizing the exact phrase in the NLP model would, by
+our estimations, return a much better prediction, as the exact symptom
+would be matched, rather than terms that can essentially be fractions of
+other arbitrary permutations like \textit{tooth pain}. As such, diseases
+containing both \textit{chronic back pain} and \textit{tooth pain} would
+be highlighted by using the unigrams, e.g. \textit{pain}, where as only
+the disease containing \textit{chronic back pain} would be highlighted
+using the N-gram model. \ding{111}\newline
 
 %Unfortunately, the results were far from satisfactory, and as
 %illustrated in appendix \ref{app:tfidf_tfidfrecalc} and
