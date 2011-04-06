@@ -706,8 +706,8 @@ testing and comparison.
 
 \subsection{Unigram}
 \label{chap:unigrammethod}
-The unigram model is initially equivalent to the model used in
-\cite{jensenandersen}, but we build additional models on top of this
+The unigram model is initially equivalent to the bag-of-words model used in
+\cite{jensenandersen} and in the following we will add new layers on top of this
 approach. As the construction and usage of these models are essentially
 the same as what is presented in \cite{jensenandersen}, we will not go
 into much detail with specifics in the implementation for each model,
@@ -757,7 +757,7 @@ unigram model and $w'$ is the NLP model.
 %\ref{app:orphanet_old_new}, where the model is compared to the simply
 %unigram model based on the Orphanet abstracts.
 
-\subsection{ICD10}
+\subsection{ICD10 subspaces}
 As presented in \ref{chap:icd10method}, we want to test the possibility of clustering
 the data using the ICD10 codes provided by Orphanet. 
 
@@ -780,7 +780,7 @@ the reduced search-space are found by
     \item for each term saving the category of the three feature vectors having the lowest term-index (remembering the the vectors are sorted by term-importance),
     \item and finally letting the reduced search-space consist of the feature vectors for all diseases falling within the category of the total set of candidates found in step 2.
 \end{enumerate}
-The reason for picking as many as three categories for each term that a term or symptom will often fall into several categories. To increase the precision high fragmentation of the clusters should be made, so that the category 'A' would be split into 'A0','A1',etc. (or even 'A00.1'). This, however, requries more knowlegde of the ICD10 domains than our system currently support. 
+The reason for picking as many as three categories for each term is that a term or symptom will often fall into several categories. To increase the precision high fragmentation of the clusters should be made, so that the category 'A' would be split into 'A0','A1',etc. (or even 'A00.1'). This, however, requries more knowlegde of the ICD10 domains than our system currently support. 
 
 Though we in general end up selecting nearly half of all categories, we still reduce the search-space to some effect. 
 
