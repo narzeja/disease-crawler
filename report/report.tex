@@ -666,6 +666,7 @@ TF-IDF described in section \ref{chap:basicmodel}.
 
 
 \subsection{Utilizing ICD10 Codes}
+\label{chap:icd10method}
 ICD10\footnote{"International Statistical Classification of Diseases and
 Related Health Problems"-10th revision.} codes from Orphanet represents
 a hierarchical structured coding of the category of the disease. As an
@@ -704,6 +705,7 @@ testing and comparison.
 
 
 \subsection{Unigram}
+\label{chap:unigrammethod}
 The unigram model is initially equivalent to the model used in
 \cite{jensenandersen}, but we built additional models on top of this
 approach. As the construction and usage of these models are essentially
@@ -755,11 +757,35 @@ unigram model and $w'$ is the NLP model.
 %\ref{app:orphanet_old_new}, where the model is compared to the simply
 %unigram model based on the Orphanet abstracts.
 
-
-
 \subsection{ICD10}
+As presented in \ref{chap:icd10method}, we want to test the possibility of clustering
+the data using the ICD10 codes provided by Orphanet. 
 
+The first step is choose the depth of the clustering and how many groups that should
+be included in the reduced search-space. Since we only have a couple of thousand 
+diseases and only one, two or none diseases for each full ICD10 code, we choose the
+highest level (e.i. the broadest disease categories) possible - namely the first letter
+of the code. Diseases are thus divided into \textit{categories} such as \textit{'G: Diseases of the nervous system'}
+and \textit{'I: Diseases of the circulatory system'} and so forth. To represent a
+category a single feature vector is created by a summation of all the feature vectors of 
+the given category. This will flatten the entire TF-IDF matrix to a matrix consisting
+of 23 categorized feature vectors\footnote{The number of overall categories in the ICD10 hierarchy.}. 
+Finally the vectors are sorted by term-score thus letting the vector run from
+the most to the least important terms.
 
+A diagnostic query is then given the reduced feature-space. For a given diagnostic query,
+the reduced search-space are found by
+\begin{enumerate}
+    \item for each term locating all feature vectors containing the term,
+    \item for each term saving the category of the three feature vectors having the lowest term-index (remembering the the vectors are sorted by term-importance),
+    \item and finally letting the reduced search-space consist of the feature vectors for all diseases falling within the category of the total set of candidates found in step 2.
+\end{enumerate}
+The reason for picking as many as three categories for each term that a term or symptom will often fall into several categories. To increase the precision high fragmentation of the clusters should be made, so that the category 'A' would be split into 'A0','A1',etc. (or even 'A00.1'). This, however, requries more knowlegde of the ICD10 domains than our system currently support. 
+
+Though we in general end up selecting nearly half of all categories, we still reduce the search-space to some effect. 
+
+Finally, the best results are obtained by running the TF-IDF algorithm (same version as in \ref{chap:unigrammethod}) on the reduced search-space to enhance the more
+subtle parts of each disease-candidate.
 
 \section{Tests}
 \label{chap:test}
