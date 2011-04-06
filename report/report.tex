@@ -760,16 +760,18 @@ model.
 \caption{Pseudo-code for NLP+Unigram model (comments are in brackets)}
 \begin{algorithmic}
 
-\STATE $Q=[t_{1}, t_{2}, ... t_{n}]$ \COMMENT{$Q$ a list of N-gram search terms}
-\STATE $w = Unigram model$
-\STATE $w' = NLP model$
+\STATE $Q \gets [t_{1}, t_{2}, ... t_{n}]$ \COMMENT{$Q$ a list of N-gram search terms}
+\STATE $w \gets$ unigram model
+\STATE $w' \gets$ NLP model
 \FORALL{$t_{i}$ in Q}
     \IF {$t_{i}$ in $w'$}
-        \STATE $s' = get\_disease\_ranks(w')$ \COMMENT{$s$ and $s'$ are vectors of summed scores for each disease}
-    \ELSE
-        \STATE $s = get\_diseases\_ranks(w)$
+        \STATE $s \gets accumulate\_disease\_ranks(w', t_{i})$ \COMMENT{$s$ and $s'$ are vectors of summed scores for each disease}
     \ENDIF
-    \STATE $S = s + s'$
+    \STATE $t' \gets split(t_{i})$ %\COMMENT{N-gram search term is split to unigrams}
+    \FORALL{$t'_{j}$ in $t'$}
+        \STATE $s' \gets accumulate\_diseases\_ranks(w, t'_{j})$
+    \ENDFOR
+    \STATE $S \gets s + s'$
 \ENDFOR
 \RETURN $S$ as list\_of\_disease\_predictions
 
@@ -783,16 +785,16 @@ symptoms as opposed to simply using unigrams.
 \paragraph{Example} Consider the phrase \textit{chronic back pain}.
 Using only the unigram model will prohibit us from exploiting the
 context and composition of the particular symptom, and may skewer the
-result, as the subterms \textit{chronic}, \textit{back} and
-\textit{pain} would be a misrepresentation of the overall symptom or
-search query. Utilizing the exact phrase in the NLP model would, by
-our estimations, return a much better prediction, as the exact symptom
-would be matched, rather than terms that can essentially be fractions of
-other arbitrary permutations like \textit{tooth pain}. As such, diseases
-containing both \textit{chronic back pain} and \textit{tooth pain} would
-be highlighted by using the unigrams, e.g. \textit{pain}, where as only
-the disease containing \textit{chronic back pain} would be highlighted
-using the N-gram model. \ding{111}\newline
+result, as the terms \textit{chronic}, \textit{back} and \textit{pain}
+would be a misrepresentation of the overall symptom or search query.
+Utilizing the exact phrase in the NLP model would, by our estimations,
+return a much better prediction, as the exact symptom would be matched,
+rather than terms that can essentially be fractions of other arbitrary
+permutations like \textit{tooth pain}. As such, diseases containing both
+\textit{chronic back pain} and \textit{tooth pain} would be highlighted
+by using the unigrams, e.g. \textit{pain}, where as only the disease
+containing \textit{chronic back pain} would be highlighted using the
+N-gram model. \ding{111}\newline
 
 %Unfortunately, the results were far from satisfactory, and as
 %illustrated in appendix \ref{app:tfidf_tfidfrecalc} and
@@ -813,7 +815,7 @@ of the code. Diseases are thus divided into \textit{categories} such as \textit{
 and \textit{'I: Diseases of the circulatory system'} and so forth\footnote{For a complete list of ICD10 codes, see http://www.icd10data.com/ICD10CM/Codes}. To represent a
 category a single feature vector is created by a summation of all the feature vectors of 
 the given category. This will flatten the entire TF-IDF matrix to a matrix consisting
-of 23 categorized feature vectors\footnote{The number of overall categories in the ICD10 hierarchy.}. 
+of 23 categorised feature vectors\footnote{The number of overall categories in the ICD10 hierarchy.}. 
 Finally the vectors are sorted by term-score thus letting the vector run from
 the most to the least important terms.
 
