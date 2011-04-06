@@ -12,6 +12,8 @@
 \usepackage{amsmath}
 \usepackage{pifont}
 \usepackage{caption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
 %% FONT
 %\usepackage[T1]{fontenc}
@@ -720,21 +722,24 @@ these made with reference to the results in the appendices.
 %and discuss the differences in the chosen training data, as well as
 %highlight the most significant improvements, with reference to the
 %summaries and results presented in the appendices.
-In essense, the following models are produced using the basic TF-IDF
-method:
+In essence, the following models are produced using the basic TF-IDF
+method as described in \ref{chap:unigrammethod}:
 
 \begin{description}
-\item[Unigram] The basic model trained on the Orphanet data set.
-\item[Googled unigram] Model trained on information harvested from
+\item[1. Unigram] The basic model trained on the Orphanet data set.
+\item[2. Googled unigram] Model trained on information harvested from
 Google. The Orphanet data set is not part of the training set.
-\item[Googled unigram cleansed] Model cleansed for some noise, in
-particular since we experienced a number of literature references, it
-was important to filter these.
-\item[Googled cleansed/Orphanet unigram] Model using the cleansed
+\item[3. Googled unigram cleansed] Model cleansed for literature
+references.
+\item[4. Googled cleansed/Orphanet unigram] Model using the cleansed
 googled data set in combination with the original Orphanet data set.
 \end{description}
 
-\todo[inline]{discuss differences}
+Results in the appendices suggests an increased precision as the models
+are expanded with additional and cleansed for noise. As such, models 3
+and 4 will be used in combination with the NLP model and ICD10 grouping,
+explained in the following sections.
+
 
 
 \subsection{NLP+Unigram}
@@ -750,7 +755,42 @@ all harvested data for all diseases.
 Then we have the two models $w, w'$, where $w$ is the googled cleansed
 unigram model and $w'$ is the NLP model.
 
-\todo[inline]{Flow model, pseudocode or something to make it more concrete}
+
+Algorithm \ref{alg:nlpunigram} provides pseudo code of the NLP+Unigram
+model.
+
+\begin{algorithm}
+\caption{Pseudo-code for NLP+Unigram model (comments are in brackets)}
+\begin{algorithmic}
+
+\STATE $Q=[t_{1}, t_{2}, ... t_{n}]$ \COMMENT{$Q$ a list of N-gram search terms}
+\STATE $w = Unigram model$
+\STATE $w' = NLP model$
+\FORALL{$t_{i}$ in Q}
+    \IF {$t_{i}$ in $w'$}
+        \STATE $s' = get\_disease\_ranks(w')$ \COMMENT{$s$ and $s'$ are vectors of summed scores for each disease}
+    \ELSE
+        \STATE $s = get\_diseases\_ranks(w)$
+    \ENDIF
+    \STATE $S = s + s'$
+\ENDFOR
+\RETURN $S$ as list\_of\_disease\_predictions
+
+\end{algorithmic}
+\label{alg:nlpunigram}
+\end{algorithm}
+
+Using this consensus method allows us to exploit confirmed n-gram
+symptoms as opposed to simply using unigrams. Consider the phrase
+\textit{something very long}, using only the unigram model will prohibit
+us from exploiting the context and composition of the particular
+symptom, and may skewer the result, as the subterms \textit{something},
+\textit{very} and \textit{long} would be a misrepresentation of the
+overall symptom or search query... more to come...
+
+%\paragraph{Example} Consider the query $Q = \{thickened blood, neutropenia\}$
+
+%\ding{111}\newline
 
 %Unfortunately, the results were far from satisfactory, and as
 %illustrated in appendix \ref{app:tfidf_tfidfrecalc} and
@@ -1670,4 +1710,5 @@ all	        &    41   &  40    &   43    &   95.35   & 93.02 \\ \hline
 \end{small}
 \end{center}
 
-\end{document}
+\end{document}\usepackage{algorithm}
+\usepackage{algorithmic}
