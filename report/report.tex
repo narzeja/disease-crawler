@@ -73,18 +73,18 @@ In this paper we design and construct models for assisting physicians
 with the task of diagnosing rare diseases. Using a prior knowledge of
 rare diseases consisting of \textit{disease name} and \textit{abstract},
 we utilize the \textit{Google Search Engine} to harvest additional
-knowledge to expand the model. [The models are constructed using machine
-learning and natural language processing techniques by text mining
-symptoms and features from abstracts and other relevant paragraphs of
-text found in the search process.]
+knowledge of 3882 rare diseases to expand the model. Using various
+techniques, ranging from data set noise reduction, to Machine
+Learning and Natural Language Processing are applied in order to
+construct different models and subsequently compare them in terms of
+prediction precision.
 
-Our models can place up to 86\% of the diseases within the top 5
-predicted results and 95\% in top 20 by using data gathered using Google
-as well as using prior information, based on 43 test cases.
-
-By using ICD10 code categorisation we can get 85\% in top 5 and 92\% in
-top 20, by only using data gathered using Google based on 39 test cases.
-
+\paragraph{Results: }The most successful approach (Orphanet Abstracts+Noise Reduced googled
+data with TFIDF modelling) places 86\% (37 out of 43) of the diseases
+within the top 5 predicted results and 95\% (41 out of 43) within top
+20. The model is based on harvested information and prior information
+(abstracts from Orphanet), and is implemented using a basic \textit{Term
+Frequency - Inverse Document Frequency} model.
 \end{abstract}
 %%-----------------------------
 %\newpage
@@ -121,12 +121,12 @@ The full test descriptions along with search queries are likewise
 available at the above mentioned repository. The results for the tests
 are available in the appendices.
 
-\subsection{How-to}
-\paragraph{Building a model: }
+%\subsection{How-to}
+%\paragraph{Building a model: }
 
-\paragraph{Querying a model: }
+%\paragraph{Querying a model: }
 
-\paragraph{Interpreting the result: }
+%\paragraph{Interpreting the result: }
 
 
 \section{Introduction}
@@ -149,17 +149,16 @@ practising physician can query a case report or a number of search terms
 and get a list of disease predictions based on the knowledge of the
 model.
 
-The basic model is constructed given information of 3882 diseases\footnote{We have chosen not to discriminate between diseases groups of diseases.}, with
-corresponding abstract or disease group information. This information,
-together with the disease name and other relevant terms are used to
-harvest the Internet for related information to expand the knowledge of
-that particular disease.
+The basic model is constructed given information of 3882 diseases
+\footnote{We have chosen not to discriminate between diseases groups of
+diseases.}, with corresponding abstract or disease group information.
+This information, together with the disease name and other relevant
+terms are used to harvest the Internet for related information to expand
+the knowledge of that particular disease.
 
 A number of post-processing techniques are now applied to the basic
 model to develop the final proof of concept models, based on different
 characteristics and processing strategies.
-
-\todo[inline]{More!}
 
 
 % The models are sketched as
@@ -249,7 +248,9 @@ tests. We will finally propose a number of topics for future work.
 The article \cite{googlingdiagnosis} assesses the viability of using
 Google as a diagnosis aid, despite the tests being done manually with
 little consideration with regard to automation or test reliability and
-validity. \todo[inline]{Present their results}
+validity. Their method yield a correct diagnosis in 15 (58\%, 95\%
+confidence interval 38\% to 77\%) cases.
+
 
 \cite{jensenandersen} proposed a system for diagnosing rare diseases
 using vector space models and text mining. They showed a potential in
@@ -371,13 +372,19 @@ save it for further processing.
 %accepted paragraph we use NLP to identify candidates for relevant terms
 %and phrases that will then be used to expand the model. 
 
-The abstract flow model is shown in figure \ref{fig:flow}.
-\todo[inline]{Describe the model}
+The abstract flow model is shown in figure \ref{fig:flow}. The data set
+is processed (cleansed for noise, NLP, etc.) and fed into the modelling
+procedure (TF-IDF or similar). The model is then expanded using various
+searching strategies, in this case using Google, where the data set is
+feature extracted, processed, and fed into a new modelling procedure.
+This iterative approach is initiated until a reasonable amount of data
+is collected. In this project, only one iteration of using the Google
+search engine per disease is executed.
 
 \begin{figure}[htp!]
 \begin{center}
 \includegraphics[scale=0.4]{images/pipeline}
-\caption{Systems diagram}
+\caption{Systems diagram.}
 \label{fig:flow}
 \end{center}
 \end{figure}
@@ -428,7 +435,7 @@ walking, walker, walks have the affixes \textit{-ing}, \textit{-er} and
 The term-disease matrix is then processed using the
 TF-IDF model (as originally proposed by \cite{tfidf}) along with
 additional logarithmic smoothing of the $tf_{t,d}$-parameter to flatten
-term-burstiness (\cite{burstiness}) \todo[inline]{Why is this smoothing good?}.
+term-burstiness (\cite{burstiness}).
 
 The TF-IDF model is thus constructed as following:
 \[
@@ -489,7 +496,11 @@ from Orphanet \ref{app:preliminary_results}.
 
 
 \subsection{Harvesting data}
-\todo[inline]{placeholder: In order to blablabla...}
+Initially, we believe we can use Google or other search engines to
+expand to knowledge for the set of diseases. Ultimately, basing the
+prediction on only one abstract per disease feels small, and the
+opportunity to expand the knowledge with reasonable ease is too good to
+miss.
 
 Harvesting additional data to expand the basic model is done using the
 Google search engine. For each site returned from the query, i.e.
@@ -686,9 +697,14 @@ subspace, the model can be fine-tuned to locate subtle features or
 symptoms in the symptomatic query of the reduced set of diseases.
 Intuitively, reusing the TFIDF scheme on the reduced space should
 reduce the importance of main features or symptoms and enhance the more
-subtle parts that separate runner-up candidate predictions. However, though 3335 ICD10 codes were received from Orphanet (in total
- representing 3137 unique rare diseases), only 50.05\% of the ICD10-coded diseases were also
- represented in the used data set (diseases containing Orphanet abstracts). Improved results achieved through the use of a ICD10-scheme would thus be invalidated (in a comparative sense) by an overall reduction of the data set. Nonetheless, tests are made to indicate the possibilities of such a model.
+subtle parts that separate runner-up candidate predictions. However,
+though 3335 ICD10 codes were received from Orphanet (in total
+representing 3137 unique rare diseases), only 50.05\% of the ICD10-coded
+diseases were also represented in the used data set (diseases containing
+Orphanet abstracts). Improved results achieved through the use of a
+ICD10-scheme would thus be invalidated (in a comparative sense) by an
+overall reduction of the data set. Nonetheless, tests are made to
+indicate the possibilities of such a model.
 
 
 \section{Implementation}
@@ -726,12 +742,12 @@ In essence, the following models are produced using the basic TF-IDF
 method as described in \ref{chap:unigrammethod}:
 
 \begin{description}
-\item[1. Unigram] The basic model trained on the Orphanet data set.
-\item[2. Googled unigram] Model trained on information harvested from
+\item[A. Unigram] The basic model trained on the Orphanet data set.
+\item[B. Googled unigram] Model trained on information harvested from
 Google. The Orphanet data set is not part of the training set.
-\item[3. Googled unigram cleansed] Model cleansed for literature
+\item[C. Googled unigram cleansed] Model cleansed for literature
 references.
-\item[4. Googled cleansed/Orphanet unigram] Model using the cleansed
+\item[D. Googled cleansed/Orphanet unigram] Model using the cleansed
 googled data set in combination with the original Orphanet data set.
 \end{description}
 
@@ -753,8 +769,8 @@ all phrases and terms found. The extraction procedure is applied to
 all harvested data for all diseases.
 
 We thus have the two models $w, w'$, where $w$ is the googled cleansed
-unigram model and $w'$ is the NLP model. Algorithm \ref{alg:nlpunigram} provides pseudo code of the NLP+Unigram
-model.
+unigram model and $w'$ is the NLP model. Algorithm \ref{alg:nlpunigram}
+provides pseudo code of the NLP+Unigram model.
 
 \begin{algorithm}
 \caption{Pseudo-code for NLP+Unigram model (comments are in brackets)}
@@ -792,9 +808,10 @@ return a much better prediction, as the exact symptom would be matched,
 rather than terms that can essentially be fractions of other arbitrary
 permutations like \textit{tooth pain}. As such, diseases containing both
 \textit{chronic back pain} and \textit{tooth pain} would be highlighted
-by using the unigrams, e.g. \textit{pain}, where as only the disease
-containing \textit{chronic back pain} would be highlighted using the
-N-gram model. \ding{111}\newline
+by using the unigrams, e.g. \textit{pain}, where as using the disease
+containing \textit{chronic back pain} would be highlighted furter from
+using the N-gram model, thus increasing the rank of the correct disease.
+\ding{111}\newline
 
 %Unfortunately, the results were far from satisfactory, and as
 %illustrated in appendix \ref{app:tfidf_tfidfrecalc} and
@@ -802,8 +819,9 @@ N-gram model. \ding{111}\newline
 %unigram model based on the Orphanet abstracts.
 
 \subsection{ICD10 subspaces}
-As presented in \ref{chap:icd10method}, we want to test the posibility of clustering
-the data using the ICD10 codes provided by Orphanet. 
+As presented in \ref{chap:icd10method}, we want to test the possibility
+of classifying diseases using the ICD10 codes provided by Orphanet, by
+using a k-nearest neighbour classifier.
 
 % Forklar ""2 en eller ingen ICD10 koder...""
 
@@ -819,38 +837,64 @@ of 23 categorised feature vectors\footnote{The number of overall categories in t
 Finally the vectors are sorted by term-score thus letting the vector run from
 the most to the least important terms.
 
-A diagnostic query is then given the reduced feature-space. For a given diagnostic query,
-the reduced search-space are found by
+A diagnostic query is then given the reduced feature-space. For a given
+diagnostic query, the reduced search-space are found by
 \begin{enumerate}
     \item for each term locating all feature vectors containing the term,
     \item for each term saving the category of the three feature vectors having the lowest term-index (remembering the the vectors are sorted by term-importance),
     \item and finally letting the reduced search-space consist of the feature vectors for all diseases falling within the category of the total set of candidates found in step 2.
 \end{enumerate}
-The reason for picking as many as three categories for each term is that a term or symptom will often fall into several categories. To increase the precision high fragmentation of the clusters should be made, so that the category 'A' would be split into 'A0','A1',etc. (or even 'A00.1'). This, however, requries more knowlegde of the ICD10 domains than our system currently support. 
+The reason for picking as many as three categories for each term is that
+a term or symptom will often fall into several categories. To increase
+the precision high fragmentation of the clusters should be made, so that
+the category 'A' would be split into 'A0','A1',etc. (or even 'A00.1').
+This, however, requries more knowlegde of the ICD10 domains than our
+system currently support. 
 
-Though we in general end up selecting nearly half of all categories, we still reduce the search-space to some extend and thereby limit ourselves to a more refined search (roughly speaking we want to look neoplasms (cancer) if we locate a tumor, and not cardiac diseases).
+Though we in general end up selecting nearly half of all categories, we
+still reduce the search-space to some extend and thereby limit ourselves
+to a more refined search (roughly speaking we want to look neoplasms
+(cancer) if we locate a tumor, and not cardiac diseases).
 
-Finally, the best results are obtained by running the TF-IDF algorithm (same version as in \ref{chap:unigrammethod}) on the reduced search-space to enhance the more
-subtle parts of each disease-candidate.
+Finally, the best results are obtained by running the TF-IDF algorithm
+(same version as in \ref{chap:unigrammethod}) on the reduced
+search-space to enhance the more subtle parts of each disease-candidate.
 
 \section{Tests}
 \label{chap:test}
 In the following, we will distinguish the different methods and models
 as such:
 \begin{description}
-\item[Old model] Refers to the model constructed in
+\item[A. old unigram] Refers to the model constructed in
 \cite{jensenandersen}
-\item[New model] Refers to the model constructed using the Orphanet data
+\item[B. new unigram] Refers to the model constructed using the Orphanet data
 set.
-\item[New model(cleansed)] Refers to the model constructed using the
-Orphanet and harvested data set, cleansed for low information
-paragraphs.
-\item[New model(NLP)] Refers to the model constructed by extracting
-phrases using NLP methods.
+\item[C. raw googled data] The model constructed using the unspoiled harvested data.
+\item[D. noise reduced googled data] Refers to the model constructed using the
+harvested data set, cleansed for low information paragraphs.
+\item[E. unigram and nlp consensus] Using model B in consensus with the NLP based model.
+\item[F. icd10 grouping] Using ICD10 codes to improve suggestion (reduced data, see \ref{chap:icd10method})
+\item[G. icd10 grouping recalc. tf-idf] Same as F, except the subspace
+of relevant ICD10 diseases are recalculated with TF-IDF.
+\item[H. orphanet abstracts+noise reduced googled data] Same as D except
+the data set also consists of Orphanet abstacts.
 \end{description}
 
-\noindent The test sets are described as such:
+To assess the performance of each model, we have performed the following
+pair wise comparisons, denoting the best model (in terms of most
+diseases in top 5). While we do not perform tests for each permutation,
+the following is sufficient for validating our point.
+\begin{description}
+\item[A \& B] Results in appendix \ref{app:preliminary_results} with B being superior.
+\item[C \& D] Results in appendix \ref{app:tests_raw_reduced} with D being superior.
+\item[B \& E] Results in appendix \ref{app:tfidf_tfidfrecalc} with B being superior.
+\item[F \& G] Results in appendix \ref{app:icd10_icd10recalc} with neither being superior.
+\item[G \& H] Results in appendix \ref{app:with_without} with H being superior.
+\end{description}
 
+For each of these comparisons, we have collected three different test
+sets yielding a total of 43 test cases. The test sets are described as
+such and will be treated individually:
 \begin{description}
 \item[Blind tests] These tests are originally blind tests from
 \cite{jensenandersen} provided by a practising physician only as a list
@@ -863,16 +907,16 @@ considered a rare disease if it is listed in
 \url{http://rarediseases.org}.}.
 \end{description}
 
+Each of the cases consists of patres, disease name and a query
+describing symptoms or keywords. Each model is given the query from the
+diseases in the test set and returns a list of ranked diseases sorted by
+their summed relevance to the query. I.e. the disease yielding the
+highest score, is the systems prediction of the correct disease.
 
-%We have chosen to base our tests on known test cases, from in particular
-%those mentioned in \cite{jensenandersen}, \cite{googlingdiagnosis} and
-%tests listed in appendix \ref{app:tests}. We will then consider the
-%significance across the results and introduce the independent variable
-%\texttt{method} with the values \texttt{\{manual, semiautomatic,
-%automatic\}}, where \texttt{manual} is the method used in
-%\cite{googlingdiagnosis}, \texttt{semiautomatic} is the method used in
-%\cite{jensenandersen} and finally \texttt{automatic} is the method
-%described in this paper.
+The test program identifies, using patres and disease name, the index
+of the correct disease and reports this. These predictions are used in
+the statistical analysis described later.
+
 
 \subsection{Kruskal Wallis Test Statistics}
 The tests are compared using the prediction ranking of the correct
@@ -953,11 +997,11 @@ PubMed. However, the tests are essentially diseases extracted from the
 training data and can as such better be explained as the model's ability
 to train, and not its ability to predict.
 
-In the tables in section \ref{app:summary_old_new} we also notice a
-significant increase in disease found in the top 20 rankings, from 62\%
-in the old model, up to 90\% with the model trained on the Orphanet data
-set across all test sets, while achieving 74\% with the new model
-compared to 33\% in the top 5.
+In the tables in section \ref{app:summary_old_new} we also notice an
+increase in diseases found in the top 20 rankings, from 62\% in the old
+model, up to 90\% with the model trained on the Orphanet data set across
+all test sets, while achieving 74\% with the new model compared to 33\%
+in the top 5.
 
 \begin{table}[here]
 \begin{center}
@@ -966,7 +1010,7 @@ compared to 33\% in the top 5.
  &	\textbf{new unigram} &	\textbf{old unigram} \\ \hline
 $R_{i}$ &	462 &	1249 \\
 $\frac{R_{i}^2}{n}$ &	7360.14	& 53793.14 \\
-$n_{i}$	29	& 29 \\ \hline \hline
+$n_{i}$	& 29	& 29 \\ \hline \hline
 \textbf{Test parameter}	&	&\textbf{Value} \\ \hline
 $n$	 &  &  58 \\
 $k$  &  &  2 \\
@@ -974,31 +1018,52 @@ $df$ &  &  1 \\ \hline \hline
 $H_{stat}$  &  &  37.47 \\
 Adjusted $H_{stat}$ & &  40.41 \\
 \end{tabular}
-    \caption{Results from the Kruskal-Wallis significance test of the Orphanet tests on the old and new model.}
+    \caption{Results from the Kruskal-Wallis significance test of the Orphanet tests on the old and new unigram models.}
     \label{tab:orpha_old_new_stat}
 \end{center}
 \end{table}
 
+The results in table \ref{tab:H_vs_rest} contains the complete
+Kruskal-Wallis test. For the remaining models, we simply refer to the
+adjusted $H_{stat}$ to determine significance for model H. \textit{- orphanet
+abstracts+noise reduced googled data} versus the remaining models,
+except the ICD10 grouping models, as these contain a significantly
+smaller amount of diseases.
 
-\begin{table}[here]
+\begin{table}
 \begin{center}
-\begin{tabular}{lll}
-    \textbf{Data set} & & \textbf{BMJ} \\ \hline\hline
- &	\textbf{new unigram} &	\textbf{old unigram} \\ \hline
-$R_{i}$ &	 &	 \\
-$\frac{R_{i}^2}{n}$ &  &  \\
-$n_{i}$		&  \\ \hline \hline
-\textbf{Test parameter}	&	&\textbf{Value} \\ \hline
-$n$	 &  &   \\
-$k$  &  &   \\
-$df$ &  &   \\ \hline \hline
-$H_{stat}$  &  &   \\
-Adjusted $H_{stat}$ & &  \\
-\end{tabular}
-    \caption{}
-    \label{tab:bmj_old_new_stat}
+	\begin{tabular}{llllllll}
+		  & A  &  B &  C &  D &  E \\ \hline
+		H & 22 & 23 & 24 & 25 & 26 \\
+	\end{tabular}
+	\caption{Kruskal-Wallis test statistic results on model H compared
+	with the remaining models.}
+	\label{tab:H_vs_rest}
 \end{center}
 \end{table}
+
+
+
+
+%\begin{table}[here]
+%\begin{center}
+%\begin{tabular}{lll}
+%    \textbf{Data set} & & \textbf{BMJ} \\ \hline\hline
+% &	\textbf{new unigram} &	\textbf{old unigram} \\ \hline
+%$R_{i}$ &	 &	 \\
+%$\frac{R_{i}^2}{n}$ &  &  \\
+%$n_{i}$		&  \\ \hline \hline
+%\textbf{Test parameter}	&	&\textbf{Value} \\ \hline
+%$n$	 &  &   \\
+%$k$  &  &   \\
+%$df$ &  &   \\ \hline \hline
+%$H_{stat}$  &  &   \\
+%Adjusted $H_{stat}$ & &  \\
+%\end{tabular}
+%    \caption{}
+%    \label{tab:bmj_old_new_stat}
+%\end{center}
+%\end{table}
 
 
 %Note that, for the manual googling method, the results presented in
@@ -1008,15 +1073,36 @@ Adjusted $H_{stat}$ & &  \\
 %in contrary to \cite{jensenandersen} and this project.
 
 
-
+\section{Results}
+\label{chap:results}
+Table \ref{tab:all_results} shows a summary of the results across all
+models. Further details are located in the appendices.
+\begin{center}
+	\begin{tabular}{l|l|l}
+		Model & Top 5 & Top 20 \\ \hline
+		A. Old unigram & 32.56\% & 62.79\% \\
+		B. New unigram & 74.42\% & 90.70\% \\
+		C. Raw googled & 44.19\% & 88.37\% \\
+		D. Raw googled noise reduced & 76.74\% & 93.02\% \\
+		E. Unigram and NLP consensus & 51.16\% & 76.74\% \\
+		F. ICD10 grouping & 82.05\% & 92.31\% \\
+		G. ICD10 grouping recalc. tf-idf & 85.05\% & 92.31\% \\
+		H. orphanet abstracts+noise reduced googled data & 86.05\% & 76.74\% \\
+	\end{tabular}
+	\captionof{table}{Summary of results from all models.}
+	\label{tab:all_results}
+\end{center}
+%Indeed, model H comes out on top in the top 5 category, and is supported
 
 \section{Conclusion}
 \label{chap:conclusion}
 We have investigated the possibility of using the Google search engine,
 as a means to gather additional information in order to expand knowledge
-of a range of diseases. We have shown that the information gathered
-along with prior information supplied through Orphanet abstracts yields
-significantly better results compared to previous work .
+of a range of diseases.
+%We have shown that the information gathered
+%along with prior information supplied through Orphanet abstracts yields
+%significantly better results than other models, and the results are
+%generally better than what previous methods were able to produce.
 
 %By using NLP techniques we have refined the data harvested using the
 %Google search engine and shown significant improvements over using the
@@ -1028,8 +1114,37 @@ significantly better results compared to previous work .
 %abstracts and suggests a poor choice of or too strict chunking
 %procedure.
 
-\todo[inline]{further discussion}
 
+Our tests show that using Google to harvest information and the
+abstracts provided by Orphanet yields the best results, placing 85\% of
+diseases within top 5, based on 43 test cases. Our results are
+generally better than what previous methods were able to produce.
+
+% While the model using
+%only the Orphanet data set, as illustrated in
+%\ref{app:preliminary_results}, is seemingly giving better results, it is
+%not reliable as the test set is part of the training set, and as such
+%only used as a benchmark in comparison with the old model.
+
+While approaching the problem with NLP and ML techniques, we hoped to be
+able to develop a more sophisticated model, allowing better exploitation
+of features extracted from the stored abstracts, such as symptoms and
+(later) synonyms. However, as the results suggests, the NLP based models
+yield worse results than the Orphanet/Googled models, suggesting two
+things: either NLP is unsuited for this task, or the NLP feature
+extraction is not good enough. We are inclined to think the latter, as
+the queries found in the NLP based models did not yield a satisfactory
+result, see appendix \ref{app:tfidf_tfidfrecalc}, suggesting the NLP
+model simply contains too few phrases for each disease to improve the
+predictions.
+
+Similarly, we used ICD10 labels to introduce a nested iterative approach
+to improve the relevance of diseases according to the search query.
+While this approach was not directly applicable on the entire data set,
+due to only half of the diseases having ICD10 labels, it still suggested
+great improvements compared to the simple TF-IDF models and indeed
+compared to the NLP models. This approach yielded up to 85\% in top 5
+and 92\% in top 20, based on 39 diseases.
 
 
 
@@ -1067,7 +1182,11 @@ diseases and automatically determining when information is found can
 increase the knowledge of some disease, and add this information to the
 model accordingly.
 
-Using ICD10 labels   blablabla
+Using ICD10 labels seemed to be rather successful, but lacks annotated
+data to become viable in the long run. For those diseases that are not
+annotated with ICD10 labels, it would be interesting to look into ways
+of automatically classifying these, but will regardless require a
+substantial amount of correctly labelled diseases.
 
 
 \renewcommand\bibname{References}
@@ -1078,24 +1197,13 @@ Using ICD10 labels   blablabla
 \appendix
 \section{Preliminary Tests}
 \label{app:preliminary_results}
-
-The results of the tests of the old mode, as explained in
-\cite{jensenandersen}, and the model based on abstracts from Orphanet,
-with no further processing.
-
-%Despite the larger amount of information gathered in the old model,
-%there is little difference in the results (Note that the Orphanet tests
-%are fit to the new model which were build upon the same abstracts
-%as the test queries in \ref{tab:results_orphanet}!). This indicates a
-%large amount of noise in the data gathered in the old model.
-
-%\vspace*{-3cm}
 \subsection{Orphanet tests}
 \label{app:orphanet_old_new}
-(The following tests can be interpreted as training data tests, training
-the ability to train the model, rather the ability to predict.)
-\todo[inline]{explain better}
-%\vspace*{-6cm}
+The following tests can be interpreted as training data tests, training
+the ability to train the model, rather the ability to predict. As such
+the models will only be used as a measure for describing the potential
+of the system.
+
 
 \begin{center}
 \begin{small}
@@ -1353,9 +1461,9 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
 \textbf{Test set} & \textbf{noise reduced} &	\textbf{raw googled}	 &	\textbf{total diseases} &	\% noise reduced	 &\% raw googled \\ \hline
 orphanet    &    21   &  12    & 29      & 72.41     & 41.38 \\
-BMJ	        &    7   &   4   &    9   &  77.78    & 44.44 \\
-Blind test	&   1    &   1   &    5   &   20   & 20 \\ \hline \hline
-all	        &   29    &   17   &   43    &  67.44    & 39.53 \\ \hline
+BMJ	        &    8   &   5   &    9   &  88.89    & 55.56 \\
+Blind test	&   4    &   2   &    5   &   80   & 40 \\ \hline \hline
+all	        &   33    &   19   &   43    &  76.74    & 44.19 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1365,10 +1473,10 @@ all	        &   29    &   17   &   43    &  67.44    & 39.53 \\ \hline
 \begin{tabular}{l|cc||ccc}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
 \textbf{Test set} & \textbf{noise reduced} &	\textbf{raw googled}	 &	\textbf{total diseases} &	\% noise reduced	 &\% raw googled \\ \hline
-orphanet    &    27   &   25   &  29     &  93.10    & 86.27\\
+orphanet    &    27   &   25   &  29     &  93.10    & 86.20\\
 BMJ	        &     9  &   9   &    9   &    100  & 100 \\
-Blind test	&     4  &   2   &    5   &    80  & 40 \\ \hline \hline
-all	        &    40   & 17     &   43    &   93.02   &  83.72 \\ \hline
+Blind test	&     4  &   4   &    5   &    80  & 80 \\ \hline \hline
+all	        &    40   & 38    &   43    &   93.02   &  88.37 \\ \hline
 \end{tabular}
 \end{small}
 \end{center}
@@ -1606,6 +1714,7 @@ all	        &    36   &  36    &   39    &  92.31  & 92.31 \\ \hline
 
 \newpage
 \section{Comparision of tests performed without and with an abstract from Orphanet}
+\label{app:with_without}
 
 \subsection{Orphanet}
 \label{app:orphanet_with_without}
