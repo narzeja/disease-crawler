@@ -160,7 +160,6 @@ A number of post-processing techniques are now applied to the basic
 model to develop the final proof of concept models, based on different
 characteristics and processing strategies.
 
-
 % The models are sketched as
 %follows:
 %\begin{description}
@@ -227,9 +226,10 @@ among blind tests, BMJ and Orphanet, further explained in section
 We will discuss the results based on statistical significance
 analyses.
 
-Finally, in chapter \ref{chap:conclusion} we will conclude the project,
-and discuss major implications and advantages of the system, methods and
-tests. We will finally propose a number of topics for future work.
+Finally, in section \ref{chap:conclusion} we will conclude the project,
+highlight the most important test results and discuss major implications
+and advantages of the system, methods and tests. We will finally propose
+a number of topics for future work.
 
 
 %In the following we will present and highlight current and previous work
@@ -991,8 +991,9 @@ Initially, the most basic model used is the \textit{old unigram} model,
 originally proposed by \cite{jensenandersen}. This model was
 subsequently re-made with data provided by Orphanet, which is described
 as \textit{new unigram}. The results in table \ref{tab:orpha_old_new_stat},
-suggests a significant improvement by simply using the Orphanet data to
-train the model, as opposed to automatically harvesting them from
+presents an example calculation of a Kruskal-Wallis test statistics,
+and suggests a significant improvement by simply using the Orphanet data
+to train the model, as opposed to automatically harvesting them from
 PubMed. However, the tests are essentially diseases extracted from the
 training data and can as such better be explained as the model's ability
 to train, and not its ability to predict.
@@ -1007,7 +1008,7 @@ in the top 5.
 \begin{center}
 \begin{tabular}{lll}
     \textbf{Data set} & & \textbf{Orphanet} \\ \hline\hline
- &	\textbf{new unigram} &	\textbf{old unigram} \\ \hline
+ &	\textbf{B. new unigram} &	\textbf{A. old unigram} \\ \hline
 $R_{i}$ &	462 &	1249 \\
 $\frac{R_{i}^2}{n}$ &	7360.14	& 53793.14 \\
 $n_{i}$	& 29	& 29 \\ \hline \hline
@@ -1023,7 +1024,7 @@ Adjusted $H_{stat}$ & &  40.41 \\
 \end{center}
 \end{table}
 
-The results in table \ref{tab:H_vs_rest} contains the complete
+The results in table \ref{tab:H_vs_rest} contains the results
 Kruskal-Wallis test. For the remaining models, we simply refer to the
 adjusted $H_{stat}$ to determine significance for model H. \textit{- orphanet
 abstracts+noise reduced googled data} versus the remaining models,
@@ -1032,17 +1033,21 @@ smaller amount of diseases.
 
 \begin{table}
 \begin{center}
-	\begin{tabular}{llllllll}
-		  & A  &  B &  C &  D &  E \\ \hline
-		H & 22 & 23 & 24 & 25 & 26 \\
+	\begin{tabular}{lllllll}
+		  & B &  C &  D &  E \\ \hline
+		H & $-285.03$ & $-231.64$ & $-257.82$ & $-244.19$ \\
 	\end{tabular}
 	\caption{Kruskal-Wallis test statistic results on model H compared
 	with the remaining models.}
 	\label{tab:H_vs_rest}
 \end{center}
 \end{table}
+The test statistics in table \ref{tab:H_vs_rest} means that we can
+reject the null hypothesis ($model_{B,C,D,E} > H$), implying H to be the
+superior model in these cases, as $H_{adjusted} < \chi^2$.
 
-
+Notice that model A is ignored in these results, as this model is only
+used as a baseline or bootstrap.
 
 
 %\begin{table}[here]
@@ -1073,8 +1078,8 @@ smaller amount of diseases.
 %in contrary to \cite{jensenandersen} and this project.
 
 
-\section{Results}
-\label{chap:results}
+\subsection{Results}
+\label{subchap:results}
 Table \ref{tab:all_results} shows a summary of the results across all
 models. Further details are located in the appendices.
 \begin{center}
@@ -1240,7 +1245,7 @@ of the system.
 %    Myeloma, multiple & overproduction of abnormal plasma cells in the bone marrow and manifested by skeletal destruction, bone pain, and presence of abnormous immunoglobulins & 1 & 3\\    \hline
 %    Trichodental syndrome & fine, dry and short hair with dental anomalies & 1 & 60\\    \hline
 	\begin{longtable}{|p{6cm}|p{1.8cm}|p{1.8cm}|}	\hline
-	\textbf{Disease}  & \textbf{Rank (new unigram} & \textbf{Rank (old unigram)} \\
+	\textbf{Disease}  & \textbf{Rank (B. new unigram} & \textbf{Rank (A. old unigram)} \\
     \hline\hline
     Apparent mineralocorticoid excess &1 & 10\\    \hline
     Rubinstein-Taybi syndrome  & 1 & 91\\    \hline
@@ -1297,7 +1302,7 @@ of the system.
 %    Brugada syndrome & cardiac arrest sleep & 3 & 7\\    \hline
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease} & \textbf{Rank (new unigrma)} & \textbf{Rank (old unigram)} \\
+	\textbf{Disease} & \textbf{Rank (B. new unigram)} & \textbf{Rank (A. old unigram)} \\
     \hline\hline
     Cushing syndrome & 3 & 2 \\    \hline
 %    Eosinophilic granuloma & \textit{Not in the model} & 598 \\    \hline
@@ -1330,7 +1335,7 @@ of the system.
 %    Midface retraction syndrome, Schinzel-Giedion type & Male child, malformations at birth, midfacial retraction with a deep groove under the eyes, and hypertelorism, short nose with a low nasal bridge and large low-set ears, wide mouth and retrognathia. Hypertrichosis with bright reddish hair and a median frontal cutaneous angioma, short neck with redundant skin, Bilateral inguinal hernias, hypospadias with a megameatus, and cryptorchidism  & 14 & 164\\    \hline
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease} & \textbf{Rank (new unigram)} & \textbf{Rank (old unigram)} \\
+	\textbf{Disease} & \textbf{Rank (B. new unigram)} & \textbf{Rank (A. old unigram)} \\
     \hline\hline
     Fibrodysplasia ossificans progressiva & 92 & 20\\    \hline
     Adrenoleukodystrophy, X-linked & 1 & 1718\\    \hline
@@ -1346,9 +1351,9 @@ of the system.
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{unigram} &	\textbf{old unigram}	 &	\textbf{total diseases} &	\% unigram	 &\% old unigram \\ \hline
+\textbf{Test set} & \textbf{B. unigram} &	\textbf{A. old unigram}	 &	\textbf{total diseases} &	\% B. new unigram	 &\% A. old unigram \\ \hline
 orphanet &	28 &	8	 &	29 &	96.55 &	27.59 \\
 BMJ	& 2 &	5	 &	9	 & 22.22 &	55.56 \\
 Blind test	& 2 &	1	 &	5 &	40	 &20 \\ \hline \hline
@@ -1359,9 +1364,9 @@ all	& 32 &	14	 &	43 &	74.42 &	32.56 \\ \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{unigram} &	\textbf{old unigram}	 &	\textbf{total diseases} &	\% unigram	 &\% old unigram \\ \hline
+\textbf{Test set} & \textbf{B. unigram} &	\textbf{A. old unigram}	 &	\textbf{total diseases} &	\% B. new unigram	 &\% A. old unigram \\ \hline
 orphanet &	29 &	17	 &	29 &	100	 & 58.62 \\
 BMJ &	6 &	7 &		9 &	66.67 &	77.78 \\
 Blind test &	4	 &3	 &	5 &	80	 &60 \\  \hline \hline
@@ -1380,7 +1385,7 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 \begin{small}
 	\begin{longtable}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\
+	\textbf{Disease}  & \textbf{Rank (C. raw googled data)} & \textbf{Rank (D. noise reduced googled data)} \\
     \hline\hline
     Apparent mineralocorticoid excess & 4 & 2\\    \hline
     Rubinstein-Taybi syndrome  & 230 & 190\\    \hline
@@ -1421,7 +1426,7 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 \begin{small}
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\    \hline\hline
+	\textbf{Disease}  & \textbf{Rank (C. raw googled data)} & \textbf{Rank (D. noise reduced googled data)} \\    \hline\hline
     Cushing syndrome  & 7 &  4\\    \hline
     Hereditary pheochromocytoma-paraganglioma syndrome  & 7 & 4\\    \hline
     Creutzfeldt-Jakob disease  & 14 & 5\\    \hline
@@ -1441,7 +1446,7 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 \begin{small}
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (raw googled data)} & \textbf{Rank (noise reduced googled data)} \\
+	\textbf{Disease}  & \textbf{Rank (C. raw googled data)} & \textbf{Rank (D. noise reduced googled data)} \\
 	\hline\hline
     Fibrodysplasia ossificans progressiva & 8 & 5\\    \hline
     Adrenoleukodystrophy, X-linked & 10 & 1 \\    \hline
@@ -1457,9 +1462,9 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{noise reduced} &	\textbf{raw googled}	 &	\textbf{total diseases} &	\% noise reduced	 &\% raw googled \\ \hline
+\textbf{Test set} & \textbf{D. noise reduced} &	\textbf{C. raw googled}	 &	\textbf{total diseases} &	\% D. noise reduced	 &\% C. raw googled \\ \hline
 orphanet    &    21   &  12    & 29      & 72.41     & 41.38 \\
 BMJ	        &    8   &   5   &    9   &  88.89    & 55.56 \\
 Blind test	&   4    &   2   &    5   &   80   & 40 \\ \hline \hline
@@ -1470,9 +1475,9 @@ all	        &   33    &   19   &   43    &  76.74    & 44.19 \\ \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{noise reduced} &	\textbf{raw googled}	 &	\textbf{total diseases} &	\% noise reduced	 &\% raw googled \\ \hline
+\textbf{Test set} & \textbf{D. noise reduced} &	\textbf{C. raw googled}	 &	\textbf{total diseases} &	\% D. noise reduced	 &\% C. raw googled \\ \hline
 orphanet    &    27   &   25   &  29     &  93.10    & 86.20\\
 BMJ	        &     9  &   9   &    9   &    100  & 100 \\
 Blind test	&     4  &   4   &    5   &    80  & 80 \\ \hline \hline
@@ -1494,7 +1499,7 @@ unigram model results listed in section \ref{app:preliminary_results}.
 \begin{small}
 	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (unigram and nlp consensus)} & \textbf{Terms verified by NLP}  & \textbf{Terms not found by NLP} \\
+	\textbf{Disease}  & \textbf{Rank (E. unigram and nlp consensus)} & \textbf{Terms verified by NLP}  & \textbf{Terms not found by NLP} \\
 	\hline\hline
 Apparent mineralocorticoid excess & 28 & sever hypertens, earli onset & hypoaldosteron, low renin level, associ \\ \hline
 Rubinstein-Taybi syndrome & 226 & intellectu deficit & behaviour characterist, congenit anomali \\ \hline
@@ -1535,7 +1540,7 @@ Trichodental syndrome & 17 & dri hair, fine hair & dental anomali, short hair  \
 \begin{small}
 	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (unigram and nlp consensus)} & \textbf{Terms verified by NLP}  & \textbf{Terms not found by NLP} \\
+	\textbf{Disease}  & \textbf{Rank (E. unigram and nlp consensus)} & \textbf{Terms verified by NLP}  & \textbf{Terms not found by NLP} \\
 	\hline\hline
 Cushing syndrome & 4 &  & hypertension, adrenal mass \\ \hline
 Hereditary pheochromocytoma-paraganglioma syndrome & 4 & cafe au lait & renal mass, headach, papilledema, hypertens \\ \hline
@@ -1556,7 +1561,7 @@ Brugada syndrome & 16 & cardiac arrest & sleep \\ \hline
 \begin{small}
 	\begin{longtable}{|p{3.5cm}|p{1.5cm}|p{3cm}|p{3cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (unigram and nlp consensus)} & \textbf{Terms verified by NLP}  & \textbf{Terms not found by NLP} \\
+	\textbf{Disease}  & \textbf{Rank (E. unigram and nlp consensus)} & \textbf{Terms verified by NLP}  & \textbf{Terms not found by NLP} \\
 	\hline\hline
 Fibrodysplasia ossificans progressiva & 5 & normal birth & osteogenesis., spine, bone tumor, quick develop of bone tumor, miss joint, deform of big toe, boy \\ \hline
 Adrenoleukodystrophy, X-linked & 6 & adren insuffici, normal develop & auditori function, visual, degener, ataxia, seizur, talk difficulti, progess develop, age 5, boy \\ \hline
@@ -1572,9 +1577,9 @@ Midface retraction syndrome, Schinzel-Giedion type & 23 & short nose, low nasal 
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{TFIDF NLP} &	\textbf{Unigram}	 &	\textbf{total diseases} &	\% TFIDF NLP	 &\% Unigram \\ \hline
+\textbf{Test set} & \textbf{E. TFIDF NLP} &	\textbf{B. Unigram}	 &	\textbf{total diseases} &	\% E. TFIDF NLP	 &\% B. Unigram \\ \hline
 orphanet    &   14    &  28    &    29   & 48.28     & 96.55\\
 BMJ	        &    5   &    2  &     9  &   55.56   & 22.22\\
 Blind test	&    3   &    2  &     5  &   60   & 40 \\ \hline \hline
@@ -1585,9 +1590,9 @@ all	        &    22   &   32   &    43   &  51.16    & 74.42\\ \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{TFIDF NLP} &	\textbf{Unigram}	 &	\textbf{total diseases} &	\% TFIDF NLP	 &\% Unigram \\ \hline
+\textbf{Test set} & \textbf{E. TFIDF NLP} &	\textbf{B. Unigram}	 &	\textbf{total diseases} &	\% E. TFIDF NLP	 &\% B. Unigram \\ \hline
 orphanet    &    20   & 29     & 29      &   68.97   & 100\\
 BMJ	        &    9   &   6   &    9   &  100    & 66.67\\
 Blind test	&    4   &   4   &    5   & 80     & 80 \\ \hline \hline
@@ -1607,7 +1612,7 @@ all	        &    33   &  39    &   43    & 76.74     & 90.70 \\ \hline
 \begin{small}
 	\begin{longtable}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (ICD10 grouping)} & \textbf{Rank (ICD10 grouping recalc. TF-IDF)} \\
+	\textbf{Disease}  & \textbf{Rank (F. ICD10 grouping)} & \textbf{Rank (G. ICD10 grouping recalc. TF-IDF)} \\
 	\hline\hline
 Apparent mineralocorticoid excess & 3 & 2\\    \hline
 Rubinstein-Taybi syndrome & 167 & 80\\    \hline
@@ -1649,7 +1654,7 @@ Trichodental syndrome & Disease not found!  & Disease not found!\\    \hline
 \begin{small}
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (ICD10 grouping)} & \textbf{Rank (ICD10 grouping recalc. TF-IDF)} \\
+	\textbf{Disease}  & \textbf{Rank (F. ICD10 grouping)} & \textbf{Rank (G. ICD10 grouping recalc. TF-IDF)} \\
 	\hline\hline
 Cushing syndrome & 6 & 4\\    \hline
 Hereditary pheochromocytoma-paraganglioma syndrome & 3 & 4\\    \hline
@@ -1670,7 +1675,7 @@ Brugada syndrome & 2 & 2\\    \hline
 \begin{small}
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (ICD10 grouping)} & \textbf{Rank (ICD10 grouping recalc. TF-IDF)} \\
+	\textbf{Disease}  & \textbf{Rank (F. ICD10 grouping)} & \textbf{Rank (G. ICD10 grouping recalc. TF-IDF)} \\
 	\hline\hline
 Fibrodysplasia ossificans progressiva & 4 & 3\\    \hline
 Adrenoleukodystrophy, X-linked & 1 & 1\\    \hline
@@ -1686,9 +1691,9 @@ Midface retraction syndrome, Schinzel-Giedion type & 49 & 199\\    \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{ICD10} &	\textbf{ICD10 recalc.}	 &	\textbf{total diseases} &	\% ICD10 &\% ICD10 recalc. \\ \hline
+\textbf{Test set} & \textbf{G. ICD10} &	\textbf{F. ICD10 recalc.}	 &	\textbf{total diseases} &	\% G. ICD10 &\% F. ICD10 recalc. \\ \hline
 orphanet    &     20  &  19    &     25  &   80   & 76 \\
 BMJ	        &   8    &    9  &    9   &    88.89  & 100 \\
 Blind test	&   4    &    4  &    5   &    80  & 80 \\ \hline \hline
@@ -1699,9 +1704,9 @@ all	        &   32    &   32   &   39    &   82.05   & 85.05 \\ \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{ICD10} &	\textbf{ICD10 recalc.}	 &	\textbf{total diseases} &	\% ICD10 &\% ICD10 recalc. \\ \hline
+\textbf{Test set} & \textbf{G. ICD10} &	\textbf{F. ICD10 recalc.}	 &	\textbf{total diseases} &	\% G. ICD10 &\% F. ICD10 recalc. \\ \hline
 orphanet    &   23    &  23    &   25    &   92   & 92 \\
 BMJ	        &    9   &   9   &     9  &   100   & 100 \\
 Blind test	&    4   &   4   &    5   &   80   & 80 \\ \hline \hline
@@ -1722,7 +1727,7 @@ all	        &    36   &  36    &   39    &  92.31  & 92.31 \\ \hline
 \begin{small}
 	\begin{longtable}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (noise reduced googled data)} & \textbf{Rank (orphanet abstract + noise reduced googled data)} \\
+	\textbf{Disease}  & \textbf{Rank (D. noise reduced googled data)} & \textbf{Rank (H. orphanet abstract + noise reduced googled data)} \\
 	\hline\hline
 Apparent mineralocorticoid excess       &  2 & 2 \\ \hline
 Rubinstein-Taybi syndrome               &  190 & 40 \\ \hline
@@ -1763,7 +1768,7 @@ Trichodental syndrome                   &  4 & 3 \\ \hline
 \begin{small}
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (noise reduced googled data)} & \textbf{Rank (orphanet abstract + noise reduced googled data)} \\
+	\textbf{Disease}  & \textbf{Rank (D. noise reduced googled data)} & \textbf{Rank (H. orphanet abstract + noise reduced googled data)} \\
 	\hline\hline
 Cushing syndrome                        &  4 & 4 \\ \hline
 Hereditary pheochromocytoma-paraganglioma syndrome  &  4 & 4 \\ \hline
@@ -1784,7 +1789,7 @@ Brugada syndrome                        &  3 & 3 \\ \hline
 \begin{small}
 	\begin{tabular}{|p{6cm}|p{2.5cm}|p{2.5cm}|}
 	\hline
-	\textbf{Disease}  & \textbf{Rank (noise reduced googled data)} & \textbf{Rank (orphanet abstract + noise reduced googled data)} \\
+	\textbf{Disease}  & \textbf{Rank (D. noise reduced googled data)} & \textbf{Rank (H. orphanet abstract + noise reduced googled data)} \\
 	\hline\hline
 Fibrodysplasia ossificans progressiva   &  5 & 4 \\ \hline
 Adrenoleukodystrophy, X-linked          &  1 & 1 \\ \hline
@@ -1801,9 +1806,9 @@ Midface retraction syndrome, Schinzel-Giedion type  & 274  & 145 \\ \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 5}} \\ \hline
-\textbf{Test set} & \textbf{With abstracts} &	\textbf{Without abstracts}	 &	\textbf{total diseases} &	\% With &\% Without \\ \hline
+\textbf{Test set} & \textbf{H. orphanet abstract + noise reduced googled data} &	\textbf{D. noise reduced googled data}	 &	\textbf{total diseases} &	\% H. orphanet abstract + noise reduced googled data &\% D. noise reduced googled data \\ \hline
 orphanet    &   24    &  21    &  29     & 82.76     & 72.41 \\
 BMJ	        &    9   &   8   &     9  &    100  & 88.89 \\
 Blind test	&    4   &   4   &     5  &    80  & 80 \\ \hline \hline
@@ -1814,9 +1819,9 @@ all	        &    37   & 33     &   43    &  86.05    & 76.74 \\ \hline
 
 \begin{center}
 \begin{small}
-\begin{tabular}{l|cc||ccc}
+\begin{tabular}{l|p{2.2cm}p{2.2cm}||p{1.2cm}p{2.2cm}p{2.2cm}}
 	\multicolumn{6}{l}{\textbf{Diseases found in top 20}} \\ \hline
-\textbf{Test set} & \textbf{With abstracts} &	\textbf{Without abstracts}	 &	\textbf{total diseases} &	\% With &\% Without \\ \hline
+\textbf{Test set} & \textbf{H. orphanet abstract + noise reduced googled data} &	\textbf{D. noise reduced googled data}	 &	\textbf{total diseases} &	\% H. orphanet abstract + noise reduced googled data &\% D. noise reduced googled data \\ \hline
 orphanet    &    28   &   27   & 29      & 96.55     & 93.10 \\
 BMJ	        &    9   &    9  &    9   &   100   & 100 \\
 Blind test	&    4   &    4  &    5   &    80  & 80 \\ \hline \hline
