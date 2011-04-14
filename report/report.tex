@@ -97,7 +97,7 @@ Master's degree entry level.
 It is expected that the reader has read the project
 \cite{jensenandersen}.
 
-We expect the reader to have knowledge of Natural Language Processing
+We expect the reader to have knowledge of Natural Language Processing (NLP)
 techniques, in particular POS-tagging and phrase chunking. It is also
 required to have knowledge of the foundations and overall methodology of
 Machine Learning.
@@ -149,15 +149,14 @@ practising physician can query a case report or a number of search terms
 and get a list of disease predictions based on the knowledge of the
 model.
 
-The basic model is constructed given information of 3882 diseases
-\footnote{We have chosen not to discriminate between diseases groups of
+The basic model is constructed given information of 3882 diseases\footnote{We have chosen not to discriminate between diseases groups of
 diseases.}, with corresponding abstract or disease group information.
 This information, together with the disease name and other relevant
 terms are used to harvest the Internet for related information to expand
 the knowledge of that particular disease.
 
 A number of post-processing techniques are now applied to the basic
-model to develop the final proof of concept models, based on different
+model to develop the final proof-of-concept models, based on different
 characteristics and processing strategies.
 
 % The models are sketched as
@@ -322,7 +321,7 @@ In the following, the methods used to compute the various models will be
 explained at a high abstraction level. We will highlight the basic model
 used to compute unigram models, similar to that presented in
 \cite{jensenandersen}, present the use of Natural Language Processing
-techniques to allow extracting specific knowledge to built an NLP based
+techniques to allow extracting specific knowledge to build an NLP based
 model or tailored N-gram model. Finally we will highlight the use of
 ICD10 codes to categorise related diseases.
 
@@ -373,7 +372,7 @@ save it for further processing.
 %and phrases that will then be used to expand the model. 
 
 The abstract flow model is shown in figure \ref{fig:flow}. The data set
-is processed (cleansed for noise, NLP, etc.) and fed into the modelling
+is processed (cleansed for noise, stemmed, NLP, etc.) and fed into the modelling
 procedure (TF-IDF or similar). The model is then expanded using various
 searching strategies, in this case using Google, where the data set is
 feature extracted, processed, and fed into a new modelling procedure.
@@ -523,13 +522,13 @@ further processing is set to $0.8$. This number is used based on a
 number of anecdotal tests showing a reasonable amount of relevant
 information, where $0.9$ would introduce too much noise, and $0.7$ being
 too strict. However, not all relevant paragraphs are found using this threshold
-(e.g. a short list of symptoms) and proved useful to added secondary threshold of
-acceptance which includes three rules: 1) If the paragraph does a threshold below
+(e.g. a short list of symptoms) and it proved useful to add a secondary threshold of
+acceptance which includes three rules: 1) If the paragraph does not have a threshold below
 $0.8$, it must have a threshold below $0.9$ (loosely similar), 2) contain one of the
-the phrases \{"characterized by", "characteristic", "symptom", "may include"\}\footnote{Common phrases in clinical descriptions} and 3) at least contain the main title of the disease or a synonym hereof\footnote{A lot of websites returned by Google contains lists of descriptions of similar diseases that we are not interested in.}
+the phrases \{"characterized by", "characteristic", "symptom", "may include"\}\footnote{Common phrases in clinical descriptions} and 3) at least contain the main title of the disease or a synonym hereof\footnote{A lot of websites returned by Google contains lists of descriptions of similar diseases that we are not interested in.}.
 
 It is observed that many of the harvested paragraphs are literature
-references and should be considered noise, due to it's low information
+references and should be considered noise due to it's low information
 value.
 These paragraphs are structured by a listing of names followed by a
 title and other meta information, e.g.
@@ -819,9 +818,9 @@ using the N-gram model, thus increasing the rank of the correct disease.
 %unigram model based on the Orphanet abstracts.
 
 \subsection{ICD10 subspaces}
+\label{chap:icd10implementation}
 As presented in \ref{chap:icd10method}, we want to test the possibility
-of classifying diseases using the ICD10 codes provided by Orphanet, by
-using a k-nearest neighbour classifier.
+of classifying diseases using the ICD10 codes provided by Orphanet.
 
 % Forklar ""2 en eller ingen ICD10 koder...""
 
@@ -837,24 +836,23 @@ of 23 categorised feature vectors\footnote{The number of overall categories in t
 Finally the vectors are sorted by term-score thus letting the vector run from
 the most to the least important terms.
 
-A diagnostic query is then given the reduced feature-space. For a given
-diagnostic query, the reduced search-space are found by
+For a given diagnostic query, the reduced search-space is found by
 \begin{enumerate}
-    \item for each term locating all feature vectors containing the term,
-    \item for each term saving the category of the three feature vectors having the lowest term-index (remembering the the vectors are sorted by term-importance),
+    \item for each term in the query locating all categorised feature vectors containing the term,
+    \item for each term saving the category of the three feature vectors having the lowest term-index (remembering that the vectors are sorted by term-importance),
     \item and finally letting the reduced search-space consist of the feature vectors for all diseases falling within the category of the total set of candidates found in step 2.
 \end{enumerate}
 The reason for picking as many as three categories for each term is that
 a term or symptom will often fall into several categories. To increase
-the precision high fragmentation of the clusters should be made, so that
-the category 'A' would be split into 'A0','A1',etc. (or even 'A00.1').
-This, however, requries more knowlegde of the ICD10 domains than our
+the precision, high fragmentation of the clusters should be made so that
+the category 'A' would be split into \textit{'A0'},\textit{'A1'},etc. (or even \textit{'A00.1'}).
+This, however, requries more knowledge of the ICD10 domains than our
 system currently support. 
 
 Though we in general end up selecting nearly half of all categories, we
 still reduce the search-space to some extend and thereby limit ourselves
-to a more refined search (roughly speaking we want to look neoplasms
-(cancer) if we locate a tumor, and not cardiac diseases).
+to a more refined search (roughly speaking we want to look at \textit{neoplasms}
+(cancer) if we locate a tumor, and not \textit{cardiac diseases}).
 
 Finally, the best results are obtained by running the TF-IDF algorithm
 (same version as in \ref{chap:unigrammethod}) on the reduced
@@ -1505,7 +1503,8 @@ all	        &    40   & 38    &   43    &   93.02   &  88.37 \\ \hline
 \label{app:tfidf_tfidfrecalc}
 The TFIDF NLP\footnote{Built on the same data set as that of the noised reduced googled data in appendix \ref{app:tests_raw_reduced} which does not include Orphanet abstracts} (unigram and nlp consensus) model is compared with the new
 unigram model results listed in appendix \ref{app:tests_raw_reduced}.
-\todo[inline]{Where's the comparasion?}
+
+In the tables below \textit{'Terms verified by NLP'} refers to n-grams found by the NLP symptom extraction (\ref{chap:nlpmodel}). The terms that were not found were not used in the concensus-ranking.
 
 \subsection{Orphanet}
 \label{app:orphanet_tfidf_tfidfrecalc}
@@ -1619,7 +1618,7 @@ all	        &    33   &  39    &   43    & 76.74     & 90.70 \\ \hline
 \newpage
 \section{Tests using ICD10 grouping}
 \label{app:icd10_icd10recalc}
-\todo[inline]{Explain the tests and results!}
+Tests run on the subspace described in \ref{chap:icd10implementation} - with and without running the TF-IDF algorithm on the sub search-space (all diseases within the accepted ICD10 categories).
 
 \subsection{Orphanet}
 \label{app:orphanet_icd10_icd10recalc}
@@ -1735,6 +1734,7 @@ all	        &    36   &  36    &   39    &  92.31  & 92.31 \\ \hline
 \newpage
 \section{Comparision of tests performed without and with an abstract from Orphanet}
 \label{app:with_without}
+The best results were obtained by using the prior knowledge (Orphanet abstracts) and noise-reduced googled data.
 
 \subsection{Orphanet}
 \label{app:orphanet_with_without}
