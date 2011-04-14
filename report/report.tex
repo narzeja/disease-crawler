@@ -900,7 +900,8 @@ such and will be treated individually:
 \cite{jensenandersen} provided by a practising physician only as a list
 of terms, and was later correlated with the proper diagnosis after the
 model returned a prediction.
-\item[Orpha tests] Tests provided by \todo[inline]{how did we get these tests?}
+\item[Orpha tests] Tests provided by \cite{jensenandersen}. The tests were randomly selected
+from Orphanet by taking out the list of symptoms that often follows the phrase "\textit{characterized by [...]}".
 \item[BMJ tests] Selected tests from \cite{googlingdiagnosis}, yielding
 only tests that are labelled as 'rare diseases' \footnote{A disease is
 considered a rare disease if it is listed in
@@ -1101,13 +1102,14 @@ models. Further details are located in the appendices.
 
 \section{Conclusion}
 \label{chap:conclusion}
-We have investigated the possibility of using the Google search engine,
+We have investigated the possibility of using the Google search engine
 as a means to gather additional information in order to expand knowledge
-of a range of diseases.
-%We have shown that the information gathered
-%along with prior information supplied through Orphanet abstracts yields
-%significantly better results than other models, and the results are
-%generally better than what previous methods were able to produce.
+of a range of diseases. We have shown that the information gathered
+along with prior information supplied through Orphanet abstracts yields
+significantly better results compared to previous work. We have shown
+that there is a potential in using Google's search engine as a means to
+improve language models and the knowledge of rare diseases. However, due to level of
+user-generated noise, prior knowledge is required for the acceptance of new data.
 
 %By using NLP techniques we have refined the data harvested using the
 %Google search engine and shown significant improvements over using the
@@ -1118,7 +1120,6 @@ of a range of diseases.
 %failed to extract representative phrases and terms from documents and
 %abstracts and suggests a poor choice of or too strict chunking
 %procedure.
-
 
 Our tests show that using Google to harvest information and the
 abstracts provided by Orphanet yields the best results, placing 85\% of
@@ -1202,13 +1203,22 @@ substantial amount of correctly labelled diseases.
 \appendix
 \section{Preliminary Tests}
 \label{app:preliminary_results}
+
+The results of the tests of the old model provided by
+\cite{jensenandersen} and the model based on abstracts from Orphanet,
+with no further processing.
+
+%Despite the larger amount of information gathered in the old model,
+%there is little difference in the results (Note that the Orphanet tests
+%are fit to the new model which were build upon the same abstracts
+%as the test queries in \ref{tab:results_orphanet}!). This indicates a
+%large amount of noise in the data gathered in the old model.
+
+%\vspace*{-3cm}
+
 \subsection{Orphanet tests}
 \label{app:orphanet_old_new}
-The following tests can be interpreted as training data tests, training
-the ability to train the model, rather the ability to predict. As such
-the models will only be used as a measure for describing the potential
-of the system.
-
+The highly improved results of using the abstracts from Orphanet. This is not unexpected since these tests are taken from the training data of the new model (the abstracts) while the old model is based on abstracts from PubMed (i.e. we observe the training error in the results below). Though fitted to the data, this also indicates a good performance of the TF-IDF scheme.
 
 \begin{center}
 \begin{small}
@@ -1282,6 +1292,7 @@ of the system.
 
 \subsection{BMJ ('Googling for a Diagnosis') tests }
 \label{app:bmj_old_new}
+
 \begin{center}
 \begin{small}
 %	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
@@ -1322,6 +1333,7 @@ of the system.
 
 \subsection{Blind tests}
 \label{app:blind_old_new}
+It was later discovered that the correct version of "\textit{Adrenoleukodystrophy, X-linked}"(the "\textit{X-linked}" part) was not in the data set of \cite{jensenandersen} which would explain the highly improved results in the new model.
 \begin{center}
 \begin{small}
 %	\begin{tabular}{|p{3.5cm}|p{4.5cm}|p{1.8cm}|p{1.8cm}|}
@@ -1377,6 +1389,7 @@ all	 &39	 &27 &		43 &	90.70 &	62.79\\ \hline
 
 \newpage
 \section{Testing raw googled and noise reduced googled data}
+Here we test the googled data without the use of prior knwledge (Orphanet abstracts). We observe the significant amount of noise introduced by literature references which was removed using NLP (noise reduced googled data). 
 \label{app:tests_raw_reduced}
 
 \subsection{Orphanet tests}
@@ -1490,8 +1503,9 @@ all	        &    40   & 38    &   43    &   93.02   &  88.37 \\ \hline
 \newpage
 \section{Tests using both a TFIDF unigram and TFIDF NLP model}
 \label{app:tfidf_tfidfrecalc}
-The TFIDF NLP (unigram and nlp consensus) model is compared with the new
-unigram model results listed in section \ref{app:preliminary_results}.
+The TFIDF NLP\footnote{Built on the same data set as that of the noised reduced googled data in appendix \ref{app:tests_raw_reduced} which does not include Orphanet abstracts} (unigram and nlp consensus) model is compared with the new
+unigram model results listed in appendix \ref{app:tests_raw_reduced}.
+\todo[inline]{Where's the comparasion?}
 
 \subsection{Orphanet}
 \label{app:orphanet_tfidf_tfidfrecalc}
@@ -1605,6 +1619,7 @@ all	        &    33   &  39    &   43    & 76.74     & 90.70 \\ \hline
 \newpage
 \section{Tests using ICD10 grouping}
 \label{app:icd10_icd10recalc}
+\todo[inline]{Explain the tests and results!}
 
 \subsection{Orphanet}
 \label{app:orphanet_icd10_icd10recalc}
