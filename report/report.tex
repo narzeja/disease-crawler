@@ -1,6 +1,6 @@
 %\documentclass[10pt,a4paper,final,oneside,openany,article]{memoir}
 %\documentclass[letterpaper,a4paper,10pt]{article}
-\documentclass[10pt,letterpaper,final]{article}
+\documentclass[10pt,letterpaper,two column,final]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
 \usepackage{hyperref}
@@ -52,11 +52,12 @@
 
 \author{Brian S. Mathiasen $-$ soborg@diku.dk \\
         Henrik G. Jensen $-$ henne@diku.dk\\
-%        \\
-%        Department of Computer Science\\
-%        University of Copenhagen\\
-%        Universitetsparken 1\\
-%        DK-2100 Copenhagen, Denmark
+        \small{Supervisor: Jakob Grue Simonsen $-$ simonsen@diku.dk} \\
+        \\
+        Department of Computer Science\\
+        University of Copenhagen\\
+        Universitetsparken 1\\
+        DK-2100 Copenhagen, Denmark
 }
 
 \date{\today} %\today
@@ -219,11 +220,9 @@ in each model.
 % while
 %explaining the more important parts of the architecture.
 
-In section \ref{chap:test} we present the results from our tests, here
-among blind tests, BMJ and Orphanet, further explained in section
-\ref{chap:test}, comparing our results with previous similar projects.
-We will discuss the results based on statistical significance
-analyses.
+In section \ref{chap:test} we present the results from our experiments,
+here among blind tests, BMJ and Orphanet. We will discuss the results
+based on statistical significance and descriptive analyses.
 
 Finally, in section \ref{chap:conclusion} we will conclude the project,
 highlight the most important test results and discuss major implications
@@ -858,7 +857,7 @@ Finally, the best results are obtained by running the TF-IDF algorithm
 (same version as in \ref{chap:unigrammethod}) on the reduced
 search-space to enhance the more subtle parts of each disease-candidate.
 
-\section{Tests}
+\section{Experiments}
 \label{chap:test}
 In the following, we will distinguish the different methods and models
 as such:
@@ -874,7 +873,7 @@ harvested data set, cleansed for low information paragraphs.
 \item[F. icd10 grouping] Using ICD10 codes to improve suggestion (reduced data, see \ref{chap:icd10method})
 \item[G. icd10 grouping recalc. tf-idf] Same as F, except the subspace
 of relevant ICD10 diseases are recalculated with TF-IDF.
-\item[H. orphanet abstracts+noise reduced googled data] Same as D except
+\item[H. orphanet abstracts+noise reduced googled] Same as D except
 the data set also consists of Orphanet abstacts.
 \end{description}
 
@@ -1005,7 +1004,7 @@ in the top 5.
 
 \begin{table}[here]
 \begin{center}
-\begin{tabular}{lll}
+\begin{tabular}{p{2.5cm}p{2.1cm}p{2.1cm}}
     \textbf{Data set} & & \textbf{Orphanet} \\ \hline\hline
  &	\textbf{B. new unigram} &	\textbf{A. old unigram} \\ \hline
 $R_{i}$ &	462 &	1249 \\
@@ -1082,7 +1081,7 @@ used as a baseline or bootstrap.
 Table \ref{tab:all_results} shows a summary of the results across all
 models. Further details are located in the appendices.
 \begin{center}
-	\begin{tabular}{l|l|l}
+	\begin{tabular}{p{4cm}|l|l}
 		Model & Top 5 & Top 20 \\ \hline
 		A. Old unigram & 32.56\% & 62.79\% \\
 		B. New unigram & 74.42\% & 90.70\% \\
@@ -1199,6 +1198,7 @@ substantial amount of correctly labelled diseases.
 
 \newpage
 \appendix
+\onecolumn
 \section{Preliminary Tests}
 \label{app:preliminary_results}
 
