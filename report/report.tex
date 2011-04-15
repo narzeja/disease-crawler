@@ -11,7 +11,7 @@
 \usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{pifont}
-\usepackage{caption}
+\usepackage[small, bf]{caption}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
@@ -213,9 +213,12 @@ information harvesting, feature extraction, modelling and prediction.
 %the developed models.
 
 In section \ref{chap:implementation} we will go into the implementation
-details of the various models, highlighting the overall architecture and
-pipeline of constructing the models, and clarify which methods are used
-in each model.
+details of the various models, discuss unique traits and clarify which
+methods are employed in each model.
+
+%highlighting the overall architecture and
+%pipeline of constructing the models, and clarify which methods are used
+%in each model.
 
 % while
 %explaining the more important parts of the architecture.
@@ -331,10 +334,10 @@ final models will be explained in section \ref{chap:implementation}.
 \subsection{General Procedure}
 To get an overview of how to build any model, the general procedure will
 be explained in this section.
-Ultimately, the needed tools for building the model is
+Ultimately, the needed tools for building the model are
 \begin{description}
-\item[data set] for much of our purpose, we utilize data acquired from
-Orphanet.
+\item[data set] we utilize data (disease name, abstract/description)
+acquired from Orphanet.
 \item[mathematical model] We will use the TF-IDF model as a basis, and
 from this offset develop specific methods to improve the results.
 \end{description}
@@ -443,10 +446,11 @@ where $tf_{t,d}$ is term frequency of term $t$ in disease $d$, $|D|$
 the total number of diseases in the disease set, and $|\{d'\in D|t\in
 d'\}|$ the number of diseases containing the term $t$.
 
-To compare the precision of the new model to the previous, we applied
-the same test queries (search terms) to the model using the same
-scoring-scheme to obtain a rank for each disease. The rank of each
-disease can be interpreted as being the precision of the model.
+To compare the precision of the new model to the old model in
+\cite{jensenandersen}, we applied the same test queries (search terms)
+to the model using the same scoring-scheme to obtain a rank for each
+disease. The rank of each disease can be interpreted as being the
+precision of the model.
 
 When a query is given, it is stemmed and stopwords are removed. Each
 disease-vector that contain one or more of the queried terms is given a
@@ -457,10 +461,14 @@ s_{d} = \displaystyle\sum\limits_{t_1}^{t_n} w_{t,d}\quad t \in Q
 \]
 
 \paragraph{Example}
-Consider four diseases, each consisting of up to three terms:
-\[
-d_{0} = \{t_{2}\}, d_{1} = \{t_{0}, t_{2} \}, d_{2} = \{t_{2} \}, d_{3} = \{t_{0}, t_{1}, t_{2} \}
-\]
+Consider four diseases, each consisting of up to three terms,
+\{headache, pain, insomnia\}:
+\begin{align*}
+d_{0} &= \{insomnia\} \\
+d_{1} &= \{headache, insomnia \} \\
+d_{2} &= \{insomnia \} \\
+d_{3} &= \{headache, pain, insomnia\}
+\end{align*}
 
 Then the TF-IDF matrix is constructed, at this point ignoring the
 logarithmic smoothing:
@@ -473,7 +481,7 @@ logarithmic smoothing:
 \]
 
 In this case the queried terms correspond with all the terms of
-$w$, i.e. $Q = \{t_{0}, t_{1}, t_{2}\}$, then the summation of the
+$w$, i.e. $Q = \{headache, pain, insomnia\}$, then the summation of the
 weights of the queries terms are given as
 
 \[ s = \left| \begin{array}{c}
@@ -482,23 +490,27 @@ weights of the queries terms are given as
 0.25 \\
 1.75 \end{array} \right|.
 \]
-Thus the bottom entry with a score of $1.75$ is the model's prediction
-of the correct disease/diagnosis. \ding{111}\newline
+Thus the bottom entry, disease number 3 (zero-indexed), with a score of
+$1.75$ is the model's prediction of the correct disease/diagnosis.
+\ding{111}\newline
 
-Though the model used in \cite{jensenandersen} was based on large
-amounts of information gathered from PubMed, our tests show that we
-can obtain close to the same precision solely based on the abstracts
-from Orphanet \ref{app:preliminary_results}.
+%Though the model used in \cite{jensenandersen} was based on large
+%amounts of information gathered from PubMed, our tests show that we
+%can obtain close to the same precision solely based on the abstracts
+%from Orphanet \ref{app:preliminary_results}.
 
 %The results can be seen in appendix \ref{app:preliminary_results}.
 
 
 \subsection{Harvesting data}
-Initially, we believe we can use Google or other search engines to
-expand to knowledge for the set of diseases. Ultimately, basing the
-prediction on only one abstract per disease feels small, and the
-opportunity to expand the knowledge with reasonable ease is too good to
-miss.
+We can use Google or other search engines to expand to knowledge for the
+set of diseases. Ultimately, basing the prediction on only one abstract
+per disease is inappropriate, as one abstract may not describe the
+disease satisfactory. By combining this with several other abstracts, we
+gain a better foundation of knowledge for each disease.
+
+%, and the opportunity to expand the
+%knowledge with reasonable ease is too good to miss.
 
 Harvesting additional data to expand the basic model is done using the
 Google search engine. For each site returned from the query, i.e.
@@ -555,7 +567,7 @@ noise, and will thus be filtered.
 \label{chap:nlpmodel}
 Feature extraction is used as a means to extract unique or otherwise
 relevant information from a document regarding a specific disease. The
-purpose is to built a phrase document matrix similar to the above
+purpose is to build a phrase document matrix similar to the above
 mentioned TF-IDF matrix, i.e. a \textit{Phrase Frequency - Inverse
 Document Frequency} matrix (PF-IDF). We hypothesise that extracting
 terms and phrases directly relevant to a particular disease may reduce
@@ -636,7 +648,8 @@ also match non-relevant terms such as \texttt{addition}.
 %increase the amount of medically relevant terms as opposed to simply
 %catching all combinations matching the \texttt{SYMPTOM} grammar above.
 
-As an example, the grammar applied to the sentence
+\paragraph{Example}
+The grammar applied to the sentence
 \textit{``Hermansky-Pudlak syndrome type 2 is a type of Hermansky-Pudlak
 syndrome, a multi-system disorder characterized by oculocutaneous
 albinism, bleeding diathesis and neutropenia.''} \footnote{Excerpt from
@@ -667,6 +680,7 @@ yields the following POS-tagged syntax tree:
 of which we are particularly interested in the \texttt{SYMPTOM}
 subtrees. For each existing paragraph or abstract for a given disease, a
 list of phrases and terms are returned for further processing.
+\ding{111}\newline
 
 The extracted phrases can now be used to built a model equivalent to the
 TF-IDF described in section \ref{chap:basicmodel}.
@@ -685,7 +699,7 @@ example, Cholera falls within \textit{A00 $\rightarrow$ 'Certain
 infectious and parasitic diseases' $\rightarrow$ 'Intestinal infectious
 diseases' $\rightarrow$ 'Cholera' }. Codes can thus be used to locate
 groups or clusters of diseases and has the potential of being used for
-training models to be used for classifying un-coded diseases. In theory
+training models to be used for classifying unlabelled diseases. In theory
 limiting a diagnostic query to one or a few categories should improve
 the precision of the current model and --- using the TFIDF-model ---
 important terms of each category can be located (main symptoms). If
@@ -707,52 +721,48 @@ indicate the possibilities of such a model.
 
 \section{Implementation}
 \label{chap:implementation}
-As mentioned previously, a number of different models are constructed to
-give a better foundation for comparison between the models. Initially,
-we have constructed a large array of various models, both in terms of
-training data, but also model searching and prediction. In the following
-we will highlight the most successful models and describe important
+We have constructed 8 different models, varying in terms of training
+data, but also modelling, searching and prediction. In the following we
+will highlight the most successful models and describe important
 implementation details and how they differ from one another.
-
-Basic \textit{unigram} models, an \textit{NLP+unigram} model utilizing a
-consensus ranking scheme across two TF-IDF matrices and finally an
-\textit{ICD10} code based model is constructed and ultimately used for
-testing and comparison.
-
 
 \subsection{Unigram}
 \label{chap:unigrammethod}
-The unigram model is initially equivalent to the bag-of-words model used in
-\cite{jensenandersen} and in the following we will add new layers on top of this
-approach. As the construction and usage of these models are essentially
-the same as what is presented in \cite{jensenandersen}, we will not go
-into much detail with specifics in the implementation for each model,
-but rather present an overview of the differences between the models,
-i.e. discuss the differences in the training data and the improvements
-these made with reference to the results in the appendices.
+The unigram model is initially equivalent to the bag-of-words model used
+in \cite{jensenandersen} and in the following we will add new layers on
+top of this approach. As the construction and usage of these models are
+essentially the same as what is presented in \cite{jensenandersen}, we
+will not go into further detail with specifics of these models, as they
+are initially identical to the simple TF-IDF model, only varying in the
+data set.
+
+%,
+%but rather present an overview of the differences between the models,
+%i.e. discuss the differences in the training data and the improvements
+%these made with reference to the results in the appendices.
 
 % We
 %will however, briefly give an overview of how we implemented the model
 %and discuss the differences in the chosen training data, as well as
 %highlight the most significant improvements, with reference to the
 %summaries and results presented in the appendices.
-In essence, the following models are produced using the basic TF-IDF
-method as described in \ref{chap:unigrammethod}:
+%In essence, the following models are produced using the basic TF-IDF
+%method as described in \ref{chap:unigrammethod}:
 
-\begin{description}
-\item[A. Unigram] The basic model trained on the Orphanet data set.
-\item[B. Googled unigram] Model trained on information harvested from
-Google. The Orphanet data set is not part of the training set.
-\item[C. Googled unigram cleansed] Model cleansed for literature
-references.
-\item[D. Googled cleansed/Orphanet unigram] Model using the cleansed
-googled data set in combination with the original Orphanet data set.
-\end{description}
+Below is listed the different data sets used for the models:
 
-Results in the appendices suggests an increased precision as the models
-are expanded with additional information and cleansed for noise. As such, models 3
-and 4 will be used in combination with the NLP model and ICD10 grouping,
-explained in the following sections.
+\begin{itemize}
+\item Orphanet data set
+\item raw uncleansed googled data
+\item googled data cleansed for literature references
+\item cleansed googled data set in combination with the original
+Orphanet data set
+\end{itemize}
+
+%Results in the appendices suggests an increased precision as the models
+%are expanded with additional information and cleansed for noise. As such, models 3
+%and 4 will be used in combination with the NLP model and ICD10 grouping,
+%explained in the following sections.
 
 
 
@@ -798,7 +808,7 @@ symptoms as opposed to simply using unigrams.
 
 \paragraph{Example} Consider the phrase \textit{chronic back pain}.
 Using only the unigram model will prohibit us from exploiting the
-context and composition of the particular symptom, and may skewer the
+context and composition of the particular symptom, and may skew the
 result, as the terms \textit{chronic}, \textit{back} and \textit{pain}
 would be a misrepresentation of the overall symptom or search query.
 Utilizing the exact phrase in the NLP model would, by our estimations,
@@ -845,7 +855,7 @@ The reason for picking as many as three categories for each term is that
 a term or symptom will often fall into several categories. To increase
 the precision, high fragmentation of the clusters should be made so that
 the category 'A' would be split into \textit{'A0'},\textit{'A1'},etc. (or even \textit{'A00.1'}).
-This, however, requries more knowledge of the ICD10 domains than our
+This, however, requires more knowledge of the ICD10 domains than our
 system currently support. 
 
 Though we in general end up selecting nearly half of all categories, we
@@ -948,10 +958,8 @@ $H_{stat}$ approximates a chi-square ($\chi^2$) distribution with k-1
 degrees of freedom when the number of samples is at least 5.
 
 To assess whether the null hypothesis can be rejected, we use table
-values of chi-square
-\footnote{\url{http://www.ma.utexas.edu/users/davis/375/popecol/tables/chisq.html}}
-with 1 degree of freedom ($k-1$) with an acceptance p-value of $\alpha
-= 0.05$:
+values of chi-square with 1 degree of freedom ($k-1$) with an acceptance
+p-value of $\alpha = 0.05$:
 \[
 \chi^2_{0.05}(df=1) = 3.84
 \]
@@ -1022,9 +1030,9 @@ Adjusted $H_{stat}$ & &  40.41 \\
 \end{center}
 \end{table}
 
-The results in table \ref{tab:H_vs_rest} contains the results
-Kruskal-Wallis test. For the remaining models, we simply refer to the
-adjusted $H_{stat}$ to determine significance for model H. \textit{- orphanet
+The results in table \ref{tab:H_vs_rest} contains the results of the
+Kruskal-Wallis test. In this table, we simply refer to the adjusted
+$H_{stat}$ to determine significance for model H. \textit{- orphanet
 abstracts+noise reduced googled data} versus the remaining models,
 except the ICD10 grouping models, as these contain a significantly
 smaller amount of diseases.
@@ -1035,8 +1043,7 @@ smaller amount of diseases.
 		  & B &  C &  D &  E \\ \hline
 		H & $-285.03$ & $-231.64$ & $-257.82$ & $-244.19$ \\
 	\end{tabular}
-	\caption{Kruskal-Wallis test statistic results on model H compared
-	with the remaining models.}
+	\caption{Kruskal-Wallis test statistic results on model H compared with the remaining models.}
 	\label{tab:H_vs_rest}
 \end{center}
 \end{table}
